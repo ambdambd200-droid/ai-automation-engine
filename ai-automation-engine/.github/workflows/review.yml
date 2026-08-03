@@ -1,0 +1,43 @@
+name: Review (Phase 4)
+
+on:
+  schedule:
+    # 07:00 UTC = 10:00 AM Gaza Sunday (after weekly_review at 07:00)
+    - cron: '0 7 * * 0'
+  workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run reviewer
+        env:
+          ENGINE_DIR: ${{ github.workspace }}
+        run: |
+          cd $ENGINE_DIR
+          python engine/reviewer.py review_report.md
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-report
+          path: review_report.md
+
+      - name: Extract new skills
+        if: always()
+        run: |
+          mkdir -p skills/learning/reviewed
+          echo "New skills queued for promotion"

@@ -1,0 +1,60 @@
+workflow:
+  name: n8n_community_publisher
+  description: Generate draft replies to n8n Community forum threads.
+  version: 2.0.0
+  updated: 2026-07-31
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "n8n Community publisher v2. Thread: ${input.thread_title}"
+
+    - name: build_user_prompt
+      action:
+        type: transform
+        params:
+          template: "Generate a thoughtful, technical reply to this n8n Community forum thread:\n\nTitle: ${input.thread_title}\nAuthor: ${input.thread_author}\nURL: ${input.thread_url}\nContext: ${input.thread_context}\n\nYour reply should:\n- Add ONE concrete technical insight (not generic agreement)\n- Reference a specific pattern you've used in production (1 sentence)\n- Offer to share code/snippets if relevant\n- Be 150-300 words\n- Sign as: Salim Muhammad (AI Automation Engineer, Gaza)\n- Contact: salim.muhammad.work0@gmail.com\n\nReturn JSON only: { \"reply_text\": \"<reply>\", \"thread_url\": \"<url>\", \"suggested_tags\": [\"n8n\", \"automation\"] }\n\nNo markdown. No code fences. Just the JSON object."
+
+    - name: ai_generate_reply
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.55
+          system_prompt: >
+            You are Salim Muhammad writing a reply on the n8n Community forum
+            (community.n8n.io). The forum is technical, public, read by professional
+            automation engineers. Your replies build credibility and visibility
+            for your services. They must be honest, specific, and helpful —
+            never spammy, never generic, never salesy.
+
+            RULES:
+            - Always add ONE concrete technical insight (not generic agreement).
+            - Keep replies 150-300 words.
+            - Reference your own production experience briefly (1 sentence).
+            - Sign as: Salim Muhammad (AI Automation Engineer, Gaza).
+            - Contact: salim.muhammad.work0@gmail.com.
+            - Never use emojis.
+            - Never use markdown formatting inside reply_text.
+            - Never include any other language in the reply.
+            - Return ONLY a JSON object with keys:
+              reply_text, thread_url, suggested_tags.
+            - Do NOT wrap in ```json or any code fences.
+          user_prompt: "${last_transform}"
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "n8n reply v2 generated for thread: ${input.thread_title}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"thread_url": "${input.thread_url}", "thread_title": "${input.thread_title}", "reply_text": "${last_ai_response.reply_text}", "suggested_tags": "${last_ai_response.suggested_tags}", "status": "draft_for_manual_review", "generated_at": "${input.trigger_date}", "version": "2.0.0"}'

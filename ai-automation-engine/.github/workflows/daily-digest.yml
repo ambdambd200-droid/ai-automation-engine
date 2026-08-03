@@ -1,0 +1,29 @@
+name: Daily Digest
+
+on:
+  schedule:
+    # 05:30 UTC = 08:30 AM Gaza (after daily_routine at 04:00, after auto_skill_learn at 05:00)
+    - cron: '30 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger daily_digest webhook
+        run: |
+          curl -sS -X POST "https://ai-automation-engine.onrender.com/webhook/daily_digest" \
+            -H "Content-Type: application/json" \
+            -d "{\"trigger\":\"github_actions_digest_$(date -u +%Y%m%d)\",\"trigger_date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"last_24h_summary\":\"$(date -u +%Y-%m-%d)\"}" \
+            --max-time 60 \
+            -o response.json -w "HTTP_STATUS:%{http_code}\n"
+
+      - name: Print response
+        if: always()
+        run: |
+          echo "=== Daily Digest Response ==="
+          cat response.json
+          echo ""
+          echo "=== Done ==="

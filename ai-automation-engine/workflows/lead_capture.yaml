@@ -1,0 +1,48 @@
+workflow:
+  name: lead_capture
+  description: Capture and enrich leads using AI
+  version: 1.0.0
+
+  steps:
+    - name: log_received
+      action:
+        type: log
+        params:
+          level: info
+          message: "Lead received: ${input.name} - ${input.email}"
+
+    - name: enrich_with_ai
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.3
+          system_prompt: >
+            You are a lead enrichment assistant. Extract and categorize the following lead information.
+            Always respond with valid JSON only, no extra text.
+          user_prompt: >
+            Analyze this lead: Name: ${input.name}, Email: ${input.email}, 
+            Company: ${input.company}, Message: ${input.message}.
+            Return JSON with: category (one of: hot/warm/cold), 
+            priority_score (1-10), suggested_next_action, summary (1 sentence).
+
+    - name: save_lead
+      action:
+        type: log
+        params:
+          level: info
+          message: "Lead enriched: ${last_ai_response}"
+
+    - name: check_priority
+      action:
+        type: condition
+        params:
+          value: "${last_ai_response.priority_score}"
+          equals: "10"
+
+    - name: generate_summary
+      action:
+        type: transform
+        params:
+          template: '{"name": "${input.name}", "email": "${input.email}", "company": "${input.company}", "category": "${last_ai_response.category}", "score": "${last_ai_response.priority_score}", "action": "${last_ai_response.suggested_next_action}", "summary": "${last_ai_response.summary}"}'

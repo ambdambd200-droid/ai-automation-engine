@@ -1,0 +1,29 @@
+name: Weekly Review
+
+on:
+  schedule:
+    # 4:00 AM UTC every Sunday = 7:00 AM Gaza (winter) / 6:00 AM (summer)
+    - cron: '0 4 * * 0'
+  workflow_dispatch:
+
+jobs:
+  trigger-weekly-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger weekly_review webhook
+        run: |
+          curl -sS -X POST "https://ai-automation-engine.onrender.com/webhook/weekly_review" \
+            -H "Content-Type: application/json" \
+            -d "{\"trigger\":\"github_actions_weekly_$(date -u +%Y%m%d)\",\"trigger_date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" \
+            --max-time 60 \
+            -o response.json -w "HTTP_STATUS:%{http_code}\n"
+
+      - name: Print response
+        if: always()
+        run: |
+          echo "=== Weekly Review Response ==="
+          cat response.json
+          echo ""
+          echo "=== Done ==="

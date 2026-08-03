@@ -1,0 +1,48 @@
+name: Verify (Phase 3)
+
+on:
+  schedule:
+    # 06:00 UTC = 09:00 AM Gaza (after daily_routine at 07:00)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install requests
+        run: pip install requests pyyaml --quiet
+
+      - name: Run verifier
+        env:
+          ENGINE_URL: https://ai-automation-engine.onrender.com
+          ENGINE_DIR: ${{ github.workspace }}
+        run: |
+          cd $ENGINE_DIR
+          python engine/verifier.py verify_report.md
+          echo "Exit code: $?"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-report
+          path: verify_report.md
+
+      - name: Notify on FAIL
+        if: failure()
+        run: |
+          echo "Verification failed — see artifact"
+          cat verify_report.md || true

@@ -1,0 +1,48 @@
+workflow:
+  name: weekly_review
+  description: Sunday morning weekly review — summarizes the week's contacts, executions, and proposals.
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Weekly review started. Trigger: ${input.trigger}"
+
+    - name: ai_weekly_summary
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.5
+          system_prompt: >
+            You are a weekly business review assistant for a freelance AI engineer.
+            Generate a concise Sunday morning review in English + Arabic (both languages).
+            Focus on what matters: revenue pipeline, conversions, follow-ups needed.
+
+            Return JSON only.
+          user_prompt: >
+            Generate a weekly review for Salim Muhammad, AI Automation Engineer.
+            Include sections:
+            - title (string)
+            - last_week_highlights (array of 3 bullets)
+            - this_week_priorities (array of 3 bullets)
+            - metrics_to_watch (array of 3 items: metric + target)
+            - motivation_quote (1 short sentence)
+            Trigger: ${input.trigger}
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Weekly summary: ${last_ai_response}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"status": "completed", "trigger": "${input.trigger}", "summary": "${last_ai_response}", "generated_at": "${input.trigger_date}"}'

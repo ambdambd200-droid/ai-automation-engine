@@ -1,0 +1,66 @@
+workflow:
+  name: arabic_bid_generator
+  description: Generate an Arabic bid for Nafezly or Mostaql from a project description.
+  version: 2.0.0
+  updated: 2026-07-31
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Arabic bid generator v2 started. Platform: ${input.platform}"
+
+    - name: build_user_prompt
+      action:
+        type: transform
+        params:
+          template: "مشروع على منصة ${input.platform}:\n\nالعنوان: ${input.project_title}\n\nالوصف: ${input.project_description}\n\nميزانية العميل المتوقعة: ${input.budget || 'غير محددة'}\n\nولّد عرض (bid) احترافي بالعربية الفصحى، 150-200 كلمة.\n\nيجب أن يحتوي العرض على:\n1. شكر مختصر يذكر طلب العميل بالاسم\n2. insight تقني واحد يُثبت فهمي للمشروع\n3. 3-4 خطوات تنفيذ واضحة\n4. نطاق السعر والوقت المتوقع\n5. سؤالان لتأكيد النطاق\n6. CTA: مكالمة تدقيق 15 دقيقة مجانية\n7. توقيع: سليم محمد، مهندس أتمتة ذكاء اصطناعي\n\nمهم جداً:\n- اكتب بالعربية الفصحى فقط. لا تخلط لغات أخرى.\n- لا تستخدم رموز markdown. أرجع JSON نظيف فقط.\n\nأرجع JSON بهذا الشكل الحرفي:\n{\"bid_text\": \"<النص الكامل للعرض بالعربية>\", \"subject\": \"<عنوان مختصر بالعربية>\"}"
+
+    - name: ai_generate_bid
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.45
+          system_prompt: >
+            You are Salim Muhammad, an AI Automation Engineer based in Gaza, Palestine.
+            You write Arabic bids for freelance platforms (Nafezly and Mostaql).
+
+            LANGUAGE RULES (CRITICAL):
+            - Write ONLY in formal Arabic (فصحى). Never mix English, Chinese,
+              or any other language into the Arabic text.
+            - Currency is USD only ($). Never use any other currency symbol.
+            - Never use emojis.
+            - Never use markdown formatting (no **, ##, -, etc.) inside bid_text.
+
+            STRUCTURE (all 7 elements required):
+            1. شكر العميل + ذكر طلبه
+            2. insight تقني (1-2 جملة)
+            3. خطة 3-4 خطوات
+            4. وقت + نطاق سعر
+            5. سؤالان للتأكيد
+            6. CTA: مكالمة تدقيق مجانية 15 دقيقة
+            7. توقيع: سليم محمد، مهندس أتمتة ذكاء اصطناعي
+
+            OUTPUT FORMAT:
+            - Return ONLY a JSON object with exactly two keys:
+              {"bid_text": "...", "subject": "..."}
+            - No code fences (```), no markdown, no commentary outside JSON.
+            - bid_text length: 150-200 Arabic words.
+          user_prompt: "${last_transform}"
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Arabic bid v2 generated for ${input.platform}: ${input.project_title}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"platform": "${input.platform}", "project_title": "${input.project_title}", "bid_text": "${last_ai_response.bid_text}", "subject": "${last_ai_response.subject}", "suggested_price": "${input.suggested_price || "25"}", "generated_at": "${input.trigger_date}", "version": "2.0.0"}'

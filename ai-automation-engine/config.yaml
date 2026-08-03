@@ -1,0 +1,25 @@
+engine:
+  name: AI Automation Engine
+  version: 2.0.0
+  secret_key: change-this-to-a-random-string
+  # local_mode: when True, engine runs standalone (no Render required).
+  # All notifications go via Telegram. Email via Gmail SMTP.
+  local_mode: true
+
+database:
+  path: storage/data.db
+
+workflows_dir: workflows
+
+server:
+  host: 0.0.0.0
+  port: 5000
+
+# Optional: notify engine on Render (set to false for local-only)
+notifications:
+  telegram_enabled: true
+  email_enabled: true
+
+# Public URL — only used if engine is deployed somewhere (Render, PythonAnywhere, etc.)
+# Leave blank for local-only mode
+public_url: ""

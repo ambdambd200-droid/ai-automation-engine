@@ -1,0 +1,77 @@
+{
+  "name": "WhatsApp Invoice",
+  "description": "Stripe webhook → WhatsApp invoice message. Real money flow, fully automated.",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "stripe-webhook",
+        "responseMode": "onReceived",
+        "responseData": "={{ $json }}"
+      },
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [
+            {
+              "leftValue": "={{ $json.type }}",
+              "rightValue": "checkout.session.completed",
+              "operator": {"type": "string", "operation": "equals"}
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "name": "Filter Checkout",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 300],
+      "id": "filter"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data.object;\nconst amount = (data.amount_total / 100).toFixed(2);\nconst currency = data.currency.toUpperCase();\nconst customer = data.customer_details;\nconst message = `🧾 Invoice from Salim.flow\\n\\nAmount: ${amount} ${currency}\\nCustomer: ${customer.name}\\nEmail: ${customer.email}\\nInvoice ID: ${data.id}\\nDate: ${new Date().toLocaleString()}\\n\\nThank you for your business!`;\nreturn [{ json: { phone: customer.phone || '+970000000000', message: message }}];"
+      },
+      "name": "Format Invoice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300],
+      "id": "format"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "={{ $env.WHATSAPP_PHONE_ID }}",
+        "recipient": "={{ $json.phone }}",
+        "messageType": "text",
+        "message": "={{ $json.message }}",
+        "additionalFields": {}
+      },
+      "name": "WhatsApp Send",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [840, 300],
+      "id": "whatsapp"
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {"main": [[{"node": "Filter Checkout", "type": "main", "index": 0}]]},
+    "Filter Checkout": {"main": [[{"node": "Format Invoice", "type": "main", "index": 0}]]},
+    "Format Invoice": {"main": [[{"node": "WhatsApp Send", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [{"name": "whatsapp"}, {"name": "stripe"}, {"name": "invoice"}],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Built by Salim Muhammad · salim.muhammad.work0@gmail.com",
+    "instanceId": "demo-002"
+  }
+}

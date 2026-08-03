@@ -1,0 +1,25 @@
+workflow:
+  name: gmail_check
+  description: Quick Gmail check — fetches unread count and last 5 unread emails metadata.
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Gmail check started"
+
+    - name: log_summary
+      action:
+        type: log
+        params:
+          level: info
+          message: "Gmail check requires local IMAP connection (GMAIL_APP_PASSWORD). Skipping on Render — handled by Money/gmail_check.py locally."
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"status": "skipped", "reason": "Local IMAP only", "trigger": "${input.trigger}", "checked_at": "${input.trigger_date}"}'

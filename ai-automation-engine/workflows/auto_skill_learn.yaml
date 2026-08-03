@@ -1,0 +1,50 @@
+workflow:
+  name: auto_skill_learn
+  description: Review last 24h sent items and convert successful ones into reusable skills.
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Auto skill learn started. Trigger: ${input.trigger}"
+
+    - name: ai_skill_extraction
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.3
+          system_prompt: >
+            You analyze past sent items (emails, bids, replies) and identify which
+            patterns are worth saving as reusable templates.
+
+            Rules:
+            - Only flag patterns that performed well (got replies, hired, etc.)
+            - Suggest 1-3 new skills max per day
+            - For each, return: type (email_reply|bid|followup), name (kebab-case),
+              template_summary (1 sentence), tags (array)
+
+            Return JSON only.
+          user_prompt: >
+            Review last 24h of activity. Trigger: ${input.trigger}.
+            Note: actual sent items log is in Money/hunt_decisions.md (local).
+            For now, return empty array — real extraction happens via skills/manager.py locally.
+
+            Return JSON: {"new_skills": [], "status": "queued_for_local"}
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Skill learn result: ${last_ai_response}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"status": "completed", "result": "${last_ai_response}", "trigger": "${input.trigger}", "generated_at": "${input.trigger_date}"}'

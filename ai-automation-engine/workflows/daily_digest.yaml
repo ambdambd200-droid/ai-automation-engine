@@ -1,0 +1,54 @@
+workflow:
+  name: daily_digest
+  description: Aggregates last 24h of activity into a digest. Used by daily.py.
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Daily digest started. Trigger: ${input.trigger}"
+
+    - name: ai_digest
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.4
+          system_prompt: >
+            You are a daily business digest assistant for Salim Muhammad.
+            Generate a concise morning digest (200-300 words) covering:
+            - Pipeline status (last 24h workflow runs)
+            - Hunt events (sent items)
+            - Pending items in review queue
+            - Suggestions for today
+
+            Be specific. Reference numbers. Bilingual (Arabic headlines + English detail).
+            Return JSON.
+          user_prompt: >
+            Generate today's digest. Trigger: ${input.trigger}.
+            Last 24h data (sample): ${input.last_24h_summary || 'no data yet'}.
+
+            Return JSON: {
+              "headline": "<Arabic + English>",
+              "status": "ok" | "attention_needed",
+              "items": [{"type": "...", "summary": "...", "count": 0}],
+              "today_priorities": ["...", "...", "..."],
+              "generated_at": "<ISO timestamp>"
+            }
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Daily digest: ${last_ai_response.headline}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"status": "completed", "trigger": "${input.trigger}", "digest": "${last_ai_response}", "generated_at": "${input.trigger_date}"}'

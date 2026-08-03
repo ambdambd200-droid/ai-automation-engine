@@ -1,0 +1,59 @@
+workflow:
+  name: daily_routine
+  description: Daily freelance routine — Gmail check, quota status, AI summary
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Daily routine started. Trigger: ${input.trigger}"
+
+    - name: check_engine_health
+      action:
+        type: http_request
+        params:
+          method: GET
+          url: "https://ai-automation-engine.onrender.com/health"
+          headers: {}
+
+    - name: check_quota
+      action:
+        type: log
+        params:
+          level: info
+          message: "Quota check skipped (local logic, not on Render). Date: ${input.trigger_date}"
+
+    - name: ai_daily_summary
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.4
+          system_prompt: >
+            You are a daily digest assistant for a freelance business.
+            Generate a concise morning summary in Arabic (with English technical terms).
+            Always respond with valid JSON only.
+          user_prompt: >
+            Create today's morning routine status. Include:
+            - greeting (in Arabic, friendly)
+            - checklist (array of 4 items to do today)
+            - motivation (1 short Arabic sentence).
+            Context: trigger=${input.trigger}, engine_health=${last_response.status}.
+            Return JSON with: greeting, checklist (array of strings), motivation, generated_at.
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Daily summary generated: ${last_ai_response}"
+
+    - name: build_digest
+      action:
+        type: transform
+        params:
+          template: '{"status": "completed", "trigger": "${input.trigger}", "engine": "${last_response.engine}", "ai_version": "${last_response.version}", "summary": "${last_ai_response}", "generated_at": "${input.trigger_date}"}'

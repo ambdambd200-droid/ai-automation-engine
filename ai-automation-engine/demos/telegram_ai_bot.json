@@ -1,0 +1,82 @@
+{
+  "name": "Telegram AI Bot",
+  "description": "Telegram bot that uses Groq AI to respond to user messages intelligently. Multi-language.",
+  "nodes": [
+    {
+      "parameters": {
+        "rule_set": "",
+        "expression": "{{ $json.message.text }}",
+        "type": "Expression"
+      },
+      "name": "Has Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "telegram-trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "={{ $json.ai_reply }}",
+        "additionalFields": {}
+      },
+      "name": "Send Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "id": "telegram-send"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.GROQ_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "model", "value": "llama-3.3-70b-versatile"},
+            {"name": "messages", "value": "=[{\"role\":\"system\",\"content\":\"You are a helpful bilingual assistant. Reply in the same language as the user.\"},{\"role\":\"user\",\"content\":\"{{ $json.message.text }}\"}]"},
+            {"name": "temperature", "value": "0.4"},
+            {"name": "max_tokens", "value": "500"}
+          ]
+        }
+      },
+      "name": "Groq AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 300],
+      "id": "groq-ai"
+    },
+    {
+      "parameters": {
+        "jsCode": "const reply = $input.first().json.choices[0].message.content;\nreturn [{ json: { chatId: $('Telegram Trigger').first().json.message.chat.id, ai_reply: reply }}];"
+      },
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [580, 300],
+      "id": "format"
+    }
+  ],
+  "connections": {
+    "Has Message": {"main": [[{"node": "Groq AI", "type": "main", "index": 0}]]},
+    "Groq AI": {"main": [[{"node": "Format Response", "type": "main", "index": 0}]]},
+    "Format Response": {"main": [[{"node": "Send Reply", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [{"name": "telegram"}, {"name": "ai"}, {"name": "bot"}],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Built by Salim Muhammad · salim.muhammad.work0@gmail.com",
+    "instanceId": "demo-001"
+  }
+}

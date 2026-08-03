@@ -1,0 +1,40 @@
+name: Daily Routine
+
+on:
+  schedule:
+    # 4:00 AM UTC = 7:00 AM Gaza (winter) / 6:00 AM Gaza (summer)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      trigger_source:
+        description: 'Who is triggering this run'
+        required: false
+        default: 'manual'
+
+jobs:
+  trigger-daily-routine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Get current UTC date
+        id: date
+        run: |
+          echo "trigger_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "now=$(date -u)" >> $GITHUB_OUTPUT
+
+      - name: Trigger Render daily_routine webhook
+        run: |
+          curl -sS -X POST "https://ai-automation-engine.onrender.com/webhook/daily_routine" \
+            -H "Content-Type: application/json" \
+            -d "{\"trigger\":\"github_actions_$(date -u +%Y%m%d)\",\"trigger_date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" \
+            --max-time 60 \
+            -o response.json -w "HTTP_STATUS:%{http_code}\n"
+
+      - name: Print response
+        if: always()
+        run: |
+          echo "=== Response ==="
+          cat response.json
+          echo ""
+          echo "=== Done ==="

@@ -1,0 +1,29 @@
+name: Auto Skill Learn
+
+on:
+  schedule:
+    # 5:00 AM UTC = 8:00 AM Gaza — after daily_routine runs
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  trigger-skill-learn:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger auto_skill_learn webhook
+        run: |
+          curl -sS -X POST "https://ai-automation-engine.onrender.com/webhook/auto_skill_learn" \
+            -H "Content-Type: application/json" \
+            -d "{\"trigger\":\"github_actions_learn_$(date -u +%Y%m%d)\",\"trigger_date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" \
+            --max-time 60 \
+            -o response.json -w "HTTP_STATUS:%{http_code}\n"
+
+      - name: Print response
+        if: always()
+        run: |
+          echo "=== Auto Skill Learn Response ==="
+          cat response.json
+          echo ""
+          echo "=== Done ==="

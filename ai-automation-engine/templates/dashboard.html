@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Automation Engine</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; padding: 2rem; }
+        h1 { font-size: 1.8rem; font-weight: 600; color: #38bdf8; margin-bottom: 0.5rem; }
+        .subtitle { color: #94a3b8; margin-bottom: 2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .card { background: #1e293b; border-radius: 12px; padding: 1.5rem; border: 1px solid #334155; }
+        .card h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.5rem; }
+        .card .value { font-size: 2rem; font-weight: 700; }
+        .card .value.green { color: #22c55e; }
+        .card .value.yellow { color: #eab308; }
+        .card .value.blue { color: #38bdf8; }
+        .card .value.red { color: #ef4444; }
+        table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; }
+        th { text-align: left; padding: 0.75rem 1rem; background: #0f172a; color: #64748b; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #334155; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .badge.completed { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .badge.failed { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .badge.running { background: rgba(234,179,8,0.15); color: #eab308; }
+        .endpoint { background: #1e293b; border-radius: 8px; padding: 1rem; border: 1px solid #334155; margin-bottom: 0.5rem; }
+        .endpoint code { color: #38bdf8; font-size: 0.9rem; }
+        .endpoint .desc { color: #94a3b8; font-size: 0.85rem; margin-top: 0.25rem; }
+        .curl-box { background: #0f172a; border-radius: 6px; padding: 0.75rem; color: #a5b4fc; font-family: monospace; font-size: 0.8rem; margin-top: 0.5rem; overflow-x: auto; }
+        .test-form { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .test-form input { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.5rem; color: #e2e8f0; font-size: 0.85rem; flex: 1; min-width: 120px; }
+        .test-form button { background: #38bdf8; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: #0f172a; font-weight: 600; cursor: pointer; }
+        .test-form button:hover { background: #7dd3fc; }
+        @media (max-width: 600px) { body { padding: 1rem; } }
+    </style>
+</head>
+<body>
+    <h1>AI Automation Engine</h1>
+    <p class="subtitle" id="subtitle">Loading...</p>
+
+    <div class="grid">
+        <div class="card"><h3>Status</h3><div class="value green" id="status">-</div></div>
+        <div class="card"><h3>Workflows</h3><div class="value blue" id="workflows">-</div></div>
+        <div class="card"><h3>Total Executions</h3><div class="value" id="total">-</div></div>
+        <div class="card"><h3>Success Rate</h3><div class="value green" id="rate">-</div></div>
+    </div>
+
+    <h2 style="margin-bottom:1rem; font-size:1.2rem;">Quick Test</h2>
+    <div class="endpoint">
+        <code>POST /webhook/lead_capture</code>
+        <div class="desc">Submit a test lead to see the AI enrichment in action</div>
+        <div class="test-form">
+            <input type="text" id="test_name" placeholder="Name" value="Test Client">
+            <input type="text" id="test_email" placeholder="Email" value="client@test.com">
+            <input type="text" id="test_company" placeholder="Company" value="TestCorp">
+            <input type="text" id="test_message" placeholder="Message" value="I need automation">
+            <button onclick="testWebhook()">Send Test</button>
+        </div>
+        <div id="test_result" style="margin-top:0.5rem; font-size:0.85rem; color:#94a3b8;"></div>
+    </div>
+
+    <h2 style="margin:1.5rem 0 1rem; font-size:1.2rem;">Execution History</h2>
+    <table id="exec_table">
+        <thead><tr><th>ID</th><th>Workflow</th><th>Status</th><th>Input</th><th>Time</th></tr></thead>
+        <tbody id="exec_body"></tbody>
+    </table>
+
+    <script>
+        async function loadData() {
+            try {
+                const [health, execs] = await Promise.all([
+                    fetch('/health').then(r => r.json()),
+                    fetch('/executions?limit=10').then(r => r.json())
+                ]);
+                document.getElementById('subtitle').textContent = health.engine + ' v' + health.version;
+                document.getElementById('status').textContent = health.status;
+                document.getElementById('workflows').textContent = health.workflows.length;
+
+                if (execs.executions && execs.executions.length > 0) {
+                    document.getElementById('total').textContent = execs.executions.length;
+                    const success = execs.executions.filter(e => e.status === 'completed').length;
+                    document.getElementById('rate').textContent = Math.round(success / execs.executions.length * 100) + '%';
+                    renderTable(execs.executions);
+                }
+            } catch(e) {
+                document.getElementById('subtitle').textContent = 'Engine offline';
+                document.getElementById('status').textContent = 'offline';
+            }
+        }
+
+        function renderTable(execs) {
+            const tbody = document.getElementById('exec_body');
+            tbody.innerHTML = execs.map(e => {
+                const input = e.input_data ? JSON.parse(e.input_data) : {};
+                const name = input.name || '-';
+                return `<tr>
+                    <td>#${e.id}</td>
+                    <td>${e.workflow}</td>
+                    <td><span class="badge ${e.status}">${e.status}</span></td>
+                    <td>${name}</td>
+                    <td>${new Date(e.created_at).toLocaleString()}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function testWebhook() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            const payload = {
+                name: document.getElementById('test_name').value,
+                email: document.getElementById('test_email').value,
+                company: document.getElementById('test_company').value,
+                message: document.getElementById('test_message').value
+            };
+            try {
+                const resp = await fetch('/webhook/lead_capture', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const result = await resp.json();
+                document.getElementById('test_result').textContent = '✅ Execution #' + result.execution_id + ' - ' + result.status;
+                loadData();
+            } catch(e) {
+                document.getElementById('test_result').textContent = '❌ Error: ' + e.message;
+            }
+            btn.disabled = false;
+            btn.textContent = 'Send Test';
+        }
+
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>

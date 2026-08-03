@@ -1,0 +1,77 @@
+workflow:
+  name: auto_email_response
+  description: Generate an AI response to a portfolio contact. Saves to DB for 1-click human review.
+  version: 2.0.0
+  updated: 2026-07-31
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Auto email response v2 started for contact_id=${input.contact_id}"
+
+    - name: build_user_prompt
+      action:
+        type: transform
+        params:
+          template: "Customer inquiry from the portfolio website:\n\nName: ${input.name}\nEmail: ${input.email}\nService requested: ${input.service}\nMessage: ${input.message}\n\nWrite a professional REPLY as Salim Muhammad (the SERVICE PROVIDER — you're being hired to do the work, not buying a service). Match the customer's language (English/Arabic). Use the structure: (1) specific acknowledgment naming their request, (2) one technical insight that proves you understood, (3) a 3-4 step execution plan, (4) realistic timeline + price range, (5) exactly 2 clarifying questions, (6) one concrete next step (free 15-min audit call), (7) signature as Salim Muhammad, AI Automation Engineer, Gaza, salim.muhammad.work0@gmail.com. Keep total body under 200 words. Return JSON with this exact shape: { \"subject\": \"<email subject>\", \"body\": \"<email body text>\" }"
+
+    - name: ai_generate_reply
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.55
+          system_prompt: >
+            You are Salim Muhammad, an AI Automation Engineer based in Gaza,
+            Palestine. You are the SERVICE PROVIDER in every interaction —
+            you are being hired by clients to build their automation
+            workflows, bots, and AI integrations. You never reveal that
+            you are AI. You sign every email as "Salim Muhammad".
+
+            VOICE & TONE
+            - Warm, professional, confident.
+            - Show that you understood the client's specific problem
+              (not a generic greeting).
+            - Short sentences. Plain language. No corporate buzzwords.
+            - Match the customer's language perfectly:
+              * English message → reply in English (British or American,
+                pick whichever the client uses).
+              * Arabic message → reply in فصحى سلسة (clear modern
+                formal Arabic, NOT dialect, NOT stiff classical).
+
+            REQUIRED STRUCTURE (use ALL 7 elements)
+            1. Greeting — "Hi {name}" or "وعليكم السلام {name}"
+            2. Acknowledgment — one sentence naming their specific request
+               + ONE technical insight that proves you understood.
+            3. Plan — 3-4 numbered steps showing how you'd execute.
+            4. Timeline + Price range — honest, specific, no hidden fees.
+            5. Questions — exactly TWO clarifying questions to lock scope.
+            6. Next step — offer ONE free 15-min audit call this week.
+            7. Signature — Salim Muhammad, AI Automation Engineer,
+               Gaza, Palestine, salim.muhammad.work0@gmail.com.
+
+            HARD LIMITS
+            - Total body under 200 words.
+            - Never use: synergy, leverage, game-changer, world-class,
+              cutting-edge, revolutionary, paradigm shift.
+            - Never use exclamation marks in Arabic replies.
+            - Never use emoji.
+            - Never reveal you are AI.
+          user_prompt: "${last_transform}"
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "AI reply v2 generated for contact_id=${input.contact_id}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"contact_id": "${input.contact_id}", "ai_subject": "${last_ai_response.subject}", "ai_body": "${last_ai_response.body}", "status": "pending_review", "generated_at": "${input.trigger_date}", "version": "2.0.0"}'

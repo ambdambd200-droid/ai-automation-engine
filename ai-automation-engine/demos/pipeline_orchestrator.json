@@ -1,0 +1,140 @@
+{
+  "name": "Pipeline Orchestrator (4-Phase)",
+  "description": "Orchestrates the 4-phase pipeline: Planning -> Execution -> Verification -> Review. Triggers the AI Automation Engine on Render and notifies via Telegram.",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pipeline-trigger",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      },
+      "name": "Pipeline Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "pipeline-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.body || {};\nconst task = data.task || 'unnamed';\nconst trigger = data.trigger || 'manual';\nreturn [{ json: {\n  task: task,\n  trigger: trigger,\n  started_at: new Date().toISOString(),\n  phase_1: 'planning',\n  phase_2: 'execution',\n  phase_3: 'verification',\n  phase_4: 'review',\n  engine_url: 'https://ai-automation-engine.onrender.com'\n}}];"
+      },
+      "name": "Init Pipeline",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 300],
+      "id": "init"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.GROQ_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "model", "value": "llama-3.3-70b-versatile"},
+            {"name": "messages", "value": "=[{\"role\":\"system\",\"content\":\"You are a planning assistant. Generate a structured plan.md for the given task. Include: Goal, Steps, Files, Verification, Risks. Be concise. Return JSON: {\\\"plan_title\\\":\\\"...\\\",\\\"goal\\\":\\\"...\\\",\\\"steps\\\":[\\\"step1\\\",\\\"step2\\\"],\\\"files\\\":[\\\"file1\\\",\\\"file2\\\"],\\\"risks\\\":[\\\"risk1\\\"]}\"},{\"role\":\"user\",\"content\":\"Task: {{ $json.task }}\"}]"},
+            {"name": "temperature", "value": "0.4"},
+            {"name": "response_format", "value": "{\"type\":\"json_object\"}"}
+          ]
+        }
+      },
+      "name": "Phase 1: Planning (AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [640, 200],
+      "id": "phase1-plan"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.engine_url }}/webhook/auto_email_response",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "task", "value": "={{ $('Init Pipeline').item.json.task }}"},
+            {"name": "phase", "value": "execution"},
+            {"name": "plan", "value": "={{ JSON.stringify($('Phase 1: Planning (AI)').item.json.choices[0].message.content) }}"}
+          ]
+        }
+      },
+      "name": "Phase 2: Execution (Engine)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [840, 200],
+      "id": "phase2-exec"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.engine_url }}/webhook/auto_email_response",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "phase", "value": "verification"},
+            {"name": "target", "value": "={{ $('Phase 2: Execution (Engine)').item.json }}"}
+          ]
+        }
+      },
+      "name": "Phase 3: Verification (Engine)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1040, 200],
+      "id": "phase3-verify"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.engine_url }}/api/hunt_event",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "type", "value": "pipeline_review"},
+            {"name": "task", "value": "={{ $('Init Pipeline').item.json.task }}"},
+            {"name": "phase_4_result", "value": "queued"}
+          ]
+        }
+      },
+      "name": "Phase 4: Review (Engine)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1240, 200],
+      "id": "phase4-review"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "={{ `Pipeline complete: ${$('Init Pipeline').item.json.task}\n\nPhase 1 (Plan): done\nPhase 2 (Execute): done\nPhase 3 (Verify): done\nPhase 4 (Review): queued\n\nReview at: https://ai-automation-engine.onrender.com/review` }}",
+        "additionalFields": {}
+      },
+      "name": "Notify Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1440, 200],
+      "id": "notify"
+    }
+  ],
+  "connections": {
+    "Pipeline Trigger": {"main": [[{"node": "Init Pipeline", "type": "main", "index": 0}]]},
+    "Init Pipeline": {"main": [[{"node": "Phase 1: Planning (AI)", "type": "main", "index": 0}]]},
+    "Phase 1: Planning (AI)": {"main": [[{"node": "Phase 2: Execution (Engine)", "type": "main", "index": 0}]]},
+    "Phase 2: Execution (Engine)": {"main": [[{"node": "Phase 3: Verification (Engine)", "type": "main", "index": 0}]]},
+    "Phase 3: Verification (Engine)": {"main": [[{"node": "Phase 4: Review (Engine)", "type": "main", "index": 0}]]},
+    "Phase 4: Review (Engine)": {"main": [[{"node": "Notify Telegram", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [{"name": "pipeline"}, {"name": "orchestrator"}, {"name": "4-phase"}],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Built by Salim Muhammad · salim.muhammad.work0@gmail.com — Pipeline Orchestrator (4-Phase: Plan -> Execute -> Verify -> Review)",
+    "instanceId": "demo-005-pipeline"
+  }
+}

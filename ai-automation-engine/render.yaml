@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: ai-automation-engine
+    runtime: python
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "waitress-serve --host 0.0.0.0 --port $PORT --threads 4 wsgi:application"
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENGINE_PUBLIC_URL
+        value: https://ai-automation-engine.onrender.com
+    healthCheckPath: /health

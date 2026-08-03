@@ -1,0 +1,32 @@
+workflow:
+  name: data_pipeline
+  description: Fetch external data, process with AI, and store results
+  version: 1.0.0
+
+  steps:
+    - name: fetch_data
+      action:
+        type: http_request
+        params:
+          method: GET
+          url: "${input.api_url}"
+          headers:
+            Authorization: "Bearer ${input.api_key}"
+
+    - name: analyze_with_ai
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          system_prompt: >
+            You analyze data and return insights. Respond in JSON format only.
+          user_prompt: >
+            Analyze this data and provide key insights: ${last_response}
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Pipeline complete. AI Analysis: ${last_ai_response}"

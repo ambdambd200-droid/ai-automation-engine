@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Queue · Salim.flow</title>
+  <link rel="stylesheet" href="/static/portfolio.css">
+  <style>
+    .review-container { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+    .review-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .review-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .review-meta strong { color: var(--accent); }
+    .review-message {
+      background: var(--bg);
+      border-left: 3px solid var(--accent);
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    .review-ai-response {
+      background: rgba(124, 92, 255, 0.05);
+      border: 1px solid rgba(124, 92, 255, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .review-ai-response pre {
+      white-space: pre-wrap;
+      font-family: inherit;
+      margin: 0.5rem 0;
+    }
+    .review-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .review-actions button {
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .btn-approve {
+      background: var(--accent-2);
+      color: var(--bg);
+    }
+    .btn-reject {
+      background: #ff5577;
+      color: white;
+    }
+    .btn-edit {
+      background: var(--bg-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .review-actions button:hover { opacity: 0.85; }
+    .review-actions button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .review-empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-dim);
+    }
+    .review-empty h2 { color: var(--accent-2); margin-bottom: 0.5rem; }
+    textarea.review-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+    .review-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    .review-nav a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .review-nav a:hover { color: var(--text); }
+    .badge-service {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--accent-2);
+      border-radius: 100px;
+      font-size: 0.75rem;
+    }
+ </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">Salim<span>.flow</span</a>
+      <div class="nav-links">
+        <a href="/">Portfolio</a>
+        <a href="/review" class="nav-cta">Review Queue</a>
+     </div>
+   </div>
+ </nav>
+
+  <div class="review-container">
+    <div class="review-nav">
+      <h1>Review Queue</h1>
+      <a href="/">← Back to portfolio</a>
+   </div>
+    <p style="color: var(--text-dim); margin-bottom: 2rem;">
+      AI-generated replies waiting for human approval. Click <strong>Send</strong> to email them. Click <strong>Edit</strong> to modify before sending.
+   </p>
+
+    <div id="queue</div>
+ </div>
+
+  <script>
+    const queue = document.getElementById('queue');
+
+    async function loadQueue() {
+      const res = await fetch('/api/contacts?pending=true');
+      const json = await res.json();
+      const contacts = json.contacts || [];
+
+      if (contacts.length === 0) {
+        queue.innerHTML = `
+          <div class="review-empty">
+            <h2>All caught up</h2>
+            <p>No pending replies. The AI will queue new ones here automatically</p>
+         </div>`;
+        return;
+      }
+
+      queue.innerHTML = contacts.map(c => `
+        <div class="review-card" id="card-${c.id}">
+          <div class="review-meta">
+            <span><strong>From</strong> ${c.name} <${c.email}&gt</span>
+            <span class="badge-service">${c.service || 'general'</span>
+            <span>${new Date(c.created_at).toLocaleString()</span>
+         </div>
+
+          <h3 style="margin: 1rem 0 0.5rem;">Original message</h3>
+          <div class="review-message">${escapeHtml(c.message)}</div>
+
+          ${c.ai_response ? `
+            <h3 style="margin: 1.5rem 0 0.5rem;">AI-generated reply</h3>
+            <div class="review-ai-response" id="ai-${c.id}">
+              <strong style="color: var(--accent);">Subject</strong> <span id="subj-${c.id}">${escapeHtml(c.ai_subject || extractSubject(c.ai_response) || 'Re: Your inquiry')</span>
+              <pre id="body-${c.id}">${escapeHtml(c.ai_body || extractBody(c.ai_response) || c.ai_response)}</pre>
+           </div>
+
+            <div id="edit-${c.id}" style="display: none;">
+              <textarea class="review-textarea" id="textarea-${c.id}">${escapeHtml(c.ai_body || extractBody(c.ai_response) || c.ai_response)}</textarea>
+           </div>
+
+            <div class="review-actions">
+              <button class="btn-approve" onclick="approve(${c.id})">Send reply</button>
+              <button class="btn-edit" onclick="toggleEdit(${c.id})">Edit before sending</button>
+              <button class="btn-reject" onclick="reject(${c.id})">Discard</button>
+           </div>
+          ` : `
+            <p style="color: var(--text-dim); font-style: italic;">Generating AI reply</p>
+            <p>Reload in 30 seconds</p>
+          `}
+       </div>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&', '<': '<', '>': '>', '"': '"', "'": '''
+      })[m]);
+    }
+
+    function extractSubject(text) {
+      try {
+        const j = JSON.parse(text);
+        return j.subject;
+      } catch { return ''; }
+    }
+
+    function extractBody(text) {
+      try {
+        const j = JSON.parse(text);
+        return j.body;
+      } catch { return text; }
+    }
+
+    async function approve(id) {
+      const editDiv = document.getElementById(`edit-${id}`);
+      const textarea = document.getElementById(`textarea-${id}`);
+      const finalText = editDiv.style.display === 'block' ? textarea.value : null;
+
+      const body = finalText ? { response: finalText } : {};
+
+      const res = await fetch(`/api/contacts/${id}/approve`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const json = await res.json();
+      if (res.ok) {
+        document.getElementById(`card-${id}`).remove();
+      } else {
+        alert('Error: ' + (json.error || 'unknown'));
+      }
+    }
+
+    async function reject(id) {
+      if (!confirm('Discard this contact?')) return;
+      // Just remove from queue for now
+      document.getElementById(`card-${id}`).remove();
+      // TODO: Add a proper reject endpoint
+    }
+
+    function toggleEdit(id) {
+      const editDiv = document.getElementById(`edit-${id}`);
+      editDiv.style.display = editDiv.style.display === 'none' ? 'block' : 'none';
+    }
+
+    loadQueue();
+    setInterval(loadQueue, 30000);
+ </script>
+</html>

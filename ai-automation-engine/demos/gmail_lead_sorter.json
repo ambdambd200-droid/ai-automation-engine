@@ -1,0 +1,127 @@
+{
+  "name": "Gmail Lead Sorter",
+  "description": "Gmail → AI classify → folder + auto-reply. The most common freelance job.",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {"interval": 5},
+        "filters": {"q": "is:unread in:inbox"}
+      },
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "gmail"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "Bearer {{ $env.GROQ_API_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "model", "value": "llama-3.3-70b-versatile"},
+            {"name": "messages", "value": "=[{\"role\":\"system\",\"content\":\"Classify this email as one of: interested, question, not_interested, out_of_office. Respond with JSON only: {\\\"category\\\":\\\"...\\\",\\\"confidence\\\":0.0-1.0,\\\"reason\\\":\\\"...\\\"}\"},{\"role\":\"user\",\"content\":\"Subject: {{ $json.subject }}\\n\\nFrom: {{ $json.from }}\\n\\nBody: {{ $json.snippet }}\"}]"},
+            {"name": "temperature", "value": "0.2"},
+            {"name": "response_format", "value": "{\"type\":\"json_object\"}"}
+          ]
+        }
+      },
+      "name": "AI Classify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [440, 300],
+      "id": "classify"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse($json.choices[0].message.content).category }}",
+                    "rightValue": "interested",
+                    "operator": {"type": "string", "operation": "equals"}
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "interested"
+            },
+            {
+              "conditions": {
+                "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse($json.choices[0].message.content).category }}",
+                    "rightValue": "question",
+                    "operator": {"type": "string", "operation": "equals"}
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "question"
+            }
+          ]
+        }
+      },
+      "name": "Route by Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [640, 300],
+      "id": "route"
+    },
+    {
+      "parameters": {
+        "operation": "labelsAdd",
+        "messageId": "={{ $('Gmail Trigger').first().json.id }}",
+        "labels": ["LEADS/Hot"]
+      },
+      "name": "Label Hot",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [900, 180],
+      "id": "label-hot"
+    },
+    {
+      "parameters": {
+        "operation": "labelsAdd",
+        "messageId": "={{ $('Gmail Trigger').first().json.id }}",
+        "labels": ["LEADS/Question"]
+      },
+      "name": "Label Question",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [900, 420],
+      "id": "label-q"
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {"main": [[{"node": "AI Classify", "type": "main", "index": 0}]]},
+    "AI Classify": {"main": [[{"node": "Route by Category", "type": "main", "index": 0}]]},
+    "Route by Category": {"main": [
+      [{"node": "Label Hot", "type": "main", "index": 0}],
+      [{"node": "Label Question", "type": "main", "index": 0}]
+    ]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": [{"name": "gmail"}, {"name": "ai"}, {"name": "lead-sorter"}],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Built by Salim Muhammad · salim.muhammad.work0@gmail.com",
+    "instanceId": "demo-003"
+  }
+}

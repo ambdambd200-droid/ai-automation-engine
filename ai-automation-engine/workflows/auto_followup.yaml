@@ -1,0 +1,50 @@
+workflow:
+  name: auto_followup
+  description: Generate a follow-up email for contacts who haven't replied in N days.
+  version: 1.0.0
+
+  steps:
+    - name: log_start
+      action:
+        type: log
+        params:
+          level: info
+          message: "Auto follow-up started. Days since: ${input.days_since}"
+
+    - name: build_user_prompt
+      action:
+        type: transform
+        params:
+          template: "Original customer inquiry:\n\nName: ${input.name}\nService: ${input.service}\nOriginal message: ${input.message}\n\nDays since first contact: ${input.days_since}\n\nWrite a gentle, non-pushy follow-up email (under 100 words) in the same language as the original. Don't apologize. Don't say \"just following up\". Add ONE new piece of value (a tip, a link, an observation). Sign as Salim Muhammad. Return JSON with this exact shape: { \"subject\": \"<email subject>\", \"body\": \"<email body text>\" }"
+
+    - name: ai_followup_message
+      action:
+        type: ai_prompt
+        params:
+          provider: groq
+          model: llama-3.3-70b-versatile
+          temperature: 0.6
+          system_prompt: >
+            You are Salim Muhammad writing a gentle, non-pushy follow-up email
+            to a contact who didn't reply to your first message.
+
+            Rules:
+            - Be brief (under 100 words)
+            - Don't apologize or be needy
+            - Add ONE new piece of value (a tip, a link, an observation)
+            - Sign as "Salim Muhammad"
+            - Match the language of the original message
+          user_prompt: "${last_transform}"
+
+    - name: log_result
+      action:
+        type: log
+        params:
+          level: info
+          message: "Follow-up generated for contact_id=${input.contact_id}"
+
+    - name: package_result
+      action:
+        type: transform
+        params:
+          template: '{"contact_id": "${input.contact_id}", "ai_subject": "${last_ai_response.subject}", "ai_body": "${last_ai_response.body}", "status": "pending_review", "type": "followup", "days_since": "${input.days_since}", "generated_at": "${input.trigger_date}"}'
