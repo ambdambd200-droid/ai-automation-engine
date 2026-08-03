@@ -1,0 +1,25 @@
+{
+  "name": "forum_reply/technical_n8n_real_46e60e",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": [
+    "forum",
+    "technical",
+    "n8n"
+  ],
+  "template": "Hey {first_name},\n\nNice work — I've been looking for exactly this kind of bridge. The\n\"click a button in Figma, data lands in n8n\" pattern removes the\nworst step in the loop (manual export → email → re-import).\n\nQuick context on me: I run a small automation studio. Most of my\nclients are solo founders and small agencies. A few still do the\n\"screenshot the frame, paste into Notion, write a ticket by hand\"\ndance every week.\n\nWhat I'd love to pilot with you: a design-token-to-GitHub workflow.\nThe use cases I can think of off the top:\n\n- A design system maintainer who copies color/typography values\n  into a styles repo by hand\n- A dev shop that wants design changes to trigger Jira tickets\n  with frame previews attached\n- An agency that generates client handoff PDFs manually\n\nOne technical question: does the plugin send the full frame tree\nrecursively, or just top-level metadata? I have a Flask webhook\nreceiver with OpenAI enrichment, and I want to make sure my schema\nwon't choke on nested layers.\n\nHappy to be one of your pilot agencies if you have bandwidth.\nI'm in GMT+3, can jump on a quick call this week.\n\nSalim\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.087393+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "46e60eecb3ab"
+}

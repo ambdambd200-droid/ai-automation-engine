@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113254",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi Nikolaos,\n\nFollowing up on my June 1st message. Hope the e-commerce video projects are going well.\n\nIf useful, I can build you a small workflow: take a product URL, pull description + images, generate a 30-sec video script via OpenAI, and output to Google Sheets for the video team. 3-day turnaround, no commitment.\n\nOpen to a quick call.\n\nBest,\nAlaa Fathi\nAI Automation Engineer\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "folafoluwaolaneye@gmail.com",
+    "subject": "Following up — e-commerce video workflow",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T11:32:54Z"
+  },
+  "created": "2026-06-07T11:32:54Z",
+  "version": 2
+}

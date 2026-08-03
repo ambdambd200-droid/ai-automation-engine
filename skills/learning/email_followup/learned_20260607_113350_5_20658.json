@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113350_5_20658",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi Wayne,\n\nFollowing up on my June 1st note. Understand if you're buried in client work.\n\nIf useful: I can be your n8n + Python overflow. You handle the no-code frontend, I handle the workflow backends (OpenAI, webhooks, data pipelines). Per-project or per-hour, your call.\n\nHappy to jump on a 15-min call to see if it fits.\n\nBest,\nAlaa Fathi\nAI Automation Engineer\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "wayne@nocodecreative.io",
+    "subject": "Following up — n8n help for nocodecreative",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T14:33:50"
+  },
+  "created": "2026-06-07T11:33:50Z",
+  "version": 2
+}

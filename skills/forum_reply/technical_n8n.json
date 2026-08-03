@@ -1,0 +1,19 @@
+{
+  "name": "forum_reply/technical_n8n",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": ["forum", "n8n", "technical", "community", "code"],
+  "template": "Hi @{author},\n\nWelcome to the n8n community. I built something similar recently — a pipeline that does roughly what you're describing. Here's the approach that worked for me:\n\n1. Use the {trigger_node} as the entry point (HTTP webhook or schedule trigger depending on your case)\n2. Add a Function or Code node to normalize the input data shape — this saves a lot of headaches downstream\n3. Chain the API calls with a {tool_node} node, but wrap each one in an IF node for error handling\n4. Persist results to {dest_system} with a batch insert (avoid one row per request if volume is high)\n5. Send a Slack/email alert on success AND failure (silent failures are the worst)\n\nA few things that often bite people:\n- Rate limits: check the API docs and add a Wait node between calls if needed\n- Time zones: store everything in UTC, convert in the UI layer\n- Credentials: use n8n's credential manager, never hardcode in the Function node\n\nIf you share a sample payload, I can sketch a more specific workflow. Happy to help further.\n\nBest,\nSalim",
+  "rules": [
+    "address the original poster by @name",
+    "give 3-5 concrete steps",
+    "warn about 1-2 common pitfalls",
+    "offer to go deeper with a sample payload",
+    "sign as Salim"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-06-07T00:00:00Z",
+  "version": 1
+}

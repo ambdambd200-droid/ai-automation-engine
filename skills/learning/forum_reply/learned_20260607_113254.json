@@ -1,0 +1,24 @@
+{
+  "name": "learning/forum_reply/learned_20260607_113254",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": [
+    "n8n",
+    "community"
+  ],
+  "template": "Doru — solid pattern. I run something similar on the Flask side\nfor a lead-enrichment pipeline (OpenAI calls behind a webhook).\nThree additions I'd suggest for the Guard Sub-workflow:\n\n1. Per-user budgets, not just per-workflow. When a single agent\n   is driving many parallel workflows for different users, a\n   workflow-level cap hits the wrong person. We tag each call\n   with the triggering user/tenant and budget against that. The\n   sub-workflow only needs the tag passed in.\n\n2. Structured deny logs. The most useful thing we did was write\n   a JSON line for every deny with: who, what tool, why, time.\n   Now we can spot patterns (one user hitting rate limits 50x\n   in 5 minutes is a real signal, not noise). Easy to ship to\n   a SIEM or just a file.\n\n3. A fallback for when the guard itself errors. This is the\n   unsexy one but it's bitten us twice: if ProceedGate is down\n   or returns a 5xx, does the workflow fail-closed (deny) or\n   fail-open (allow)? We'd default to fail-closed for the costly\n   stuff, fail-open for the read-only stuff. Worth deciding\n   per-tool.\n\nOn your three questions:\n\n- Import flow: clear, the JSON + guide combo is good\n- Sub-workflow pattern: yes, feels native — I agree with the\n  comments above about keeping v1 simple\n- Template vs community node: template first. Locking the\n  interface in a node this early would block the pattern from\n  evolving\n\nHappy to share our Flask-side guard code if useful.\n\nAlaa\nambdambd200@gmail.com",
+  "rules": [
+    "technical",
+    "concise"
+  ],
+  "source": {
+    "to": "",
+    "subject": "",
+    "type": "forum_reply",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T11:32:54Z"
+  },
+  "created": "2026-06-07T11:32:54Z",
+  "version": 2
+}

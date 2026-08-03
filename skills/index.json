@@ -1,0 +1,383 @@
+{
+  "updated": "2026-07-31T00:00:00Z",
+  "skills": {
+    "arabic_bid/mostaql": {
+      "name": "arabic_bid/mostaql",
+      "type": "arabic_bid",
+      "tags": [
+        "mostaql",
+        "freelance",
+        "n8n",
+        "automation",
+        "arabic"
+      ],
+      "language": "ar",
+      "uses": 3,
+      "last_used": "2026-06-07T07:20:15Z",
+      "from_real": false,
+      "path": "skills\\arabic_bid\\mostaql.json"
+    },
+    "arabic_bid/nafezly": {
+      "name": "arabic_bid/nafezly",
+      "type": "arabic_bid",
+      "tags": [
+        "nafezly",
+        "freelance",
+        "n8n",
+        "automation",
+        "arabic"
+      ],
+      "language": "ar",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\arabic_bid\\nafezly.json"
+    },
+    "email_followup/arabic_ar": {
+      "name": "email_followup/arabic_ar",
+      "type": "email_followup",
+      "tags": [
+        "followup",
+        "arabic",
+        "cold",
+        "no_reply",
+        "متابعة"
+      ],
+      "language": "ar",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\email_followup\\arabic_ar.json"
+    },
+    "email_followup/english_cold": {
+      "name": "email_followup/english_cold",
+      "type": "email_followup",
+      "tags": [
+        "followup",
+        "english",
+        "cold",
+        "no_reply",
+        "polite"
+      ],
+      "language": "en",
+      "uses": 2,
+      "last_used": "2026-06-07T07:20:15Z",
+      "from_real": false,
+      "path": "skills\\email_followup\\english_cold.json"
+    },
+    "email_followup/english_cold_real_25ba05": {
+      "name": "email_followup/english_cold_real_25ba05",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_25ba05.json"
+    },
+    "email_followup/english_cold_real_4aa700": {
+      "name": "email_followup/english_cold_real_4aa700",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_4aa700.json"
+    },
+    "email_followup/english_cold_real_62d3a2": {
+      "name": "email_followup/english_cold_real_62d3a2",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_62d3a2.json"
+    },
+    "email_followup/english_cold_real_9ff400": {
+      "name": "email_followup/english_cold_real_9ff400",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_9ff400.json"
+    },
+    "email_followup/english_cold_real_bbc042": {
+      "name": "email_followup/english_cold_real_bbc042",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_bbc042.json"
+    },
+    "email_followup/english_cold_real_ef2bfa": {
+      "name": "email_followup/english_cold_real_ef2bfa",
+      "type": "email_followup",
+      "tags": [
+        "email",
+        "followup",
+        "english",
+        "cold"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\email_followup\\english_cold_real_ef2bfa.json"
+    },
+    "email_reply/arabic_ar": {
+      "name": "email_reply/arabic_ar",
+      "type": "email_reply",
+      "tags": [
+        "reply",
+        "arabic",
+        "professional",
+        "عميل",
+        "رد"
+      ],
+      "language": "ar",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\email_reply\\arabic_ar.json"
+    },
+    "email_reply/cold_pitch": {
+      "name": "email_reply/cold_pitch",
+      "type": "email_reply",
+      "tags": [
+        "cold",
+        "pitch",
+        "outreach",
+        "new_prospect",
+        "english"
+      ],
+      "language": "en",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\email_reply\\cold_pitch.json"
+    },
+    "email_reply/professional_en": {
+      "name": "email_reply/professional_en",
+      "type": "email_reply",
+      "tags": [
+        "reply",
+        "english",
+        "professional",
+        "client",
+        "deprecated"
+      ],
+      "language": "en",
+      "uses": 2,
+      "last_used": "2026-06-07T07:20:15Z",
+      "from_real": false,
+      "deprecated": true,
+      "path": "skills\\email_reply\\professional_en.json"
+    },
+    "email_reply/professional_provider_en_v2": {
+      "name": "email_reply/professional_provider_en_v2",
+      "type": "email_reply",
+      "tags": [
+        "reply",
+        "english",
+        "professional",
+        "service_provider",
+        "modern",
+        "warm"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\email_reply\\professional_provider_en_v2.json"
+    },
+    "email_reply/professional_provider_ar_v2": {
+      "name": "email_reply/professional_provider_ar_v2",
+      "type": "email_reply",
+      "tags": [
+        "reply",
+        "arabic",
+        "فصحى",
+        "professional",
+        "service_provider",
+        "modern",
+        "warm"
+      ],
+      "language": "ar",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\email_reply\\professional_provider_ar_v2.json"
+    },
+    "forum_reply/showcase": {
+      "name": "forum_reply/showcase",
+      "type": "forum_reply",
+      "tags": [
+        "forum",
+        "n8n",
+        "showcase",
+        "portfolio",
+        "promotion"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\forum_reply\\showcase.json"
+    },
+    "forum_reply/technical_n8n": {
+      "name": "forum_reply/technical_n8n",
+      "type": "forum_reply",
+      "tags": [
+        "forum",
+        "n8n",
+        "technical",
+        "community",
+        "code"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\forum_reply\\technical_n8n.json"
+    },
+    "forum_reply/technical_n8n_real_34f9c0": {
+      "name": "forum_reply/technical_n8n_real_34f9c0",
+      "type": "forum_reply",
+      "tags": [
+        "forum",
+        "technical",
+        "n8n"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\forum_reply\\technical_n8n_real_34f9c0.json"
+    },
+    "forum_reply/technical_n8n_real_46e60e": {
+      "name": "forum_reply/technical_n8n_real_46e60e",
+      "type": "forum_reply",
+      "tags": [
+        "forum",
+        "technical",
+        "n8n"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\forum_reply\\technical_n8n_real_46e60e.json"
+    },
+    "forum_reply/technical_n8n_real_cddc27": {
+      "name": "forum_reply/technical_n8n_real_cddc27",
+      "type": "forum_reply",
+      "tags": [
+        "forum",
+        "technical",
+        "n8n"
+      ],
+      "language": "en",
+      "uses": 0,
+      "last_used": null,
+      "from_real": true,
+      "path": "skills\\forum_reply\\technical_n8n_real_cddc27.json"
+    },
+    "learning/arabic_platform_strategy": {
+      "name": "learning/arabic_platform_strategy",
+      "type": "strategy_tracker",
+      "tags": [
+        "nafezly",
+        "mostaql",
+        "arabic",
+        "strategy",
+        "freelance",
+        "bidding",
+        "communication"
+      ],
+      "language": "ar",
+      "uses": 0,
+      "last_used": null,
+      "from_real": false,
+      "path": "skills\\learning\\arabic_platform_strategy.json"
+    },
+    "linkedin/connection_request": {
+      "name": "linkedin/connection_request",
+      "type": "linkedin",
+      "tags": [
+        "linkedin",
+        "outreach",
+        "connection",
+        "cold",
+        "network"
+      ],
+      "language": "en",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\linkedin\\connection_request.json"
+    },
+    "service_page/nafezly": {
+      "name": "service_page/nafezly",
+      "type": "service_page",
+      "tags": [
+        "nafezly",
+        "service",
+        "marketplace",
+        "n8n",
+        "automation"
+      ],
+      "language": "en",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\service_page\\nafezly.json"
+    },
+    "upwork/cover_letter": {
+      "name": "upwork/cover_letter",
+      "type": "upwork",
+      "tags": [
+        "upwork",
+        "proposal",
+        "cover_letter",
+        "client",
+        "freelance"
+      ],
+      "language": "en",
+      "uses": 1,
+      "last_used": "2026-06-07T07:50:33Z",
+      "from_real": false,
+      "path": "skills\\upwork\\cover_letter.json"
+    }
+  }
+}

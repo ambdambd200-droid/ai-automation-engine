@@ -1,0 +1,27 @@
+{
+  "name": "upwork/cover_letter",
+  "type": "upwork",
+  "language": "en",
+  "tags": [
+    "upwork",
+    "proposal",
+    "cover_letter",
+    "client",
+    "freelance"
+  ],
+  "template": "Hi {client_name},\n\nYour project stood out because {specific_detail}. I built something close to this recently — a {similar_workflow} that does exactly that, in n8n + OpenAI.\n\nWhat I can deliver:\n- {deliverable_1} (e.g., a working workflow that scrapes the source, runs it through GPT-4, and writes the output to a Google Sheet)\n- {deliverable_2} (e.g., Slack notification on each row, error handling for missing fields)\n- {deliverable_3} (e.g., short Loom video walking through the workflow so your team can maintain it)\n\nTimeline: {duration} days\nBudget: {budget} (I bill in 2 milestones — 50% on first working version, 50% on your sign-off)\n\nI've shipped {n_projects} similar automations. Portfolio link: {portfolio_url}\n\nA few quick questions to make sure I understand the scope:\n1. How many records/items per day will the workflow process?\n2. Any specific tools (Make, Zapier, n8n) you want me to use?\n3. Do you have an example input/output you'd like me to match?\n\nHappy to do a 1-hour test task at no charge to prove the fit before you commit. Let me know if useful.\n\nBest,\nAlaa Fathi\nAI Automation Engineer",
+  "rules": [
+    "address the specific job (don't be generic)",
+    "3 concrete deliverables",
+    "milestone-based billing mentioned",
+    "portfolio link included",
+    "offer a free test task",
+    "ask 2-3 clarifying questions",
+    "sign as Alaa Fathi"
+  ],
+  "examples": [],
+  "uses": 1,
+  "last_used": "2026-06-07T07:50:33Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 2
+}

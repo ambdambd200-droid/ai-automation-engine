@@ -1,0 +1,26 @@
+{
+  "name": "email_followup/english_cold_real_25ba05",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "email",
+    "followup",
+    "english",
+    "cold"
+  ],
+  "template": "Hi {first_name},\n\nFollowing up on my June 1st message. Hope the e-commerce video projects are going well.\n\nIf useful, I can build you a small workflow: take a product URL, pull description + images, generate a 30-sec video script via OpenAI, and output to Google Sheets for the video team. 3-day turnaround, no commitment.\n\nOpen to a quick call.\n\nSalim Muhammad\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.086343+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "25ba05a734f6"
+}

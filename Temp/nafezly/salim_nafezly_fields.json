@@ -1,0 +1,92 @@
+[
+  {
+    "label": "الاسم الأول (First name)",
+    "value": "Salim",
+    "copy": true
+  },
+  {
+    "label": "اسم العائلة (Last name)",
+    "value": "Muhammad",
+    "copy": true
+  },
+  {
+    "label": "الجنس (Gender)",
+    "value": "ذكر",
+    "copy": true
+  },
+  {
+    "label": "تاريخ الميلاد — يوم (Birth day)",
+    "value": "10",
+    "copy": true
+  },
+  {
+    "label": "تاريخ الميلاد — شهر (Birth month)",
+    "value": "5",
+    "copy": true
+  },
+  {
+    "label": "تاريخ الميلاد — سنة (Birth year)",
+    "value": "2004",
+    "copy": true
+  },
+  {
+    "label": "Industry / المجال",
+    "value": "Computer Software",
+    "copy": true
+  },
+  {
+    "label": "نبذة مختصرة (Short bio)",
+    "value": "مهندس أتمتة ذكاء اصطناعي متخصص في بناء تدفقات عمل n8n وحلول أتمتة العمليات. أصمم أنظمة منخفضة/بلا كود توفّر للعميل ساعات العمل اليومية وتُحرره من المهام المتكررة. خبرة في n8n، Python، ربط APIs، وبناء بوتات تعمل 24/7.",
+    "copy": true
+  },
+  {
+    "label": "نبذة طويلة (Long bio)",
+    "value": "أنا سليم محمد، مهندس أتمتة يعمل في مجال الأتمتة الذكية (AI Automation) منذ أكثر من عامَين.\n\nتخصصي الدقيق هو:\n• بناء تدفقات عمل n8n تربط بين عشرات الخدمات والأنظمة تلقائياً\n• تصميم بوتات AI للرد على العملاء وملخصات البريد الإلكتروني\n• ربط APIs معقدة (Gmail، WhatsApp، CRM، منصات المتاجر الإلكترونية)\n• برمجة Python لأتمتة المهام المتكررة بدون واجهة\n• بناء وكلاء (agents) يقومون بمهام كاملة دون تدخّل بشري\n\nأؤمن بأن الأتمتة لا تحل محل الإنسان، بل تحرّره من المهام المملة ليركّز على ما يبرع فيه حقاً: الإبداع، الاستراتيجية، وبناء العلاقات.\n\nأعمل بنموذج عمل واضح:\n1. دراسة العملية الحالية عند العميل\n2. اقتراح خطة أتمتة مختصرة (Flow Diagram)\n3. التنفيذ مع توثيق كامل وتسليم تدريجي\n4. دعم وصيانة بعد التسليم\n\nساعات التسليم: 24-72 ساعة للمهام الصغيرة، 5-10 أيام للمشاريع المتوسطة.",
+    "copy": true
+  },
+  {
+    "label": "المهارات (Skills tags)",
+    "value": "أتمتة العمليات;n8n;Python;AI;ربط APIs;بوتات;WhatsApp;Telegram;Webhooks;Workflows",
+    "copy": true
+  },
+  {
+    "label": "headline_ar (العنوان المهني)",
+    "value": "مهندس أتمتة ذكاء اصطناعي | n8n • Python • APIs • Bots",
+    "copy": true
+  },
+  {
+    "label": "English headline",
+    "value": "AI Automation Engineer | n8n • Python • APIs • Bots",
+    "copy": true
+  },
+  {
+    "label": "Rates — ساعة (hourly USD)",
+    "value": "15",
+    "copy": true
+  },
+  {
+    "label": "Rates — مهمة صغيرة (small task USD)",
+    "value": "25",
+    "copy": true
+  },
+  {
+    "label": "Rates — باقة n8n",
+    "value": "75",
+    "copy": true
+  },
+  {
+    "label": "Rates — وكيل AI setup",
+    "value": "150",
+    "copy": true
+  },
+  {
+    "label": "Rates — اشتراك شهري",
+    "value": "100",
+    "copy": true
+  },
+  {
+    "label": "البريد الإلكتروني للتواصل",
+    "value": "salim.muhammad.work@gmail.com",
+    "copy": true
+  }
+]

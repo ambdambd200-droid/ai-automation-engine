@@ -1,0 +1,81 @@
+{
+  "identity": {
+    "full_name": "Salim Muhammad",
+    "first_name": "Salim",
+    "last_name": "Muhammad",
+    "gender": "Male",
+    "gender_ar": "ذكر",
+    "date_of_birth": "2004-05-10",
+    "industry": "Computer Software",
+    "industry_ar": "تكنولوجيا المعلومات",
+    "email_primary": "salim.muhammad.work@gmail.com",
+    "email_alternate_1": "msalim.work@gmail.com",
+    "language_primary": "ar",
+    "language_secondary": "en"
+  },
+
+  "bio_ar_short": "مهندس أتمتة ذكاء اصطناعي متخصص في بناء تدفقات عمل n8n وحلول أتمتة العمليات. أصمم أنظمة منخفضة/بلا كود توفّر للعميل ساعات العمل اليومية وتُحرره من المهام المتكررة. خبرة في n8n، Python، ربط APIs، وبناء بوتات تعمل 24/7.",
+
+  "bio_ar_long": "أنا سليم محمد، مهندس أتمتة يعمل في مجال الأتمتة الذكية (AI Automation) منذ أكثر من عامَين.\n\nتخصصي الدقيق هو:\n• بناء تدفقات عمل n8n تربط بين عشرات الخدمات والأنظمة تلقائياً\n• تصميم بوتات AI للرد على العملاء وملخصات البريد الإلكتروني\n• ربط APIs معقدة (Gmail، WhatsApp، CRM، منصات المتاجر الإلكترونية)\n• برمجة Python لأتمتة المهام المتكررة بدون واجهة\n• بناء وكلاء (agents) يقومون بمهام كاملة دون تدخّل بشري\n\nأؤمن بأن الأتمتة لا تحل محل الإنسان، بل تحرّره من المهام المملة ليركّز على ما يبرع فيه حقاً: الإبداع، الاستراتيجية، وبناء العلاقات.\n\nأعمل بنموذج عمل واضح:\n1. دراسة العملية الحالية عند العميل\n2. اقتراح خطة أتمتة مختصرة (Flow Diagram)\n3. التنفيذ مع توثيق كامل وتسليم تدريجي\n4. دعم وصيانة بعد التسليم\n\nساعات التسليم: 24-72 ساعة للمهام الصغيرة، 5-10 أيام للمشاريع المتوسطة.",
+
+  "bio_en_short": "AI Automation Engineer specialized in n8n workflows and process automation. I design low-code / no-code systems that save clients hours of daily work and free them from repetitive tasks. Expertise in n8n, Python, API integration, and 24/7 bots.",
+
+  "bio_en_long": "I'm Salim Muhammad, an AI Automation Engineer with 2+ years in the field.\n\nMy precise specialization:\n• Building n8n workflows connecting dozens of services and systems automatically\n• Designing AI agents for customer replies, email summaries, and content\n• Integrating complex APIs (Gmail, WhatsApp, CRM, e-commerce platforms)\n• Python scripting for headless repetitive tasks\n• Building autonomous agents that complete full workflows without human input\n\nI believe automation doesn't replace humans — it frees them from boring tasks to focus on what they truly excel at: creativity, strategy, and relationships.\n\nMy working model:\n1. Study client's current workflow\n2. Propose concise automation plan (Flow Diagram)\n3. Execute with full documentation and gradual delivery\n4. Post-delivery support and maintenance\n\nDelivery times: 24-72 hours for small tasks, 5-10 days for medium projects.",
+
+  "signature_ar": "مع أطيب التحيات،\nسليم محمد\nمهندس أتمتة ذكاء اصطناعي\n📧 salim.muhammad.work@gmail.com",
+
+  "signature_en": "Best regards,\nSalim Muhammad\nAI Automation Engineer\n📧 salim.muhammad.work@gmail.com",
+
+  "skills_ar": [
+    "أتمتة العمليات",
+    "أتمتة الذكاء الاصطناعي",
+    "n8n",
+    "Make.com",
+    "Zapier",
+    "Python",
+    "ربط APIs",
+    "تطوير البوتات",
+    "بوتات WhatsApp",
+    "بوتات Telegram",
+    "معالجة البيانات",
+    "Webhooks",
+    "قواعد البيانات",
+    "تصميم تدفقات العمل",
+    "Flow Diagrams",
+    "استخراج البيانات",
+    "تحليل البيانات",
+    "التعلم الآلي",
+    "هندسة الأوامر Prompt Engineering",
+    "Web Scraping",
+    "تطوير بلا كود",
+    "تطوير منخفض الكود",
+    "Node.js",
+    "JavaScript",
+    "SQLite",
+    "Google Sheets",
+    "أتمتة البريد الإلكتروني",
+    "Airtable",
+    "Notion",
+    "Google Workspace"
+  ],
+
+  "skill_tags_for_platforms": {
+    "nafezly": "أتمتة العمليات;n8n;Python;AI;ربط APIs;بوتات;WhatsApp;Telegram;Webhooks;Workflows",
+    "mostaql": "أتمتة العمليات;n8n;Python;الذكاء الاصطناعي;ربط APIs;بوتات الذكاء الاصطناعي;تصميم تدفقات العمل;معالجة البيانات",
+    "linkedin": "AI Automation;n8n;Python;API Integration;Bots;Process Automation;Low-Code;Workflows"
+  },
+
+  "headline_ar": "مهندس أتمتة ذكاء اصطناعي | n8n • Python • APIs • Bots",
+
+  "headline_en": "AI Automation Engineer | n8n • Python • APIs • Bots",
+
+  "headline_linkedin": "AI Automation Engineer | I build n8n workflows, AI agents, and bots that save clients 10+ hours/week",
+
+  "rates": {
+    "hourly_usd": 15,
+    "small_task_usd": 25,
+    "n8n_workflow_package_usd": 75,
+    "ai_agent_setup_usd": 150,
+    "monthly_retainer_usd": 100
+  }
+}

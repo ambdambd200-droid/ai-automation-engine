@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113349_2_2885",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi Asiacruit team,\n\nFollowing up on my June 1st application. Understand if priorities have shifted.\n\nQuick offer: I can build a working n8n workflow (3-5 nodes) that takes a LinkedIn profile URL, enriches it via OpenAI, and outputs a structured candidate summary to a Google Sheet — your team sees it work before signing anything.\n\nLet me know if that would help.\n\nBest,\nAlaa Fathi\nAI Automation Engineer\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "careers@asiacruit.com",
+    "subject": "Following up — sample workflow for Asiacruit",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T14:33:49"
+  },
+  "created": "2026-06-07T11:33:49Z",
+  "version": 2
+}

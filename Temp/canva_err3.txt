@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\A\Desktop\Money\Temp\canva_final.py", line 141, in <module>
+    main()
+  File "C:\Users\A\Desktop\Money\Temp\canva_final.py", line 126, in main
+    process_template(name, info, page)
+TypeError: process_template() missing 1 required positional argument: 'context'

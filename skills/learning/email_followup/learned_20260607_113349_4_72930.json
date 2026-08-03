@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113349_4_72930",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hey,\n\nFollowing up on my June 1st message. Hope your projects are going well.\n\nIf there's room to collaborate: I run a small automation studio and can take on overflow n8n work — lead enrichment pipelines, OpenAI integrations, SaaS sync. White-label friendly.\n\nOpen to a quick call whenever suits.\n\nBest,\nAlaa Fathi\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "n8nera@gmail.com",
+    "subject": "Following up — collab idea for n8nera",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T14:33:49"
+  },
+  "created": "2026-06-07T11:33:49Z",
+  "version": 2
+}

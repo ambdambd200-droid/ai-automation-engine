@@ -1,0 +1,26 @@
+{
+  "name": "service_page/nafezly",
+  "type": "service_page",
+  "language": "en",
+  "tags": [
+    "nafezly",
+    "service",
+    "marketplace",
+    "n8n",
+    "automation"
+  ],
+  "template": "## {service_title}\n\n{tagline}\n\n### What you get\n- {deliverable_1}\n- {deliverable_2}\n- {deliverable_3}\n- 1 round of revisions\n- Delivery in {duration} days\n\n### How it works\n1. You share the workflow you want automated (screenshots, video, or text description)\n2. I confirm scope and timeline within 24 hours\n3. You pay 50% upfront to start\n4. I build the workflow in n8n and send you a test version\n5. You test with your real data and request any changes\n6. After your sign-off, you pay the remaining 50% and I hand over the final workflow + a short Loom video explaining it\n\n### About me\nAI Automation Engineer. I build n8n workflows that connect OpenAI, Google Workspace, Slack, Airtable, and 100+ other tools. {n_projects} projects shipped in the last {n_months} months.\n\n### Stack\n- n8n (workflow engine)\n- OpenAI (GPT-4o-mini for cost, GPT-4o for quality)\n- Google Sheets, Airtable, Notion\n- Slack, Discord, Telegram, WhatsApp Business\n- HTTP / REST APIs to anything else\n\n### Price\n**Starting at ${price}** for a single workflow. Bulk pricing for 3+ workflows. No hourly billing — fixed price per deliverable.",
+  "rules": [
+    "clear deliverables list (3-5 items)",
+    "step-by-step process",
+    "tech stack mentioned",
+    "fixed pricing (no hourly)",
+    "milestone payment (50/50)",
+    "include a short about me"
+  ],
+  "examples": [],
+  "uses": 1,
+  "last_used": "2026-06-07T07:50:33Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 2
+}

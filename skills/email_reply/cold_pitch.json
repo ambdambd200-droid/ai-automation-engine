@@ -1,0 +1,27 @@
+{
+  "name": "email_reply/cold_pitch",
+  "type": "email_reply",
+  "language": "en",
+  "tags": [
+    "cold",
+    "pitch",
+    "outreach",
+    "new_prospect",
+    "english"
+  ],
+  "template": "Subject: Quick idea for {company}'s workflow\n\nHi {first_name},\n\nI came across {company} and noticed {observation} — that's exactly the kind of work I've been automating for similar teams. I specialize in n8n + OpenAI workflows.\n\nOne specific idea for {company}:\n- {idea_summary}\n- Estimated time saved: {hours_saved} hours/week\n- Estimated impact: {impact_metric}\n\nIf this sounds interesting, I'd be happy to do a 30-min no-pressure call to walk through the idea and see if it's a fit. If not, no problem — I appreciate your time either way.\n\nYou can see a few examples of what I've built: {portfolio_url}\n\nBest,\nAlaa Fathi\nAI Automation Engineer",
+  "rules": [
+    "specific observation about the company (not generic)",
+    "one concrete idea (not a list of services)",
+    "estimated impact (time/money saved)",
+    "low-pressure CTA (30 min, no obligation)",
+    "portfolio link",
+    "sign as Alaa Fathi",
+    "3-4 short paragraphs max"
+  ],
+  "examples": [],
+  "uses": 1,
+  "last_used": "2026-06-07T07:50:33Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 2
+}

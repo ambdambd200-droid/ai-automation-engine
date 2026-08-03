@@ -1,0 +1,30 @@
+{
+  "name": "arabic_bid/mostaql",
+  "type": "arabic_bid",
+  "language": "ar",
+  "tags": [
+    "mostaql",
+    "freelance",
+    "n8n",
+    "automation",
+    "arabic"
+  ],
+  "template": "السلام عليكم،\n\nشكرًا على نشر المشروع. قرأت التفاصيل وأعتقد أستطيع تقديم حل عملي ومُجرَّب.\n\nخبرتي:\nبنيت أكثر من {n_workflows} workflow في n8n تربط بين OpenAI و Google Sheets و Slack و Airtable. عندي مثال حي: pipeline لتأهيل العملاء المحتملين يقرأ من Google Sheet ويستدعي OpenAI ويكتب النتائج في Sheet جديدة ويرسل Slack notification.\n\nكيف سأنفّذ مشروعك:\n1. نتفق على المتطلبات بالتفصيل في المحادثة\n2. أحدد العقد (nodes) المطلوبة في n8n\n3. أسلّم workflow جاهز للاختبار خلال {duration} أيام\n4. نكرّر التعديلات حتى رضاك\n5. تسليم نهائي مع توثيق مختصر\n\nالمدة: {duration} أيام\nالميزانية: {budget}$\n\nأمثلة من أعمالي متاحة في معرض أعمالي.\n\nلو عندك أي سؤال، أنا في الخدمة.\n\nتحياتي،\nسليم محمد",
+  "rules": [
+    "السلام عليكم opening mandatory",
+    "reference 1-2 specific project details",
+    "sign as سليم محمد",
+    "use formal Arabic (فصحى)",
+    "250-400 words total"
+  ],
+  "examples": [
+    {
+      "input": "title: بناء بوت واتساب للرد على العملاء\ndesc: أبغى بوت يرد على رسائل واتساب تلقائيًا ويربطها بـ Google Sheet",
+      "output": "بوت WhatsApp مربوط بـ n8n + Google Sheet لتتبع كل محادثة عميل"
+    }
+  ],
+  "uses": 3,
+  "last_used": "2026-06-07T07:20:15Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 1
+}

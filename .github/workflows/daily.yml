@@ -1,0 +1,70 @@
+name: Daily Freelance Routine
+
+on:
+  schedule:
+    # 4:00 AM UTC = 7:00 AM Gaza (winter) / 6:00 AM (summer)
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (no actual posts)'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  daily-freelance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      ENGINE_FROM_EMAIL: ${{ secrets.ENGINE_FROM_EMAIL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r ai-automation-engine/requirements.txt
+          pip install -r requirements.txt
+
+      - name: Run daily freelance routine
+        run: |
+          cd $GITHUB_WORKSPACE
+          python run_daily_freelance.py --dry-run=${{ github.event.inputs.dry_run || 'false' }}
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-screenshots
+          path: screenshots/
+          retention-days: 7
+
+      - name: Upload state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: freelance-state
+          path: daily_freelance_state.json
+          retention-days: 30

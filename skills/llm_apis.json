@@ -1,0 +1,74 @@
+{
+  "_meta": {
+    "source": "https://github.com/cheahjs/free-llm-api-resources (27.9k stars)",
+    "fetched": "2026-07-23",
+    "reality_check": "User has NO credit card, NO phone verification possible in many cases. After live test on Cerebras (2026-07-23), all 3 'free' models returned 402 Payment Required. Gemma direct API also requires newer `google-genai` SDK not installed. EFFECTIVELY: only Groq + skill-first works without friction.",
+    "recommendation": "Use tier 0 (skills library) for 80% of work. Use Groq (tier 1) only when skills don't fit. Ollama only if user installs it later."
+  },
+
+  "tier_0_skills_library": {
+    "name": "Skills library (LOCAL JSON templates)",
+    "cost_per_call": 0,
+    "needs_network": false,
+    "needs_card": false,
+    "needs_phone": false,
+    "current_skill_count": 13,
+    "skills_index": "skills/index.json",
+    "manager_script": "skills/manager.py",
+    "rule": "ALWAYS TRY SKILL FIRST. Use ai_generate() ONLY when skill doesn't match."
+  },
+
+  "active_chain": ["groq"],
+
+  "providers": {
+    "groq": {
+      "name": "Groq (the only reliable cloud provider)",
+      "signup_url": "https://console.groq.com",
+      "env_var": "GROQ_API_KEY",
+      "tier": "PRIMARY (uses GROQ_API_KEY already set at OS level)",
+      "free_limits": {
+        "llama_3.3_70b_versatile": "1000 req/day, 12000 tokens/min",
+        "llama_3.1_8b_instant": "14400 req/day",
+        "allam_2_7b": "7000 req/day (Arabic-capable)",
+        "openai_gpt_oss_120b": "1000 req/day"
+      },
+      "best_for": ["primary LLM", "Arabic via Allam"],
+      "live_test_confirmed": true
+    },
+
+    "ollama_local": {
+      "name": "Ollama (DORMANT — install when network allows)",
+      "status": "DORMANT — install later when network allows 1.4GB download",
+      "install": "winget install Ollama.Ollama; ollama pull phi3:mini-3.8b",
+      "tier": "OFFLINE FALLBACK (not yet installed)",
+      "needs_card": false,
+      "needs_phone": false,
+      "needs_disk_mb": 2300
+    }
+  },
+
+  "excluded_providers": {
+    "cerebras": {"reason": "Requires credit card (402 Payment Required on free tier) — verified 2026-07-23"},
+    "google_ai_studio_direct": {"reason": "Requires google-genai SDK install + key works but model name format off — use Engine /proxy/ai instead (Gemini passes through engine)"},
+    "openrouter": {"reason": "NOT YET TESTED — signup is free; 50 free req/day with no card. Add later if needed.", "added_to_keyhub": "preemptively (just no key yet)"},
+    "openai": {"reason": "PAID"},
+    "cohere": {"reason": "Phone verification, $5 credit, short expiry"},
+    "trial_credit_providers": {"reason": "All require card or have $1-5 caps"}
+  },
+
+  "live_test_log": [
+    {
+      "ts": "2026-07-23",
+      "provider": "cerebras",
+      "result": "404 — models gpt-oss-120b/llama3.1-8b/llama-3.3-70b not accessible",
+      "action_taken": "excluded from chain"
+    },
+    {
+      "ts": "2026-07-23",
+      "provider": "cerebras",
+      "models_tested": ["gpt-oss-120b", "zai-glm-4.7", "gemma-4-31b"],
+      "result": "All 402 Payment Required — confirms card requirement",
+      "action_taken": "permanently removed"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "learning/arabic_bid/learned_20260607_112728",
+  "type": "arabic_bid",
+  "language": "ar",
+  "tags": [
+    "mostaql",
+    "n8n",
+    "automation"
+  ],
+  "template": "السلام عليكم، شكراً على نشر المشروع. قرأت التفاصيل وأعتقد أستطيع تقديم حل عملي...",
+  "rules": [
+    "keep Arabic formal (فصحى)",
+    "reference project details"
+  ],
+  "source": {
+    "to": "",
+    "subject": "",
+    "type": "arabic_bid",
+    "company": "",
+    "platform": "mostaql",
+    "learned_at": "2026-06-07T11:27:28Z"
+  },
+  "created": "2026-06-07T11:27:28Z",
+  "version": 2
+}

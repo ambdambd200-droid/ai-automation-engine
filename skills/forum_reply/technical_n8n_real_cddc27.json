@@ -1,0 +1,25 @@
+{
+  "name": "forum_reply/technical_n8n_real_cddc27",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": [
+    "forum",
+    "technical",
+    "n8n"
+  ],
+  "template": "This is the right problem to solve. I built a similar pipeline\n(Python + OpenAI + Sheets) for a lead-gen client last month and\nran into the same traps. A few things that would extend what\nyou've got:\n\n1. Rate-limit + backoff. LinkedIn profile endpoints are sensitive\n   — the scraper will 429 you within 10-15 requests if you go\n   too fast. Add a sleep + exponential backoff in the HTTP node,\n   and a \"resumable\" flag in the sheet so you can pick up after\n   a throttle instead of restarting.\n\n2. A confidence / parse-quality score. Not every profile parses\n   cleanly. Names with non-ASCII characters, multi-location\n   people, and senior folks with 5+ jobs break naive extractors.\n   I have the LLM output a 0-1 confidence score, and the workflow\n   only writes rows above 0.7. Below that, it flags the row for\n   manual review instead of polluting the sheet.\n\n3. Dedupe by LinkedIn URL + name. The same recruiter will often\n   search the same company twice in a week. Without a dedupe\n   step you'll double-process the same person and waste API\n   calls.\n\nOne more: send the recruiter a Slack ping (or a brief email\nsummary) when a batch finishes, with counts of \"clean\",\n\"low-confidence\", and \"errors\". The recruiter trusts the\npipeline more when they can see those numbers.\n\nHappy to share the Python enrichment code if useful.\n\nSalim\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.087393+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "cddc27745039"
+}

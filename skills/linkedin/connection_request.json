@@ -1,0 +1,25 @@
+{
+  "name": "linkedin/connection_request",
+  "type": "linkedin",
+  "language": "en",
+  "tags": [
+    "linkedin",
+    "outreach",
+    "connection",
+    "cold",
+    "network"
+  ],
+  "template": "Hi {first_name}, saw your work on {context} and the way you {specific_thought} resonates with what I do. I help small teams automate repetitive work with n8n + OpenAI — happy to swap notes on {topic} if you're open to it. — Salim",
+  "rules": [
+    "keep under 300 characters (LinkedIn limit)",
+    "reference something specific from their profile/post",
+    "one concrete value prop (what I do)",
+    "low-pressure ask (swap notes, not 'let's hop on a call')",
+    "sign as Salim"
+  ],
+  "examples": [],
+  "uses": 1,
+  "last_used": "2026-06-07T07:50:33Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 2
+}

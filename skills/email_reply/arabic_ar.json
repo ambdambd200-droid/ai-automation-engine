@@ -1,0 +1,24 @@
+{
+  "name": "email_reply/arabic_ar",
+  "type": "email_reply",
+  "language": "ar",
+  "tags": [
+    "reply",
+    "arabic",
+    "professional",
+    "عميل",
+    "رد"
+  ],
+  "template": "DEPRECATED — use email_reply/professional_provider_ar_v2 instead. Kept for legacy references.",
+  "rules": [
+    "deprecated — use professional_provider_ar_v2"
+  ],
+  "deprecated": true,
+  "deprecated_at": "2026-07-31T00:00:00Z",
+  "replaced_by": "email_reply/professional_provider_ar_v2",
+  "examples": [],
+  "uses": 0,
+  "last_used": "2026-06-07T07:50:33Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 2
+}

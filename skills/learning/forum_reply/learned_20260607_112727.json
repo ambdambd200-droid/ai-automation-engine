@@ -1,0 +1,24 @@
+{
+  "name": "learning/forum_reply/learned_20260607_112727",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": [
+    "n8n",
+    "community"
+  ],
+  "template": "Great question! I built something similar — here's a 3-step approach that worked for me: 1) add a Function node, 2) chain the API calls, 3) send Slack alerts on failure. Hope that helps! -Alaa",
+  "rules": [
+    "technical",
+    "concise"
+  ],
+  "source": {
+    "to": "",
+    "subject": "",
+    "type": "forum_reply",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T11:27:27Z"
+  },
+  "created": "2026-06-07T11:27:27Z",
+  "version": 2
+}

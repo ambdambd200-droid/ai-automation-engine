@@ -1,0 +1,19 @@
+{
+  "name": "forum_reply/showcase",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": ["forum", "n8n", "showcase", "portfolio", "promotion"],
+  "template": "Loved this build, @{author}. The way you handled {specific_part} is clean — most people skip that and it bites them later.\n\nI run a small AI automation studio and built something in the same spirit. Sharing in case it's useful as a reference:\n\nWhat I built:\n- A lead capture workflow that reads from a Google Sheet, scores each lead with OpenAI, and writes the score back to a second Sheet\n- Slack notification for any lead above a threshold\n- Daily summary email with the top 3 leads\n\nStack: n8n + OpenAI (gpt-4o-mini) + Google Sheets API + Slack webhook\nTime to build: ~3 hours including error handling\n\nWhat I learned the hard way:\n- Always paginate the Sheets API (first version of mine missed rows 100+)\n- Cap the prompt at 2k tokens or you eat cost spikes\n- Add a Switch node to handle missing/empty fields gracefully\n\nIf anyone wants the JSON export, happy to share. And @{author} — would love to see what you do with the {feature} extension.\n\nCheers,\nSalim\nAI Automation Engineer",
+  "rules": [
+    "compliment the original post specifically",
+    "share a relevant build from your portfolio",
+    "include 1-2 hard-won lessons",
+    "offer to share more (JSON export / DMs)",
+    "sign as Salim, AI Automation Engineer"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-06-07T00:00:00Z",
+  "version": 1
+}

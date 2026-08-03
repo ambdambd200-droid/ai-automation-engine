@@ -1,0 +1,18 @@
+{
+  "name": "arabic_bid/nafezly",
+  "type": "arabic_bid",
+  "language": "ar",
+  "tags": ["nafezly", "freelance", "n8n", "automation", "arabic"],
+  "template": "مرحبًا،\n\nشكرًا على المشروع. اطلعت على التفاصيل ولدي خبرة مباشرة في تنفيذها.\n\nعن سليم محمد:\nمهندس أتمتة بالذكاء الاصطناعي، متخصص في n8n و Python و OpenAI. ساعدت شركات في أتمتة عملياتها: من جذب العملاء المحتملين إلى متابعة الطلبات إلى التقارير التلقائية.\n\nعرضي لمشروعك:\n- تنفيذ خلال {duration} أيام عمل\n- تواصل مستمر خلال التنفيذ\n- تسليم workflow جاهز مع توثيق مختصر\n- ميزانية: {budget}$\n\nمرفق معرض أعمالي يوضح خبرتي العملية.\n\nيسعدني الإجابة على أي سؤال.\n\nتحياتي،\nسليم محمد\nAI Automation Engineer",
+  "rules": [
+    "shorter than mostaql (nafezly clients prefer concise bids)",
+    "mention specific n8n/Python/OpenAI tools",
+    "reference portfolio",
+    "sign as سليم محمد"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-06-07T00:00:00Z",
+  "version": 1
+}

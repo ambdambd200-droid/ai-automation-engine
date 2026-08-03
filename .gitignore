@@ -1,0 +1,37 @@
+# Logs and runtime files
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.db
+
+# Backup archives
+*.zip
+
+# Personal images
+*.jpeg
+*.jpg
+*.png
+
+# Local data
+data.db
+storage/data.db
+gmail_log.md
+job_scan_*.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+# Browser automation data
+.playwright_userdata/
+# Embedded repos (use submodules instead)
+ai-automation-engine/
+# OS files
+nul
+# Secrets and API keys
+A!1.txt

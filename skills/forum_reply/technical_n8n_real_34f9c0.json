@@ -1,0 +1,25 @@
+{
+  "name": "forum_reply/technical_n8n_real_34f9c0",
+  "type": "forum_reply",
+  "language": "en",
+  "tags": [
+    "forum",
+    "technical",
+    "n8n"
+  ],
+  "template": "Doru — solid pattern. I run something similar on the Flask side\nfor a lead-enrichment pipeline (OpenAI calls behind a webhook).\nThree additions I'd suggest for the Guard Sub-workflow:\n\n1. Per-user budgets, not just per-workflow. When a single agent\n   is driving many parallel workflows for different users, a\n   workflow-level cap hits the wrong person. We tag each call\n   with the triggering user/tenant and budget against that. The\n   sub-workflow only needs the tag passed in.\n\n2. Structured deny logs. The most useful thing we did was write\n   a JSON line for every deny with: who, what tool, why, time.\n   Now we can spot patterns (one user hitting rate limits 50x\n   in 5 minutes is a real signal, not noise). Easy to ship to\n   a SIEM or just a file.\n\n3. A fallback for when the guard itself errors. This is the\n   unsexy one but it's bitten us twice: if ProceedGate is down\n   or returns a 5xx, does the workflow fail-closed (deny) or\n   fail-open (allow)? We'd default to fail-closed for the costly\n   stuff, fail-open for the read-only stuff. Worth deciding\n   per-tool.\n\nOn your three questions:\n\n- Import flow: clear, the JSON + guide combo is good\n- Sub-workflow pattern: yes, feels native — I agree with the\n  comments above about keeping v1 simple\n- Template vs community node: template first. Locking the\n  interface in a node this early would block the pattern from\n  evolving\n\nHappy to share our Flask-side guard code if useful.\n\nSalim\nsalim.muhammad.work@gmail.com",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.087393+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "34f9c028bd0e"
+}

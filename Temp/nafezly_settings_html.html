@@ -1,0 +1,2299 @@
+<html lang="ar" dir="rtl" class=""><head><script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-0LTYGBP0XS&amp;cx=c&amp;gtm=4e66h0"></script><script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+   $.extend( $.validator.messages, {
+		required: "برجاء ملئ هذا الحقل",
+		remote: "يرجى تصحيح هذا الحقل للمتابعة",
+		email: "رجاء إدخال عنوان بريد إلكتروني صحيح",
+		url: "رجاء إدخال عنوان موقع إلكتروني صحيح",
+		date: "رجاء إدخال تاريخ صحيح",
+		dateISO: "رجاء إدخال تاريخ صحيح (ISO)",
+		number: "رجاء إدخال عدد بطريقة صحيحة",
+		digits: "رجاء إدخال أرقام فقط",
+		creditcard: "رجاء إدخال رقم بطاقة ائتمان صحيح",
+		equalTo: "رجاء إدخال نفس القيمة",
+		extension: "رجاء إدخال ملف بامتداد موافق عليه",
+		maxlength: $.validator.format( "الحد الأقصى لعدد الحروف هو {0}" ),
+		minlength: $.validator.format( "الحد الأدنى لعدد الحروف هو {0}" ),
+		rangelength: $.validator.format( "عدد الحروف يجب أن يكون بين {0} و {1}" ),
+		range: $.validator.format( "رجاء إدخال عدد قيمته بين {0} و {1}" ),
+		max: $.validator.format( "رجاء إدخال عدد أقل من أو يساوي {0}" ),
+		min: $.validator.format( "رجاء إدخال عدد أكبر من أو يساوي {0}" )
+	});
+});
+</script><script type="module">
+$("#profile-update-form").validate({});
+
+function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("autocomplete-active");
+}
+function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+}
+function closeAllLists(elmnt) {
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      /*if (elmnt != x[i] && elmnt != $('#job_title') ) {
+        x[i].parentNode.removeChild(x[i]);
+      }*/
+        $('.autocomplete-items').empty();
+    }
+}
+
+$('#job_title').on('keyup',function(){
+    $('#job_title_id').val("");
+    var job_titles = [];
+    var self = this;
+    var a, b, i, val = $(this).val();
+    if (!val) { return false;}
+    if (val.length>10) { return false;}
+    currentFocus = -1;
+    $.ajax({
+        url:"https://nafezly.com/ajax/get-job-titles",
+        method:'POST',
+        cache:true,
+        data:{_token:"Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85",q:$(this).val()}
+    }).done(function(res){
+        job_titles=res;
+        a = document.createElement("DIV");
+        a.setAttribute("id", $(self).attr('id') + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        closeAllLists();
+        self.parentNode.appendChild(a);
+        
+        if(job_titles.length==1){
+            $('#job_title_id').val(job_titles[0]['id']); 
+        }else{
+            $('#job_title_id').val(""); 
+        }
+
+        for (i = 0; i < job_titles.length; i++) {
+            b = document.createElement("DIV");
+            b.classList.add("d-block");
+            b.classList.add("autocomplete-item");
+            b.innerHTML = "<span class='font-1'>" + job_titles[i]['name_ar'] + "</span>";
+            b.innerHTML += "<input type='hidden' value='" + job_titles[i]['name_ar'] + "' data-id='"+job_titles[i]['id']+"'>";
+            a.appendChild(b);
+        }
+    });
+
+});
+$(document).on('click','.autocomplete-item',function(){
+    $('#job_title').val($(this).find('input').val()); 
+    $('#job_title_id').val($(this).find('input').attr('data-id')); 
+    /*$(this).closest('autocomplete-items').remove();*/
+    closeAllLists();
+})
+
+/*function autocomplete(inp, arr) {
+  var currentFocus;
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      console.log(arr);
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      this.parentNode.appendChild(a);
+      for (i = 0; i < arr.length; i++) {
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          b = document.createElement("DIV");
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          b.addEventListener("click", function(e) {
+              inp.value = this.getElementsByTagName("input")[0].value;
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  ['keyup', 'change'].forEach(function(e) {
+      window.addEventListener(e, function(){
+          $.ajax({
+            url:"https://nafezly.com/ajax/get-job-titles",
+            method:'POST',
+            data:{_token:"Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85",query:inp.value}
+          }).done(function(res){
+            job_titles=res;
+          });
+          var x = document.getElementById(this.id + "autocomplete-list");
+          if (x) x = x.getElementsByTagName("div");
+          if (e.keyCode == 40) {
+            currentFocus++;
+            addActive(x);
+          } else if (e.keyCode == 38) {
+            currentFocus--;
+            addActive(x);
+          } else if (e.keyCode == 13) {
+            e.preventDefault();
+            if (currentFocus > -1) {
+              if (x) x[currentFocus].click();
+            }
+          }
+      });
+  });
+  function addActive(x) {
+    if (!x) return false;
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  });
+}
+
+autocomplete(document.getElementById("job_title"), job_titles);*/
+
+
+</script>
+
+
+
+
+ 
+<meta name="google-adsense-account" content="ca-pub-5151499893945303">
+<meta name="google-adsense-account" content="ca-pub-4612153766535859">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+  
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--إذا كان مصعد النجاح معطلا استخدم السلم درجة درجة-->
+<meta name="csrf-token" content="Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85">
+<meta name="nafezly-title" content=" الصفحة الشخصية |  نفذلي">
+
+<link rel="stylesheet" type="text/css" href="/css/all-mixed.css?id=2c913f56c3e49a8d6cf1?v=?v=">
+
+<!---
+وَما نَيلُ المَطالِبِ بِالتَمَنّي وَلَكِن تُؤخَذُ الدُنيا غِلاباوَ
+ما اِستَعصى عَلى قَومٍ مَن الٌإِذا الإِقدامُ كانَ لَهُم رِكابا
+أحمد شوقي
+--->
+
+<title> الصفحة الشخصية |  نفذلي</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADdcAAA3XAUIom3gAAAGkUExURUdwTACq/wGU/gGU/gCT/QCS/wGU/gD//wKU/QCA/wGU/gCA/wGU/gCS/wCZ/wCV/wGT/gCP/wCU/wGU/gCV/wCS/wCV/wGU/gGU/gKT/QGU/gGU/gGU/gKU/QCT/wCU/wKU/QCS/wKU/QCV/wGU/gKT/QKU/QGU/gCZ/wKU/QGU/gCZ/wKU/QGU/gCV/wGU/gCV/wKV/QGU/gGU/gCU/wGU/gCV/QCT/wCU/wCV/wCU/wCS/wGU/gGU/gGU/gCT/wKU/QCT/wCT/wCT/wCT/wGU/gGT/gCT/wCT/wCU/wCV/wCT/wCU/wCW/wCU/wGU/gGU/gCV/wGU/gGU/gKT/QGU/gGU/gGV/gCA/wCS/wCX/wCU/wCW/wGU/gKV/QCX/wCU/wGU/gCV/wCV/wGU/gCV/wCW/wGU/gCV/wCV/wCO/wGU/gKU/QGU/gCZ/wKU/QCT/wCT/wGU/gKU/QGT/gCU/wCU/wCV/wKV/QCU/wCT/wCW/wKV/QKV/QCf/wGU/gCU/wGT/gCd/wGU/gKU/QGU/gCR/wCT/wGU/gKT/QGU/gGU/mkpnwYAAACLdFJOUwAD+P2AI9wBiAL8BOsHBUjAEGv1HQ5q5ayC7/n+gUAmpRyGc96VqfIPj/cZmeIp502J1vtwv39oNyQTL+zSuHaYV1xhQszHRygyGC1WInrbvEbG6qax9NoGNhZFEemLGyvuVDXzWT/UOl4S46TJCopJbdiU0zl8Z6NiGi6EqAjIfuYN0ZbtJTTwh99a452NAAABoklEQVQYGb3BZXsTQRgF0BvdxlN3d3cvFHd3p8XdtS3u3D/NzLybfXaTdMMXOAf/WUV/Nf7GyyaeXUdpsYckz7SgpNfUeudQwqUkjdGr8PeYtqwFX2HmvIUvK0xb8jP8LdM2hWIC7VUJiDcUvy0U2Nd2g+x9MAKtepRiDvnuNtIY2AGtk+IX8uwN0RY/DqU8SCMLr3QXHdEElK00flrwGKNLBko9xQI8OujSDGUnxTwwW6ZNxaBso8tzKNspFrFI8QRKmC4zUJ5SfEeE4giUXXRpgVJGsYDUJI06KIHbdGyxoOyh8Q3AFxqVfVDuDNAWvA5lMERjGsBXigpomVUaDRehbVDMAMhQnLwH7cCVKEPR8QvQ1iopfgBIf6JosyBi5yASxygmoH2krQNeVjdts9D6lmjrTsHlUQ9twykYNczZfQuOsQnmXIOITdORrYkACLR2fqCjDjmDtXRpvF8bp8vRcjj2N3BTl+fhcj7JTQyvwCPygkWdaEee9/2TLBCsT6PQwdNN9IifakVxI+NddDxrjsDH4ZvhoZ53Q68OVeFf+wNN0UTgDTHw5gAAAABJRU5ErkJggg=="> 
+<link rel="icon" type="image/png" sizes="512x512" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAICklEQVR4AZRYbahmVRV+1n6dqUYncT76UItqKrXAviizPxMVmT+k+qNxi0Csbs1779UpYvBHeqcMaoise987OoIYoVhDQQhBEMEUaGGDUGZizBQ0lcOo0yiijnPvXj5r7b3P2ee87zujm7XWXutZH3udffY577k3CPpjHOlHTLQ7aR3Dw8cRh88gBEHRH+NIP8Ls/oLSpJmnMSzUOSHmc/NlCkVnB19JelqwXcfslG9ai3e17BvpMIzWbsWSvrbrr6xUDHkHk5XTq6haTTE10tdPnw94hZFeLtBlhdyAgR7EXr0UZUhROCuZFMhAe3+AVCZLtKMT08KvRNNF5R3THzHHW2HJd0jUB7CsHyUGqMuOCN5Jx5GMJKvYMaDyFdWXLcaEeSu+TPRD5JrOFtH7MNLLarDoYVLX3nSJ6BpEJ3chBp/uIvbG80T1FhZIZPHGydrI2/4r3KYXJLNIQUB/cKU2z7S0qmkpVL3l1s6oprkjq6AQ9UZAtqAMxquWAJ/fIKt6D1qQkXyKKbukyhiDLIlVbGJLTS26iE7ceLoa8jQLzEhUPFcOWYE9xv0ZEWzHCq51KIvADUMbmFGfchI74/aX2u7pijpbci3P6IYNw25V3W2grWlzKZpWEoeY+X3cqRvdoAiqhKhMJ+4onSmdSiEHTKTyCWasQaix5EHgMzs/WFSVXX23+GU1OVvwPK6TklauogAZH5ua9OJxwEVC9usAS3ohn8Y3YVHPSmBX+s7Nyx4+tXd3PVUdOrhl13O3vaXmIemGMGoqeV7rXdaLw2j1HjmmJyToET6p/5YtejyM1u7GSrykDYSfbWsyroUh8aPkafQWnkV/HTUNToscxxV+R8Cxol/kbvyFz9oMrXPIhTYq5PO8qQ/xJfyFAtqsSrkgz6jID6hl6l000aDxM+BCL6PBnJwn2LBFlvUK7tZdNNeTp9GreQE/wYp+0gPqGi/iTmInySQryKkihVzOPQcbrLOqiEbVpOXJjX26jgvfBgjzwcEaJCqZOsaAF7JX7FzWNXbKCQYfICeSNCVJQ/BenglboM7CxCGMbxymr+JTtN9qV8iZDyVrkExP3DEM2qZb8QlTambjDzZ2J8WNc3kON/kO2JpN4ATFz03BmRsQuf0FAE8KmkF3o9cKz1Qnx3wR4V82T2XBecGa48fPV/nUfa/PfGXcAH6BjBVQbNIxMAFWL2ljcnMX8cjnuljPWsPZQZf0PXaeFLKrz4Deis24opeGqDjq5fuOai+154uCJ5D9KdcjXucSkwaj+PNot/hZeCIBpJGSxFGK9yW0SKES/kAxgVKmOYSJNjccw+95wW6WqCDxAnFkkmDUAMetwf8wcZXcRKUkBhAR6Ps5VUT89eBieKQCOyojaCdJxehhzHmO6Q2ryvZkpBUheU7gcczLUwELYu+ivydsorwS+/TcjudqWeOL9ivEXiCPkUBghDROMvY68BwlM8t9+kYI/Nei2RxtL4raX/l6sPcgGKf3owzWLmqeN+AUOr8GhstQHuDCn6X+f3KmkszyJIInFHIVhvJn6h0Kq9F+7uwOVnjJJyTq78hgUJRwHyGwU16MIWgHTd7mm/FD3dSCDDNjKL9RkXdxc+xn67ChCol0HSa2RwdyEeblt/DCaMeynq8qO1ugaJoUrokYfm1GUDPOwu+4nY+TieUgak7J3BrWx2V7sztGYWmcgGE4GoeDb+pceLs+KQM8gdeYHoeDXfiaHBuryV8UCfpT5m4gTyaVRzEvB+26glgDs3JKRW43wDmJTrJCZsJK/G4BtSj1vCgRu+XFGjK9uRhuW9gcf8ymP274NNaIJfdxET8DXmCdWuJTTKaPH56UfVLIjWF5bQVL+qrWp64KhLMxpx55xL64gRf4syiyo+fum0cI3OXlqARLNsbs4GkVuYmYk0xeC4zZwfN1P//gzq8ICxekS/JKBnR5Ra+SUziokKunlG3iWf/rcj3fLJoifQeTV8Hzczt1f3q4ItWaUgKjgIAPSMQBWY4H+Cm1A0txG+phX9cjfSd935BR/BM/CuwhvKTsSh3a03+JofxCfRETwqVQjUX+nb9OZuj6X4VmlaggraFU7Ar4VxgXX+GhPyQjPSmjeASj+F85Rh36GH32dF+GMliiqGm2OkmjPKSn5EtIKyAN7TVo6Kw8Dnt3Qex7jSrakRew25nV1gddT+xCAc4nOOisQ+AMdExFroR/I7IKi5T46hYXiN45eYjbbB8JT9pGgZB5mcpJ3BRqrticFcfcpkjBVHo0HnREIR/jrT3URGqjwV/UjenJ2TsvD2qUD7PBv5E9xN3FMCSH2gs692hoj1NWAzY5jvyRa3wEc/KIW7XIaf4UJ5yIkpOR5IIc1nPkg3xG7T9S/KBI8ERpC/fSU5w5+hpO8nx+R9fJdn4L8GMl+RtpdXJadYsNMW7CknKtvBDnBjtVxb5q7GkcD7KCFj3uMbTmNTZ2r0IujfODmzDLl0/tLboCpWTVIJpRnGV2x7w8rHODT6vIu/ke3EOs/VxnQdpoqqIeXuUx3oVvI8pFbGyGt/QfmByMMkrJ3KAXKb7mlJUgc6QIIkN5NPJ3VufC2zTINjY8w/8C7GbTd3B39nP+OZu5QyHfIl+jgjcz9mLehZuxIPygsGrGauKMnBvMwdaF8YS0HNH17JB/8um7FwuDRTY9yyau4fw5zrPcpVvI++m3n65uHq1pv1R0dSg3CHhf1oUx2uF4ayatAbPSy0lBp5d6upxc1iq8BAAA//+KKz5nAAAABklEQVQDAHA3nnRE0ypWAAAAAElFTkSuQmCC">
+<link rel="manifest" href="https://nafezly.com/manifest.json">
+<meta name="theme-color" content="#0172b8">
+<meta name="mobile-web-app-capable" content="no">
+<meta name="application-name" content="نفذلي">
+
+
+<meta name="facebook-domain-verification" content="vymdke86bl9vdcyleijy0r173c6k7c">
+<meta name="apple-mobile-web-app-capable" content="no">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="نفذلي">
+<link rel="apple-touch-icon" href="https://nafezly.com/site_images/favicon.png?v=2">
+
+
+<link rel="alternate" href="https://nafezly.com/profile/nafezly-settings" hreflang="x-default">
+
+<meta name="author" content="نفذلي">
+<meta name="description" content="نفذلي">
+<link rel="canonical" href="https://nafezly.com/profile/nafezly-settings">
+
+
+<meta name="msapplication-TileColor" content="#0172b8">
+<meta name="msapplication-TileImage" content="https://nafezly.com/site_images/favicon.png">
+<meta name="msapplication-square70x70logo" content="https://nafezly.com/site_images/title.png">
+<meta name="msapplication-square150x150logo" content="https://nafezly.com/site_images/title.png">
+<meta name="msapplication-wide310x150logo" content="https://nafezly.com/site_images/title.png">
+<meta name="msapplication-square310x310logo" content="https://nafezly.com/site_images/title.png">
+<link rel="apple-touch-icon-precomposed" href="https://nafezly.com/site_images/title.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="نفذلي">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:locale:alternate" content="ar_AR">
+<meta property="og:url" content="https://nafezly.com/profile/nafezly-settings">
+<meta property="og:title" content="الصفحة الشخصية | نفذلي">
+<meta property="og:description" content="نفذلي">
+<meta property="og:image" content="https://nafezly.com/site_images/title.png">
+
+<meta itemprop="name" content="الصفحة الشخصية | نفذلي">
+<meta itemprop="url" content="https://nafezly.com">
+<meta itemprop="author" content="نفذلي">
+<meta itemprop="image" content="https://nafezly.com/site_images/title.png">
+<meta itemprop="description" content="نفذلي">
+
+<meta name="twitter:image" content="https://nafezly.com/site_images/title.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@Nafezly">
+<meta name="twitter:creator" content="@Nafezly">
+<meta name="twitter:title" content="الصفحة الشخصية | نفذلي">
+<meta name="twitter:image:src" content="https://nafezly.com/site_images/title.png">
+<meta name="twitter:description" content="نفذلي">
+
+
+<link rel="help" title="FAQ" href="https://nafezly.com/faq">
+<link rel="alternate" type="application/rss+xml" title="المشاريع المفتوحة" href="https://nafezly.com/feed">
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "نفذلي",
+    "url": "https://nafezly.com",
+    "logo": "https://nafezly.com/site_images/favicon.png",
+    "sameAs": [
+                "https://twitter.com/Nafezly",
+                        "https://www.facebook.com/Nafezly",
+                        "https://www.youtube.com/channel/UC0lI3SXBt-Nn2Oyss4dAbOQ",
+                        "https://www.instagram.com/Nafezly",
+                        "https://www.linkedin.com/company/Nafezly"
+            ],
+    "contactPoint": [{
+            "@type": "ContactPoint",
+            "telephone": "+201032738088",
+            "contactType": "customer support"
+        },
+        {
+            "@type": "ContactPoint",
+            "telephone": "+201032738088",
+            "contactType": "technical support"
+        }, {
+            "@type": "ContactPoint",
+            "telephone": "+201032738088",
+            "contactType": "billing support"
+        }
+    ]
+}
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "https://nafezly.com",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "?key={search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "الصفحة الشخصية | نفذلي",
+    "description": "نفذلي",
+    "publisher": {
+        "@type": "Organization",
+        "name": "نفذلي"
+    }
+}
+</script>
+<script type="text/javascript">
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/serviceworker.js', {
+            scope: '.'
+        }).then(function (registration) { 
+            console.log('Laravel PWA: ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) { 
+            console.log('Laravel PWA: ServiceWorker registration failed: ', err);
+        });
+    }
+</script>
+
+<script>
+    window.ANALYTICS_SITE_KEY = 'PRWfqIKhJxZaA6AltPwhVDxmkmcIMfQL';
+    window.ANALYTICS_API_URL = 'https://analytics.nafezly.com/api/analytics/track';
+</script>
+<script async="" src="https://analytics.nafezly.com/js/analytics.js"></script>
+
+
+
+
+
+
+
+     
+
+
+
+
+
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-149847603-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-149847603-1');
+</script>
+
+  
+<meta name="google-site-verification" content="B4AR8F3ofHmBivzvdFAPc_dRChEEx71EfAean8iHlx4">
+<meta name="is_auth" content="1">
+<style>[wire\:loading], [wire\:loading\.delay], [wire\:loading\.inline-block], [wire\:loading\.inline], [wire\:loading\.block], [wire\:loading\.flex], [wire\:loading\.table], [wire\:loading\.grid], [wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short], [wire\:loading\.delay\.long], [wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest] {display:none;}[wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}input:-webkit-autofill, select:-webkit-autofill, textarea:-webkit-autofill {animation-duration: 50000s;animation-name: livewireautofill;}@keyframes livewireautofill { from {} }</style>
+<style type="text/css">
+    html {
+      scroll-padding-top: 4rem;
+    }
+    .post-content h1,
+    .post-content h2,
+    .post-content h3,
+    .post-content h4,
+    .post-content h5,
+    .post-content h6
+    {
+        font-family: 'kufi-arabic',sans-serif!important;
+        /*font-weight: bold!important;*/
+    }
+    .post-content iframe{
+        width: 100%;
+        margin: 15px auto;
+        height: calc(25vw + 100px);
+    }
+
+    .post-content,.post-content *:not(h1,h2,h3,h4,h5,h6){
+        font-family: 'Dubai',sans-serif!important;
+        font-size: 16px;
+        line-height: 1.9rem;
+    }
+    .post-content >p:nth-of-type(1){
+        margin-bottom: 0px!important;
+    }
+    .post-content img{
+        /*border: 3px solid var(--bg-color-3);
+        border-radius: 5px;*/
+    }
+    .post-content h1{ font-size: 24px; }
+    .post-content h2{ font-size: 22px; }
+    .post-content h3{ font-size: 20px; }
+    .post-content h4{ font-size: 19px; }
+    .post-content h5{ font-size: 18px; }
+    .post-content h6{ font-size: 17px; }
+    .post-content img{
+        margin: 10px auto;
+        width: 100%;
+    }
+    .dropdown .btn-light:not(:disabled):not(.disabled):active,.dropdown [aria-expanded="true"]{
+        background: var(--bg-color-3)!important;
+        border-color: var(--bg-color-3)!important;
+        color: #fff!important;
+    }
+    .post-content pre{
+        text-align: left;
+        direction: ltr;
+        background: #282923;
+        color: #fff;
+        padding: 22px;
+        border-radius: 7px;
+    }
+    #toast-container{
+        z-index: 4444444444444444444444;
+    }
+    
+    .project-box:hover{
+        box-shadow: 0 8px 16px 0 rgb(10 14 29 / 2%), 0 8px 64px 0 rgb(10 14 29 / 6%);
+    }
+    .tag-class{
+        color: #fff!important;background-color: var(--bg-color-3);padding: 2px 8px 1px!important;display: flex!important;align-items: center;justify-content: center;
+    }
+    #credential_picker_container{
+        z-index: 999999!important;
+    }
+    .google-auto-placed{
+        display:none;
+    }
+
+    /*@media (max-width:767px){
+        .nafezly-footer-iframe,.nafezly-footer-iframe-copyrights,.nafezly-footer{
+            display:none!important;
+        }
+    }*/
+</style><style>.swal2-popup.swal2-toast{box-sizing:border-box;grid-column:1/4 !important;grid-row:1/4 !important;grid-template-columns:min-content auto min-content;padding:1em;overflow-y:hidden;background:#fff;box-shadow:0 0 1px rgba(0,0,0,.075),0 1px 2px rgba(0,0,0,.075),1px 2px 4px rgba(0,0,0,.075),1px 3px 8px rgba(0,0,0,.075),2px 4px 16px rgba(0,0,0,.075);pointer-events:all}.swal2-popup.swal2-toast>*{grid-column:2}.swal2-popup.swal2-toast .swal2-title{margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-loading{justify-content:center}.swal2-popup.swal2-toast .swal2-input{height:2em;margin:.5em;font-size:1em}.swal2-popup.swal2-toast .swal2-validation-message{font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-popup.swal2-toast .swal2-html-container{margin:.5em 1em;padding:0;overflow:initial;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-html-container:empty{padding:0}.swal2-popup.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-popup.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:bold}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-popup.swal2-toast .swal2-styled{margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;transform:rotate(45deg);border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.8em;left:-0.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{animation:swal2-toast-hide .1s forwards}.swal2-container{display:grid;position:fixed;z-index:1060;top:0;right:0;bottom:0;left:0;box-sizing:border-box;grid-template-areas:"top-start     top            top-end" "center-start  center         center-end" "bottom-start  bottom-center  bottom-end";grid-template-rows:minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);height:100%;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}.swal2-container.swal2-backdrop-show,.swal2-container.swal2-noanimation{background:rgba(0,0,0,.4)}.swal2-container.swal2-backdrop-hide{background:rgba(0,0,0,0) !important}.swal2-container.swal2-top-start,.swal2-container.swal2-center-start,.swal2-container.swal2-bottom-start{grid-template-columns:minmax(0, 1fr) auto auto}.swal2-container.swal2-top,.swal2-container.swal2-center,.swal2-container.swal2-bottom{grid-template-columns:auto minmax(0, 1fr) auto}.swal2-container.swal2-top-end,.swal2-container.swal2-center-end,.swal2-container.swal2-bottom-end{grid-template-columns:auto auto minmax(0, 1fr)}.swal2-container.swal2-top-start>.swal2-popup{align-self:start}.swal2-container.swal2-top>.swal2-popup{grid-column:2;align-self:start;justify-self:center}.swal2-container.swal2-top-end>.swal2-popup,.swal2-container.swal2-top-right>.swal2-popup{grid-column:3;align-self:start;justify-self:end}.swal2-container.swal2-center-start>.swal2-popup,.swal2-container.swal2-center-left>.swal2-popup{grid-row:2;align-self:center}.swal2-container.swal2-center>.swal2-popup{grid-column:2;grid-row:2;align-self:center;justify-self:center}.swal2-container.swal2-center-end>.swal2-popup,.swal2-container.swal2-center-right>.swal2-popup{grid-column:3;grid-row:2;align-self:center;justify-self:end}.swal2-container.swal2-bottom-start>.swal2-popup,.swal2-container.swal2-bottom-left>.swal2-popup{grid-column:1;grid-row:3;align-self:end}.swal2-container.swal2-bottom>.swal2-popup{grid-column:2;grid-row:3;justify-self:center;align-self:end}.swal2-container.swal2-bottom-end>.swal2-popup,.swal2-container.swal2-bottom-right>.swal2-popup{grid-column:3;grid-row:3;align-self:end;justify-self:end}.swal2-container.swal2-grow-row>.swal2-popup,.swal2-container.swal2-grow-fullscreen>.swal2-popup{grid-column:1/4;width:100%}.swal2-container.swal2-grow-column>.swal2-popup,.swal2-container.swal2-grow-fullscreen>.swal2-popup{grid-row:1/4;align-self:stretch}.swal2-container.swal2-no-transition{transition:none !important}.swal2-popup{display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0, 100%);width:32em;max-width:100%;padding:0 0 1.25em;border:none;border-radius:5px;background:#fff;color:#545454;font-family:inherit;font-size:1rem}.swal2-popup:focus{outline:none}.swal2-popup.swal2-loading{overflow-y:hidden}.swal2-title{position:relative;max-width:100%;margin:0;padding:.8em 1em 0;color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}.swal2-actions{display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:center;width:auto;margin:1.25em auto 0;padding:0}.swal2-actions:not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}.swal2-actions:not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))}.swal2-actions:not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))}.swal2-loader{display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 rgba(0,0,0,0) #2778c4 rgba(0,0,0,0)}.swal2-styled{margin:.3125em;padding:.625em 1.1em;transition:box-shadow .1s;box-shadow:0 0 0 3px rgba(0,0,0,0);font-weight:500}.swal2-styled:not([disabled]){cursor:pointer}.swal2-styled.swal2-confirm{border:0;border-radius:.25em;background:initial;background-color:#7066e0;color:#fff;font-size:1em}.swal2-styled.swal2-confirm:focus{box-shadow:0 0 0 3px rgba(112,102,224,.5)}.swal2-styled.swal2-deny{border:0;border-radius:.25em;background:initial;background-color:#dc3741;color:#fff;font-size:1em}.swal2-styled.swal2-deny:focus{box-shadow:0 0 0 3px rgba(220,55,65,.5)}.swal2-styled.swal2-cancel{border:0;border-radius:.25em;background:initial;background-color:#6e7881;color:#fff;font-size:1em}.swal2-styled.swal2-cancel:focus{box-shadow:0 0 0 3px rgba(110,120,129,.5)}.swal2-styled.swal2-default-outline:focus{box-shadow:0 0 0 3px rgba(100,150,200,.5)}.swal2-styled:focus{outline:none}.swal2-styled::-moz-focus-inner{border:0}.swal2-footer{justify-content:center;margin:1em 0 0;padding:1em 1em 0;border-top:1px solid #eee;color:inherit;font-size:1em}.swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto !important;overflow:hidden;border-bottom-right-radius:5px;border-bottom-left-radius:5px}.swal2-timer-progress-bar{width:100%;height:.25em;background:rgba(0,0,0,.2)}.swal2-image{max-width:100%;margin:2em auto 1em}.swal2-close{z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:color .1s,box-shadow .1s;border:none;border-radius:5px;background:rgba(0,0,0,0);color:#ccc;font-family:serif;font-family:monospace;font-size:2.5em;cursor:pointer;justify-self:end}.swal2-close:hover{transform:none;background:rgba(0,0,0,0);color:#f27474}.swal2-close:focus{outline:none;box-shadow:inset 0 0 0 3px rgba(100,150,200,.5)}.swal2-close::-moz-focus-inner{border:0}.swal2-html-container{z-index:1;justify-content:center;margin:1em 1.6em .3em;padding:0;overflow:auto;color:inherit;font-size:1.125em;font-weight:normal;line-height:normal;text-align:center;word-wrap:break-word;word-break:break-word}.swal2-input,.swal2-file,.swal2-textarea,.swal2-select,.swal2-radio,.swal2-checkbox{margin:1em 2em 3px}.swal2-input,.swal2-file,.swal2-textarea{box-sizing:border-box;width:auto;transition:border-color .1s,box-shadow .1s;border:1px solid #d9d9d9;border-radius:.1875em;background:rgba(0,0,0,0);box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px rgba(0,0,0,0);color:inherit;font-size:1.125em}.swal2-input.swal2-inputerror,.swal2-file.swal2-inputerror,.swal2-textarea.swal2-inputerror{border-color:#f27474 !important;box-shadow:0 0 2px #f27474 !important}.swal2-input:focus,.swal2-file:focus,.swal2-textarea:focus{border:1px solid #b4dbed;outline:none;box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px rgba(100,150,200,.5)}.swal2-input::placeholder,.swal2-file::placeholder,.swal2-textarea::placeholder{color:#ccc}.swal2-range{margin:1em 2em 3px;background:#fff}.swal2-range input{width:80%}.swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}.swal2-range input,.swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}.swal2-input{height:2.625em;padding:0 .75em}.swal2-file{width:75%;margin-right:auto;margin-left:auto;background:rgba(0,0,0,0);font-size:1.125em}.swal2-textarea{height:6.75em;padding:.75em}.swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:rgba(0,0,0,0);color:inherit;font-size:1.125em}.swal2-radio,.swal2-checkbox{align-items:center;justify-content:center;background:#fff;color:inherit}.swal2-radio label,.swal2-checkbox label{margin:0 .6em;font-size:1.125em}.swal2-radio input,.swal2-checkbox input{flex-shrink:0;margin:0 .4em}.swal2-input-label{display:flex;justify-content:center;margin:1em auto 0}.swal2-validation-message{align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}.swal2-validation-message::before{content:"!";display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}.swal2-icon{position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;border:0.25em solid rgba(0,0,0,0);border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;user-select:none}.swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}.swal2-icon.swal2-error{border-color:#f27474;color:#f27474}.swal2-icon.swal2-error .swal2-x-mark{position:relative;flex-grow:1}.swal2-icon.swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}.swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}.swal2-icon.swal2-error.swal2-icon-show{animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-error.swal2-icon-show .swal2-x-mark{animation:swal2-animate-error-x-mark .5s}.swal2-icon.swal2-warning{border-color:#facea8;color:#f8bb86}.swal2-icon.swal2-warning.swal2-icon-show{animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-warning.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .5s}.swal2-icon.swal2-info{border-color:#9de0f6;color:#3fc3ee}.swal2-icon.swal2-info.swal2-icon-show{animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-info.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .8s}.swal2-icon.swal2-question{border-color:#c9dae1;color:#87adbd}.swal2-icon.swal2-question.swal2-icon-show{animation:swal2-animate-error-icon .5s}.swal2-icon.swal2-question.swal2-icon-show .swal2-icon-content{animation:swal2-animate-question-mark .8s}.swal2-icon.swal2-success{border-color:#a5dc86;color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;transform:rotate(45deg);border-radius:50%}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}.swal2-icon.swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-0.25em;left:-0.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}.swal2-icon.swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}.swal2-icon.swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-animate-success-line-tip .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-animate-success-line-long .75s}.swal2-icon.swal2-success.swal2-icon-show .swal2-success-circular-line-right{animation:swal2-rotate-success-circular-line 4.25s ease-in}.swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:rgba(0,0,0,0);font-weight:600}.swal2-progress-steps li{display:inline-block;position:relative}.swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}.swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}[class^=swal2]{-webkit-tap-highlight-color:rgba(0,0,0,0)}.swal2-show{animation:swal2-show .3s}.swal2-hide{animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@keyframes swal2-toast-show{0%{transform:translateY(-0.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(0.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0deg)}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-0.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-show{0%{transform:scale(0.7)}45%{transform:scale(1.05)}80%{transform:scale(0.95)}100%{transform:scale(1)}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(0.5);opacity:0}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-0.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(0.4);opacity:0}50%{margin-top:1.625em;transform:scale(0.4);opacity:0}80%{margin-top:-0.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0deg);opacity:1}}@keyframes swal2-rotate-loading{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto !important}body.swal2-no-backdrop .swal2-container{background-color:rgba(0,0,0,0) !important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:all}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll !important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)>[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static !important}}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:rgba(0,0,0,0);pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{top:0;right:auto;bottom:auto;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{top:0;right:0;bottom:auto;left:auto}body.swal2-toast-shown .swal2-container.swal2-top-start,body.swal2-toast-shown .swal2-container.swal2-top-left{top:0;right:auto;bottom:auto;left:0}body.swal2-toast-shown .swal2-container.swal2-center-start,body.swal2-toast-shown .swal2-container.swal2-center-left{top:50%;right:auto;bottom:auto;left:0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{top:50%;right:auto;bottom:auto;left:50%;transform:translate(-50%, -50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{top:50%;right:0;bottom:auto;left:auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-start,body.swal2-toast-shown .swal2-container.swal2-bottom-left{top:auto;right:auto;bottom:0;left:0}body.swal2-toast-shown .swal2-container.swal2-bottom{top:auto;right:auto;bottom:0;left:50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{top:auto;right:0;bottom:0;left:auto}</style><style type="text/css">.fancybox-margin{margin-right:15px;}</style></head> 
+
+
+  
+<body id="body" style="direction: rtl!important;"> 
+
+
+
+
+<script type="text/javascript">
+if ( localStorage.getItem('mood')=="night") {
+    var element = document.getElementById("body");
+    element.classList.add("night"); 
+}
+</script> 
+ 
+ 
+
+<div class="modal fade" id="recorderNafezly" tabindex="-1" role="dialog" aria-labelledby="recorderNafezlyTitle" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="">
+        <div class="row px-0 col-12 border-bottom">
+            <div class="col-8 px-0 py-3 px-3"> 
+                <h5 class="modal-title font-1" id="exampleModalLongTitle" style="color: var(--bg-color-0)">تسجيل صوتي
+                    <div class="spinner-grow text-primary recordig-icon ml-1" role="status" style="display: none;border-radius: 50%;height: 24px;width: 24px;top: 15px;position: absolute;">
+                          <span class="sr-only">Loading...</span>
+                      </div>
+                </h5>
+            </div>
+            <div class="col-4 px-0">
+                <button class="float-left btn p-0 px-2 close-record-modal" data-dismiss="modal" aria-label="Close" style="padding: 10px 22px!important;color: var(--bg-color-0)">
+                  <span aria-hidden="true" class="font-3 ">×</span>
+                </button>
+            </div>
+        </div> 
+      </div>
+      <div class="modal-body"> 
+            <div class="col-12 row p-0 justify-content-center">
+                <div class="col-12 p-0 row d-flex justify-content-center"> 
+                    <div class="p-1 recorder-start-record-container mb-3">
+                        <button class=" btnStartRecording btn btn-primary rounded-circle d-flex align-items-center justify-content-center cursor-pointer font-8 " style="width: 90px;height: 90px;cursor: pointer;"> <span class="fal fa-microphone"></span></button>
+                    </div>
+                    <div class="p-1 recorder-stop-record-container mb-3" style="opacity: 0.1;display: none;">
+                        <button class="btnStopRecording btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center cursor-pointer font-8 " disabled="" style="width: 90px;height: 90px;cursor: pointer;"> <span class="fal fa-stop"></span></button>
+                    </div> 
+                    <div class="col-12 d-flex p-0 justify-content-center align-items-center">
+                        <div class="col p-1 recorder-audio-container d-flex align-items-center" style="opacity: 0.1;">
+                            <audio controls="" autoplay="" playsinline="" style="width: 100%;height: 40px;" id="recorded-audio"></audio>
+                        </div> 
+                    </div> 
+                    <div class="col-12 p-0">
+                        <div class="col-12 p-1 recorder-send-audio-container d-flex align-items-center" style="opacity:.1">
+                            <button class="btnDownloadRecording btn btn-success rounded-pill col-12 d-flex align-items-center justify-content-center cursor-pointer font-1" data-textarea-message-selector="" data-attachment-uploader-container-selector="" data-dismiss="modal" style="cursor: pointer;"> <span class="fal fa-paper-plane mx-2"></span> إرسال التسجيل </button>
+                        </div> 
+                    </div>
+                </div> 
+            </div>  
+      </div> 
+    </div>
+  </div>
+</div>
+<div class="modal fade report-nafezly-modal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="col-12 border-bottom py-3" style="color: var(--bg-color-0)">
+                إبلاغ
+            </div>
+            <div class="col-12 pt-4 pb-2">
+                <form method="POST" action="https://nafezly.com/report/create" id="report-form">
+                    <input type="hidden" name="type" id="hidden_report_type" style="">
+                    <input type="hidden" name="type_id" id="hidden_report_type_id" style="">
+                    <label class="control control-checkbox">
+                        <span class="fal fa-angry ml-1 " aria-hidden="true"></span>
+                        <label class="kufi font-1" for="annoying" style="cursor: pointer;color: var(--bg-color-0)">هذا المحتوى مزعج</label>
+                        <input type="radio" id="annoying" name="report_type" data-ui="" value="annoying" class="hidden_report_report_type" style="">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">
+                        <span class="fal fa-jack-o-lantern ml-1 " aria-hidden="true"></span>
+                        <label class="kufi font-1" for="spam" style="cursor: pointer;color: var(--bg-color-0)">هذا المحتوى سبام Spam او وهمي</label>
+                        <input type="radio" id="spam" name="report_type" data-ui="" value="spam" class="hidden_report_report_type" style="">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <label class="control control-checkbox">
+                        <span class="fal fa-ban ml-1 " aria-hidden="true"></span>
+                        <label class="kufi font-1" for="illegal" style="cursor: pointer;color: var(--bg-color-0)">هذا المحتوى مخالف لشروط المنصة</label>
+                        <input type="radio" id="illegal" name="report_type" data-ui="" value="illegal" checked="" class="hidden_report_report_type" style="">
+                        <div class="control_indicator"></div>
+                    </label>
+                    <hr>
+                    <textarea class="form-control" name="reason" placeholder="معلومات اخرى (إختياري)" style="min-height: 200px;" id="hidden_report_reason"></textarea>
+                    <hr>
+                    <div class="col-12 px-0 pb-3 text-left">
+                        <button type="button" class="btn btn-secondary font-1 px-4" data-dismiss="modal" style="border-radius: 60px;" id="hidden_report_dismiss">تراجع</button>
+                        <button type="button" class="btn btn-primary font-1 px-4 post-nafezly-report" style="border-radius: 60px;">إبلاغ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="nafezly-alert-type" style="position: fixed;z-index: 45454454;left: 15px;bottom: 15px;max-width: calc(100% - 30px );width: 400px;display: none;">
+    <span class="" style="position: absolute;left: 0px;top: 0px;font-size: 14px;cursor: pointer;padding: 10px;z-index: 1512121" onclick="$('.nafezly-alert-type').fadeOut();"><span class="far fa-times"></span></span>
+    <span class="col-12 px-0 p-3 d-inline-block nafezly-alert" style="text-align: justify!important"></span>
+</div>
+<form id="logout-form" action="https://nafezly.com/logout" method="POST" style="display: none;">
+    <input type="hidden" name="_token" value="Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85" style=""></form>
+<div class="col-12 px-0" id="peterx">
+    <div id="header-to-top-btn"></div>
+
+    <div style="width: 280px;background: var(--bg-second-bg);max-width: 100%;z-index: 1000;height: 100vh;position: fixed;top: 0px;left: -280px;min-height: 100vh;overflow: auto;" class=" nafez-navbar-menu">
+                <div class="col-12 row px-0" style="height: 60px;background: var(--bg-second-bg); ">
+                    <div class="col-8">
+                    </div> 
+                    <div class="col-12 px-0">
+                        <div class="navbar-nav px-0   hidden-slider-nav" style="padding-top: 0px!important">
+
+
+                          
+
+
+                    
+
+                            <div class="col-12 " style="padding:3px"> </div>
+
+
+
+                            
+
+                            <div class="nav-item ">
+                                <a class="nav-link" href="/projects"><span class="fal fa-suitcase mx-2"></span> تصفح المشاريع</a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="/freelancers"><span class="fal fa-user-tie mx-2"></span> تصفح المنفذين </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="https://nafezly.com/portfolios"><span class="fal fa-images mx-2"></span> تصفح الأعمال </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="https://nafezly.com/services"><span class="fal fa-boxes mx-2"></span> تصفح الخدمات </a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="https://nafezly.com/community"><span class="fal fa-users mx-2"></span> مجتمع نفذلي </a>
+                            </div>
+                             
+                             
+                            <div class="nav-item ">
+                                    <a class="nav-link" href="/guide"><span class="fal fa-book mx-2"></span> الدليل الإرشادي</a>
+                            </div>
+                            <div class="nav-item ">
+                                <a class="nav-link" href="/support"><span class="fal fa-life-ring mx-2"></span> الدعم الفني</a>
+                            </div>
+                            <div class="nav-item ">
+                                <div class="nav-link" style="cursor: pointer;" onclick="$('#more-left-nav-nafezly').slideToggle('fast');$('#more-left-nav-nafezly-turn').toggleClass('open');">
+                                    <div class="col-12 px-0 row">
+                                        <div class="col-10 px-0">
+                                           <span class="fal fa-stream mx-2"></span>  عرض المزيد
+                                        </div>
+                                        <div class="col-2 text-left">
+                                            <span class="fal fa-angle-down mx-2 font-3" id="more-left-nav-nafezly-turn" style="transform: rotate(90deg)"></span>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div style="display: none;" id="more-left-nav-nafezly" class="p-3">
+                              <div class="col-12 px-0"> 
+
+                                
+
+                                
+                                <div class="nav-item ">
+                                    <a class="nav-link" href="/guarantee"><span class="fal fa-clipboard-check mx-2"></span>ضمان الحقوق</a>
+                                </div>
+
+                                <div class="nav-item ">
+                                    <a class="nav-link" href="/referral"><span class="fal fa-usd-circle mx-2"></span>التسويق بالعمولة</a>
+                                </div>
+
+                                
+                                <div class="nav-item">
+                                    <a class="nav-link" href="/faq"><span class="fal fa-question mx-2"></span> الإسئلة الشائعة</a>
+                                </div>
+
+                                <div class="nav-item">
+                                    <a class="nav-link" href="https://blog.nafezly.com"><span class="fal fa-pen-alt mx-2"></span> مدونة نفذلي </a>
+                                </div>
+                                <div class="nav-item">
+                                    <a class="nav-link" href="/privacy-policy"><span class="fal fa-lock-alt mx-2"></span> سياسة الخصوصية </a>
+                                </div>
+                                <div class="nav-item">
+                                    <a class="nav-link" href="/terms"><span class="fal fa-list-ul mx-2"></span> شروط الاستخدام </a>
+                                </div> 
+                                </div>
+                            </div>
+
+
+                            
+                            <div class="nav-item">
+                                <a class="nav-link  " href="https://nafezly.com/project/create-guest"><span class="fal fa-plus mx-2"></span>إضافة مشروع</a>
+                            </div>
+                            
+                                                        <div class="nav-item d-none">
+                                <a class="nav-link" onclick="event.preventDefault();
+                                           document.getElementById('logout-form').submit();" style="color: var(--bg-color-0)">
+                                    <span class="fal fa-sign-out-alt mx-2"></span>
+                                    تسجيل خروج
+                                </a>
+                            </div>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+
+    <div id="main-content-container" class="position-relative" style="overflow: hidden;">
+        <div class="col-12  main-content-dark-layer pb-5" style="height:100vh;position: fixed;width: 100%;z-index: 99999;background: rgba(47, 47, 47, 0.57);top: 0px;display: none;"></div>
+
+       
+
+        <nav class="navbar navbar-expand-md navbar-inverse navbar-light  fixed-top  py-1 " style="background: var(--bg-second-bg);padding: 0px 0px;margin-bottom: 0px;z-index: 10000; transition: .3s all cubic-bezier(0.25, 0.46, 0.45, 0.94);width: 100%!important;max-width: 100%!important;right: 0px;left: 0px;box-shadow: 0 .03rem .25rem rgba(0,0,0,0.09)!important;" id="nafezly-navbar">
+            <div class="container text-left  px-0">
+                <div class="col-12 row px-0">
+                    <div class="col-1 px-0 d-flex align-items-center" style="z-index: 12;">
+                        <a class="navbar-brand" href="/" aria-label="نفذلي">
+                            
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 269.47 95.08" style="width: 119px !important;" alt="نفذلي" width="110"><defs><style>.cls-1{fill:#0194fe;}</style></defs><circle class="cls-1" cx="256.48" cy="10.92" r="8.9" transform="translate(4.35 59.22) rotate(-13.28)"></circle><circle class="cls-1" cx="216.76" cy="10.92" r="8.9" transform="translate(55.76 156.47) rotate(-45)"></circle><circle class="cls-1" cx="147.37" cy="10.92" r="8.9"></circle><path fill="#0194fe" class="cls-1" d="M31.69,75.22a8.93,8.93,0,0,0-8.92,8.92h0a8.92,8.92,0,1,0,8.92-8.92Z"></path><path fill="#0194fe" class="cls-1" d="M49.21,75.22a8.93,8.93,0,0,0-7.09,3.5,8.86,8.86,0,0,1,0,10.84,8.92,8.92,0,1,0,7.09-14.34Z"></path><path fill="#0194fe" class="cls-1" d="M117.78,2h-8.31a2.68,2.68,0,0,0-2.69,2.69V54.82a1.8,1.8,0,0,1-1.8,1.79H96.53a1.79,1.79,0,0,1-1.79-1.79V28.68A2.91,2.91,0,0,0,92,25.77H72.38c-10,0-14.29,5.24-14.29,16.51V56.61H28.62c-6-.06-10.89-5.79-10.89-11.76A11,11,0,0,1,28.62,33.91l7.8,0a2.69,2.69,0,0,0,2.68-2.69V23a2.68,2.68,0,0,0-2.69-2.69H28.68a24.49,24.49,0,1,0-.13,49H71.68V44c0-3.31,2-5.62,4.3-5.62h3.34c1.21,0,1.58.89,1.58,2.1V65.82a3.4,3.4,0,0,0,3.4,3.4h32.77a3.41,3.41,0,0,0,3.41-3.4V4.71A2.69,2.69,0,0,0,117.78,2Z"></path><path fill="#0194fe" class="cls-1" d="M261.89,29.63h-9.4a2.12,2.12,0,0,0-2.12,2.14v14a10.89,10.89,0,0,1-10.84,10.81h-3.92a21.11,21.11,0,0,0,2.63-10.67c0-11.52-9.4-20.17-20.69-20.17a20.23,20.23,0,0,0-20.07,20.17,14.19,14.19,0,0,0,5,10.67H167.15V42.38c0-5.17-1.63-8.79-4.58-11.73s-7.8-4.88-13.27-4.88H136.8a3.36,3.36,0,0,0-2.63,1.17,3.79,3.79,0,0,0-1,2.6v5.55a3.25,3.25,0,0,0,1.16,2.38,3.39,3.39,0,0,0,2.55.92h10.13c3.94,0,6.45,1.48,6.45,7.49V56.61H132.39a8.16,8.16,0,0,0-1.14.08h0a3.48,3.48,0,0,0-2.42,1,1.49,1.49,0,0,0-.17.18.44.44,0,0,0-.09.11,2.69,2.69,0,0,0-.3.37c-.06.09-.1.2-.16.29a3.11,3.11,0,0,0-.27.68c0,.09-.06.17-.08.26s0,.23,0,.35a2.4,2.4,0,0,0,0,.37v5.25a3.61,3.61,0,0,0,3.61,3.61l73.44.09a37.12,37.12,0,0,0,13.21-2.12c5.08,1.47,7.44,2.12,12.73,2.12h8.91C253.09,69.14,264,59.33,264,45.8v-14A2.14,2.14,0,0,0,261.89,29.63ZM218,53.23A6.2,6.2,0,0,1,211.63,47,6.28,6.28,0,0,1,218,40.77,6.06,6.06,0,0,1,224.21,47,5.94,5.94,0,0,1,218,53.23Z"></path></svg>
+
+                        </a>
+                    </div>
+                    <div class="  col-11  row px-0" style="    justify-content: flex-end;">
+
+
+                        <a class="  nav-bar-icon text-center  ml-1 d-none d-md-inline-block   
+                       
+
+                        " style="position: relative;cursor: pointer;padding: 14px 0px 0px;text-align: center;color: #65676b;min-width: 107px;border-radius: 5px;
+                        
+                        " id="nav-services" href="https://nafezly.com/services">
+                            <span class="fas fa-boxes" style="; font-size: 18px;text-align: center;display: inline-block; padding:0px;"></span>
+                            <span class="kufi pr-1 " style="position: relative;font-size: 14px">الخدمات</span>
+                        </a>
+
+
+
+
+                        <a class="  nav-bar-icon text-center   d-none d-md-inline-block ml-1   
+
+                      
+
+                        " style="position: relative;cursor: pointer;padding: 14px 0px 0px;text-align: center;;min-width: 107px;border-radius: 5px;
+
+                        
+
+                       " href="https://nafezly.com/portfolios">
+                            <span class="far fa-images" style="; font-size: 18px;text-align: center;display: inline-block; padding:0px;"></span>
+                            <span class="kufi pr-1 " style="position: relative;font-size: 14px">الأعمال</span>
+                        </a>
+
+
+                        <a class="ml-1  nav-bar-icon text-center   d-none d-md-inline-block   
+                        
+
+
+                        " style="position: relative;cursor: pointer;padding: 14px 0px 0px;text-align: center;;min-width: 107px;border-radius: 5px;
+
+                           
+                        " href="https://nafezly.com/projects">
+                            <span class="fas fa-suitcase" style="; font-size: 18px;text-align: center;display: inline-block; padding:0px;"></span>
+                            <span class="kufi pr-1 " style="position: relative;font-size: 14px">المشاريع</span>
+                        </a>
+
+                        <a class="  nav-bar-icon text-center   d-none d-md-inline-block  ml-1    
+                        
+
+                        " style="position: relative;cursor: pointer;padding: 14px 0px 0px;text-align: center;;min-width: 107px;border-radius: 5px;   " href="https://nafezly.com/freelancers">
+                            <span class="fas fa-users" style="; font-size: 18px;text-align: center;display: inline-block; padding:0px;"></span>
+                            <span class="kufi pr-1 " style="position: relative;top: 0px;font-size: 14px">المنفذين</span>
+                        </a>
+
+
+                     
+
+
+
+
+                                                
+                        <div class="d-inline-block " style="height: 55px;">
+                            <span class="d-inline-block nav-bar-icon text-center" style="position: relative;width: 50px;cursor: pointer;padding: 15px 0px 0px;text-align: center;height: 55px;border-radius: 5px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span style=" color: white; position: absolute;top: 9px;border-radius: 5px!important;padding:4px 5px 0px;right: 2px;z-index: 1;display:
+                                                                 none;
+                                 
+                                 " class="badge badge-danger count_unseen_messages tajawal">0</span>
+                                <span class="fal fa-envelope" style="; font-size: 24px;text-align: center;display: inline-block; padding:0px;"></span>
+                                <div class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton" style="width: 380px;cursor: auto;   left:-147px;box-shadow: 0 6px 12px rgba(0,0,0,0.175);top: 57px;max-width: 95vw!important;border-radius: 0px 0px 3px 3px;overflow: hidden; ">
+                                    <span class="fas fa-caret-up" style="color:  var(--bg-main-bg);position: absolute;top:-13px;left:165px;font-size: 21px"></span>
+                                    <div class="col-12 notifications-messages-area" style="height: 240px;overflow: auto;padding: 0px;border-top: 1px solid var(--bg-main-bg);background: var(--bg-second-bg);"><div class="col-12 justify-content-center text-ceter d-flex my-auto align-items-center" style="color: var(--bg-color-0);height: 235px;">
+    <div class="col-12 px-0 text-center"> 
+        <span class="fal fa-envelope font-4" style="color:var(--bg-color-4);"></span>
+        <div class="col-12 px-0 text-center mt-2">
+            لا توجد رسائل حتى الآن
+        </div> 
+    </div>
+</div>
+
+</div>
+                                    <div style=" padding: 6px 0px ;background: var(--bg-second-bg);border-top: 1px solid var(--bg-font-6)" class="col-12 ">
+                                        <a href="https://nafezly.com/messages/list" class="noselect ">
+                                        <div class="col-12 row px-0">
+                                            <div class="col-12 font-1 py-1" style="color: var(--bg-color-0)"> 
+                                                    <span class="fal fa-envelope"></span> عرض كل الرسائل 
+                                            </div> 
+                                        </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="d-inline-block seen-notifications" style="height: 55px;">
+                            <span class="d-inline-block nav-bar-icon text-center" style="position: relative;width: 50px;cursor: pointer;padding: 15px 0px 0px;text-align: center;height: 55px;border-radius: 5px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span style=" color: white; position: absolute;top: 9px;border-radius: 5px!important;padding:4px 5px 0px;right: 2px;z-index: 1;display:
+                                                                 none;
+                                                                  ;" class="badge badge-danger count_unseen_notifications tajawal">0</span>
+                                <span class="fal fa-bell" style="; font-size: 24px;text-align: center;display: inline-block; padding:0px;"></span>
+                                <div class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton" style="width: 380px;cursor: auto;   left:-97px;box-shadow: 0 6px 12px rgba(0,0,0,0.175);top: 57px;max-width: 95vw!important;border-radius: 0px 0px 3px 3px;overflow: hidden;  ">
+                                    <span class="fas fa-caret-up" style="color:  var(--bg-main-bg);position: absolute;top:-13px;left:115px;font-size: 21px"></span>
+                                    <div class="col-12  notifications-notifications-area    px-0 " style="height: 240px;overflow: auto;padding: 0px;border-top: 1px solid var(--bg-main-bg);background: var(--bg-second-bg); "><div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/service/75542-AI-Agent-Development-%D8%A8%D9%86%D8%A7%D8%A1-%D9%88%D9%83%D9%8A%D9%84-%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A" class="cairo">تم قبول عرض الخدمة الخاصة بك في معرض خدمات المنصة </a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ 5 أيام</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/service/75535-Workflow-Automation-with-n8n" class="cairo">تم قبول عرض الخدمة الخاصة بك في معرض خدمات المنصة </a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ 5 أيام</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/service/75536-AI-Chatbot-Development-n8n-OpenAI" class="cairo">يرجى توضيح تفاصيل الخدمة بشكل أكثر تحديدًا، مثل: 1  عدد الردود أو المحادثات التي سيتم تدريب الروبوت عليها  مثلاً 20 سؤال وجواب أو عدد معين من صفحات المعرفة ، 2  هل يشمل التكامل مع موقع إلكتروني واحد أو متعددة، 3  هل تشمل الخدمة تطوير قاعدة معرفة محددة أم فقط ربط منصة قائمة، 4  ما هو حجم وعمق الأسئلة...</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ 5 أيام</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/service/75533-%D8%A8%D9%86%D8%A7%D8%A1-%D9%88%D9%83%D9%8A%D9%84-%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-AI-Agent-%D8%A8%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85-n8n" class="cairo">خدمتك جيدة وفكرتها واضحة بشكل عام، لكن بحاجة لتوضيح تفاصيل الخدمة الفنية التي سيحصل عليها العميل بالتحديد مقابل مبلغ الخدمة  25 دولار ، مثلاً: عدد المهام أو التطبيقات التي سيتم ربطها بالوكيل، طبيعة الذكاء الاصطناعي المستخدم  استخدام GPT أو غيره ، ومستوى التخصيص المقترح  هل سيتم بناء سيناريو واحد فقط...</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ 5 أيام</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/updates" class="cairo">يتوفر تحديث جديد على المنصة بعنوان تم حل جميع المشاكل التقنية<br>اضغط لعرض التحديثات</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ أسبوع</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                    <a href="https://nafezly.com/u/alaafat">
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="https://nafezly-production.fra1.cdn.digitaloceanspaces.com/uploads/avatars/small/1780578796_6a2179ecc4fd4.webp                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                    </a>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/u/alaafat" class="cairo">أهلا وسهلاً بك في نفذلي - المنصة العربية لخدمات الأعمال و المشاريع الرقمية</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ أسبوع</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/guide" class="cairo">رسالة تعليمية : إليك دليل رائد الأعمال لإستخدام منصة نفذلي</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ أسبوع</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="col-12 mt-1  px-0 pb-0 noselect notifications-notifications " style="border-bottom: 1px solid var(--bg-main-bg);background:var(--bg-second-bg)">
+    <div class="col-12 row pl-0 pr-1">
+
+         
+                <div class="text-center" style="max-width: 78px;padding: 4px 9px 4px 9px!important;">
+            <div style="display:flex;">
+                <div style="width: 45px;background: var(--bg-second-bg);display: inline-block;border-radius: 5%!important;border: 1px solid  var(--bg-main-bg);max-width: 100%;position: relative;height: 45px;overflow: hidden;" class="m-auto notification-image">
+                    <img src="/site_images/mini-logo-bg-blue.png                    " style="width: 43px!important;height: 43px!important;border-radius: 5%!important;padding: 5px; ">
+                </div>
+            </div>
+        </div>
+                
+        <div class=" px-2 py-1 " style="display: inline-block;width: calc(100% - 63px) ">
+            <div>
+                <div style=" font-size: 14px ;font-weight: normal; " class="px-0 pt-0 cairo mt-1  ">
+                    <span style="display: block; word-wrap: break-word" class="naskh-inner naskh font-1">
+                        <a href="https://nafezly.com/guide-freelancers" class="cairo">رسالة تعليمية : إليك دليل الباحث عن عمل على منصة نفذلي</a>
+                    </span>
+                </div>
+                <div style=" display: inline-block;position: relative;font-size: 14px;color: #919191">
+                    <div class="col-12  px-0  text-right text-md-right " style="color: #919191;font-size: 13px;padding: 1px 0px">
+                        <span class="fal fa-clock ml-1  font-small" aria-hidden="true"></span> 
+                        <span class="naskh font-small">منذ أسبوع</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+                                    <div style=" padding: 6px 0px ;background: var(--bg-second-bg);border-top: 1px solid var(--bg-font-6)" class="col-12 ">
+
+
+                                        <a href="https://nafezly.com/notifications/list" class="noselect ">
+                                            <div class="col-12 row px-0">
+                                                <div class="col-12 font-1 py-1" style="color: var(--bg-color-0)"> 
+                                                        <span class="fal fa-bell"></span> عرض كل الاشعارات
+                                                </div> 
+                                            </div>
+                                        </a> 
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                                                <div class="
+                                                d-md-inline-block
+                                                " style="height: 55px;">
+                            <span class="d-inline-block  nav-bar-icon text-center mx-1" style="position: relative;width: 50px;cursor: pointer;padding: 9px 0px 0px;text-align: center;height: 55px;border-radius: 5px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <img src="https://nafezly-production.fra1.cdn.digitaloceanspaces.com/uploads/avatars/small/1780578796_6a2179ecc4fd4.webp" style="width: 36px;border-radius: 50%!important;padding: 0px;height: 36px;border:0px solid #fff;background: var(--bg-main-bg)" alt="الصورة الشخصية">
+                                                                <div class="dropdown-menu p-0" aria-labelledby="dropdownMenuButton" style="padding: 0px 0px ;box-shadow: 0 6px 12px rgba(0,0,0,0.175); left: -47px;top: 58px;border-radius: 0px 0px 3px 3px;overflow: hidden;  ">
+                                    <span class="fas fa-caret-up" style="color:  var(--bg-main-bg);position: absolute;top:-13px;left: 40%;font-size: 21px"></span>
+                                    <div style="  padding: 7px 0px ;background: var(--bg-second-bg);" class="col-12 row text-right dropdown-items">
+                                        <ul style="list-style: none;padding: 0px 0px;width: 100%;margin-bottom: 0px">
+                                                                                        <a href="#dark-mood" class="py-2 px-3  d-block hover-darker change-mood">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal fa-moon ml-2"></span> تغيير الوضع </li>
+                                            </a>
+                                             
+                                            <a href="/" class="py-2 px-3  d-block  hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal fa-tachometer-alt-slow ml-2"></span>لوحة التحكم</li>
+                                            </a>
+                                            <a href="https://nafezly.com/my/projects/all" class="py-2 px-3  d-block hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal  fa-suitcase ml-2"></span> مشاريعي </li>
+                                            </a>
+                                            <a href="https://nafezly.com/u/alaafat" class="py-2 px-3  d-block hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal fa-user ml-2"></span> حسابي الشخصي</li>
+                                            </a>
+                                            <a href="https://nafezly.com/my/favourite/users" class="py-2 px-3  d-block hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal  fa-heart ml-2"></span> المفضلة</li>
+                                            </a>
+                                            <a href="/balance" class="py-2 px-3  d-block hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal  fa-money-check ml-2"></span> الرصيد</li>
+                                            </a>
+                                            
+                                            
+                                            <a href="#" class="py-2 px-3  d-block logout-nafezly hover-darker">
+                                                <li style="font-size: 14px;color: var(--bg-color-0)"> <span class="fal fa-sign-in-alt ml-2"></span> تسجيل خروج</li>
+                                            </a>
+                                                                                    </ul>
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="nav-item nafez-navbar nav-bar-icon  d-inline-block  " style="position: relative;width: 52px;cursor: pointer;padding: 8px 0px 0px;text-align: center;border-radius: 5px;left: 4px;height: 55px;">
+                            <span class="far fa-bars nav-link pt-2 nav-item" style=";font-size: 22px;text-align: center;display: inline-block;padding:0px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </nav>
+        <main style="opacity:1;padding-top: 60px;z-index: 10" class="nafez-main-content"> 
+            <div class="col-12 px-0 " id="main-content" style="transition:all  0.5s  ease-in-out!important;">
+                <style type="text/css">
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid var(--bg-main-bg);
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  top: 45px;
+  left: 0;
+  right: 0;
+  margin:0px 14px 0px 14px!important;
+}
+
+.autocomplete-items div {
+  padding: 4px 10px;
+  cursor: pointer;
+  background-color: var(--bg-second-bg); 
+  border-bottom: 1px solid var(--bg-main-bg); 
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #0194fe!important; 
+  color:#fff!important; 
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: #0194fe!important; 
+  color: #fff!important; 
+}
+</style>
+
+<div class="col-12 px-0">
+    <div class="container  ">
+        <div class="col-12 row  px-0">
+            <style type="text/css">
+
+
+.dash-list-area a,.dash-list-area a *{
+    color: var(--bg-font-4)!important;
+}
+.dash-list-area a.active , .dash-list-area a.active * ,.dash-list-area a:hover,.dash-list-area a:hover * {
+    background: var(--bg-color-3)!important;
+    color: #fff!important;
+}
+/*.dash-list-area a>div {
+    border-bottom: 1px solid var(--bg-second-bg)
+}
+
+.dash-list-area a:hover * {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area a:hover * {
+    color: var(--bg-second-bg) !important;
+}
+
+.dash-list-area .active {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area .active * {
+    color: var(--bg-second-bg) !important;
+}
+.dash-list-area a:hover * {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area a:hover span {
+    color: var(--bg-second-bg) !important;
+}
+
+.dash-list-area .active {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area .active span {
+    color: var(--bg-second-bg) !important;
+}
+.dash-list-area a:hover * {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area a:hover span {
+    color: var(--bg-second-bg) !important;
+}
+
+.dash-list-area .active {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area .active span {
+    color: var(--bg-second-bg) !important;
+}
+.dash-list-area a:hover * {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area a:hover span {
+    color: var(--bg-second-bg) !important;
+}
+
+.dash-list-area .active {
+    background: var(--bg-color-3) !important;
+}
+
+.dash-list-area .active span {
+    color: var(--bg-second-bg) !important;
+}*/
+
+
+
+
+.croppie-container .cr-resizer,
+.croppie-container .cr-viewport {
+    box-shadow: unset;
+}
+
+.croppie-container {
+    width: 100%;
+    height: unset !important;
+    /* height: 100%; */
+}
+
+</style>
+<div class="col-12 col-lg-3 col-md-4 text-center px-0  " style="width: 100%;position: relative;">
+    <div class="col-12 px-0 ">
+        <div class="col-12 text-center px-0 mb-0" style="direction: ltr;">
+            <div class="mt-0 mt-md-5  text-center " style="display: inline-block;padding: 0px!important;border-radius: 6px!important;padding: 37px 0px 0px!important;max-width: 100%">
+             
+                <div style="width: 120px; display: inline-block;border-radius: 50%!important;max-width: 100%;position: relative;height: 120px;">
+                    <a href="https://nafezly.com/u/alaafat">
+                        </a><div style="width: 120px;display: inline-block;border-radius: 50%!important;box-shadow: 0px 0px 12px var(--bg-main-bg);max-width: 100%; height: 120px;position: absolute;  left: 0;   right: 0;  margin-left: auto;   margin-right: auto;  "><a href="https://nafezly.com/u/alaafat">
+                             
+                                <img src="https://nafezly-production.fra1.cdn.digitaloceanspaces.com/uploads/avatars/1780578796_6a2179ecc4fd4.webp" style="width: 100%;border-radius:inherit;padding: 10px;height: 100%;border-radius: 50%">
+
+                                </a><a href="https://nafezly.com/profile/personal-data">
+                                    <div style="position: absolute;width: 40px;height: 40px;left: 6px;bottom: 10px;border-radius: 50%!important;background: var(--bg-second-bg);cursor: pointer;padding: 8px 0px;border:1px dashed var(--bg-font-4)" class="  text-center hover-darker">
+                                        <span class="fal fa-user-edit" style="color: var(--bg-font-4);"></span>
+                                    </div>
+                                </a>
+                       
+                        </div>
+                    
+                </div>
+                <h5 class="text-center pt-2 mb-0 mb-md-5 pb-0 mt-2" style="font-size: 20px;color: var(--bg-font-4); ">Alaa Fathi</h5>
+
+                <div class="col-12 p-0 row py-3 d-flex d-md-none">
+                    <a href="https://nafezly.com/services" class="d-flex mx-1" style="color:var(--bg-font-4);width:67px;opacity: 0.9;">
+                        <div class="d-flex row m-0" style="padding: 9px;background: var(--bg-second-bg);border-radius: 9px;">
+                            <div class="col-12 p-0 text-center">
+                                <img src="/site_images/icons/package.png" style="width:30px">
+                            </div>
+                            <div class="col-12 p-0 text-center mt-1" style="font-size:11px;">
+                                الخدمات
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://nafezly.com/projects" class="d-flex mx-1" style="color:var(--bg-font-4);width:67px;opacity: 0.9;">
+                        <div class="d-flex row m-0" style="padding: 9px;background: var(--bg-second-bg);border-radius: 9px;">
+                            <div class="col-12 p-0 text-center">
+                                <img src="/site_images/icons/suitcase.png" style="width:30px">
+                            </div>
+                            <div class="col-12 p-0 text-center mt-1" style="font-size:11px;">
+                                المشاريع
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://nafezly.com/portfolios" class="d-flex mx-1" style="color:var(--bg-font-4);width:67px;opacity: 0.9;">
+                        <div class="d-flex row m-0" style="padding: 9px;background: var(--bg-second-bg);border-radius: 9px;">
+                            <div class="col-12 p-0 text-center">
+                                <img src="/site_images/icons/picture.png" style="width:30px">
+                            </div>
+                            <div class="col-12 p-0 text-center mt-1" style="font-size:11px;">
+                                الأعمال
+                            </div>
+                        </div>
+                    </a>
+                    <a href="https://nafezly.com/freelancers" class="d-flex mx-1" style="color:var(--bg-font-4);width:67px;opacity: 0.9;">
+                        <div class="d-flex row m-0" style="padding: 9px;background: var(--bg-second-bg);border-radius: 9px;">
+                            <div class="col-12 p-0 text-center">
+                                <img src="/site_images/icons/freelancer.png" style="width:30px">
+                            </div>
+                            <div class="col-12 p-0 text-center mt-1" style="font-size:11px;">
+                                المنفذين
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+        
+
+                <div class="col-12  mb-2 mt-4    d-block d-md-none p-3 main-nafez-box-styles " style="">
+            <div class="col-12 row px-0">
+                <div class="col-6  pr-2 pt-1">
+                    لوحة التحكم
+                </div>
+                <div class="col-6 px-0 text-left">
+                    <span class="btn btn-light text-left pb-1" style="cursor: pointer; border-color: #dae0e5" onclick="$('.dash-list-area,.user-t3lam').slideToggle();"><span class="fa fa-bars text-left d-inline-block" style="color: var(--bg-color-1); "></span></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 px-0 px-md-3 mb-3 mb-md-0">
+            <div class="col-12  text-center px-0 dash-list-area 
+             || null==(\Request::route()-&gt;getName())
+            d-peter-none
+            
+             " style="border:1px solid var(--bg-main-bg) ;overflow: hidden;">
+
+                <div class="col-12 p-2">
+                    لوحة التحكم
+                </div>
+                <div class="col-12 px-0 d-flex row">
+                    
+                   
+
+                   
+
+
+
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-home d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                  
+                                      <div class="col-12 px-0 text-center title">
+                                        الرئيسية
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/profile/personal-data" class="d-block
+                                                    active
+                                                " style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-user d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        حسابي
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/balance" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-money-check  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        الرصيد
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/my/projects/all" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-suitcase  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        مشاريعي
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                        <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/my/portfolios" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-images  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        أعمالي
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/my/services" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-boxes  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        خدماتي
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                        <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/deals/list?self=2&amp;type=all" class="d-block
+                                                " style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-handshake  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        صفقاتي
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/tickets" class="d-block
+                                                " style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-ticket-alt  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        تذاكري
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/my/verification" class="d-block
+                                                " style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fas fa-badge-check  d-inline-block  font-3" style="color: var(--bg-color-2);
+                                         
+                                        color: var(--bg-color-4)!important;
+                                        color: #4caf50!important;
+                                        
+                                    "></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        توثيق
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/my/referral" class="d-block
+                                                " style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-usd-circle  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        التسويق
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                        
+
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="https://nafezly.com/community" class="d-block" style="border-radius: 7px;overflow: hidden;">
+
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+
+                               
+
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-users d-inline-block  font-3"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        المجتمع
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+
+
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/updates" class="d-block" style="border-radius: 7px;position: relative;">
+                                                                                    <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-stars  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        التحديثات
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+
+                    
+                    
+                    
+                      
+                    
+                </div>
+                <div class="col-12 p-2">
+                    مركز المساعدة
+                </div>
+                <div class="col-12 row p-0">
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/guide" class="d-block" style="border-radius: 7px;overflow: hidden;">
+
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+
+                                
+
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-book d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        الدليل
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="#" class="d-block" style="border-radius: 7px;overflow: hidden;" onclick="$('.nafezly-robot').slideToggle();">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                              
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-robot  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        الروبوت
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-3 col-md-4 p-1  text-center font-1" style="">
+                        <a href="/support" class="d-block" style="border-radius: 7px;overflow: hidden;">
+                            <div class="col-12 py-2 px-0 text-center main-nafez-box-styles d-flex align-items-center" style="color: var(--bg-font-4);height: 80px;border-radius: 7px;overflow: hidden;">
+                                <div class="col-12 p-0 text-center">
+                                    <span class="fal fa-life-ring  d-inline-block  font-3" style="color: var(--bg-color-2);"></span>
+                                    <div class="col-12 px-0 text-center title">
+                                        الدعم
+                                    </div>
+                                       
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+
+                </div>
+
+
+                
+
+                
+
+
+
+
+
+
+
+            </div>
+        </div>
+        <div class="col-12 user-t3lam  d-peter-none mb-5 px-0 px-md-3 d-none d-md-block">
+            
+        </div>
+    </div>
+</div>
+            <div class="col-12  col-lg-9 col-md-8 text-center  content-area  px-0 px-md-3 pb-2">
+                <form method="POST" action="https://nafezly.com/profile/website_settings" id="profile-update-form" novalidate="novalidate" data-gtm-form-interact-id="0">
+                    <input type="hidden" name="_token" value="Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85" style="">                    <div style=";padding: 0px; min-height: 700px; " class="col-12 row  mt-0 mt-md-5   main-nafez-box-styles">
+                        <div style=";" class="col-12   px-0    ">
+                            <div class="col-12 px-0  " style="border-bottom: 1px solid var(--bg-main-bg);   ">
+                                <nav class="navbar navbar-expand-lg   px-0 py-0">
+    <span class="navbar-brand " href="#" style="padding: 12px 0px!important;color: var(--bg-color-0) ;font-size: 16px">حسابي</span>
+
+    <button class="navbar-toggler p-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="fal fa-caret-down font-2 border ml-2 py-1 px-2 hover-light" style="color: #999"></span>
+
+   <!--    <span class=" ml-2 py-1 px-2 border font-1 tajawal"> </span>
+       -->
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto pr-0">
+
+        
+                
+        <li class="nav-item">
+          <a class="nav-link font-1 py-3 px-3 d-inline-block " href="https://nafezly.com/profile/personal-data" style="
+                    color: var(--bg-color-0);
+                           
+
+          ">البيانات الشخصية</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link font-1 py-3 px-3 d-inline-block active" href="https://nafezly.com/profile/nafezly-settings" style="
+                    color: var(--bg-color-0);
+          
+
+                     border-bottom: 3px solid #000
+                    
+          
+
+          ">بيانات الموقع</a>
+        </li>
+
+ 
+
+    </ul>
+  </div>
+</nav>                            </div>
+                            <div class="col-12" style="padding:12px 5px">
+                                <div class="col-12 col-md-12 mb-4 py-4 row text-center row">
+                                    
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <div class="col-12 font-1">
+                                            التخصص
+                                        </div> 
+                                        <div class="col-12 mt-2">
+                                                                                        <select class=" col-12 font-1 form-control py-0 px-2" name="specialization_id">
+                                                <option selected="" disabled=""></option><option value="1">أعمال وخدمات استشارية وإدارية</option><option value="2" selected="">برمجة، تطوير المواقع والتطبيقات</option><option value="3">تصميم وأعمال فنية وإبداعية</option><option value="4">تسويق الكتروني ومبيعات</option><option value="5">كتابة، صناعة محتوى، ترجمة ولغات</option><option value="6">تدريب، تعليم ومساعدة عن بعد</option><option value="7">أمور أخرى</option>                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6  mb-3">
+                                        <div class="col-12  kufi font-1 ">
+                                            المسمى الوظيفي
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <input type="hidden" name="job_title_id" id="job_title_id" value="6146" style="">
+                                            <input type="text" name="job_title" class="form-control error" required="" minlength="3" maxlength="20" value="مهندسة ذكاء اصطناعي" id="job_title" style="" data-gtm-form-interact-field-id="1"><label id="job_title-error" class="error" for="job_title">الحد الأقصى لعدد الحروف هو 20</label> 
+
+
+                                              <div style="font-size: 13px;color:var(--bg-font-4);opacity: .6;" class="pt-1 naskh">أدخل مسمى وظيفي واحد لتظهر بنتائج البحث. مثال: مهندس معماري </div>
+
+
+
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <div class="col-12 font-1">
+                                            نبذة
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <textarea class="col-12 form-control" style="min-height: 250px;" name="bio" data-gtm-form-interact-field-id="0">[ּعلاء فـتـحـي فـرج اڵـڵـہ أبـو اڵـحـصـيـن]
+
+مهندس أنظمة ذكاء اصطناعي وأتمتة (AI &amp; Automation Engineer)
+
+ [البريد الإلكتروني:: ambdambd200@gmail.com ]
+
+ | 
+
+[رابط LinkedIn :: https://www.linkedin.com/in/alaa-fathi-2b3100413/ ]
+
+﴿بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ﴾
+
+{وَقُلِ اعْمَلُوا فَسَيَرَى اللَّهُ عَمَلَكُمْ وَرَسُولُهُ وَالْمُؤْمِنُونَ}
+
+الملف الشخصي (التعريف بالتخصص)
+
+الخدمات:
+- بناء وكلاء ذكاء اصطناعي (AI Agents)
+- أتمتة سير العمل بـ n8n و Make
+- ربط APIs والتطبيقات السحابية
+- تطوير Chatbots وحلول AI
+-الخبرات العملية (أمثلة بناءً على تخصصك) تصميم وتنفيذ أنظمة ردود ذكية لخدمة العملاء مرتبطة بقواعد بيانات.
+-بناء وكلاء ذكاء اصطناعي (AI Agents) لتنفيذ مهام محددة داخل الشركات.
+-أتمتة نقل البيانات بين منصات التواصل الاجتماعي ومنصات إدارة المشاريع.
+أتحدث العربية والإنجليزية.</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <div class="col-12 font-1">
+                                            المهارات الشخصية
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <select class="select2 col-12 px-0 selectized" multiple="multiple" name="tag_id[]" style="height: 35px; display: none;" tabindex="-1"><option value="392" selected="selected">إدخال البيانات </option><option value="399" selected="selected">HTML</option><option value="400" selected="selected">CSS</option><option value="403" selected="selected">PHP</option><option value="411" selected="selected">HTML</option><option value="431" selected="selected">تسويق الشبكات الإجتماعية</option><option value="433" selected="selected">MySQL</option><option value="435" selected="selected">معالجة النصوص</option><option value="459" selected="selected">CSS</option><option value="464" selected="selected">تطوير البرمجيات</option><option value="465" selected="selected">برمجة قواعد البيانات</option><option value="470" selected="selected">C# Programming</option><option value="478" selected="selected">معالجة البيانات </option><option value="485" selected="selected">SQL</option><option value="501" selected="selected">PSD to HTML</option></select><div class="selectize-control select2 col-12 px-0 multi plugin-remove_button rtl"><div class="selectize-input items not-full has-options has-items"><div class="item" data-value="392">إدخال البيانات <a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="399">HTML<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="400">CSS<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="403">PHP<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="411">HTML<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="431">تسويق الشبكات الإجتماعية<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="433">MySQL<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="435">معالجة النصوص<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="459">CSS<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="464">تطوير البرمجيات<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="465">برمجة قواعد البيانات<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="470">C# Programming<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="478">معالجة البيانات <a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="485">SQL<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><div class="item" data-value="501">PSD to HTML<a href="javascript:void(0)" class="remove" tabindex="-1" title="Remove">×</a></div><input type="select-multiple" autocomplete="off" tabindex="" style="width: 4px;"></div><div class="selectize-dropdown multi select2 col-12 px-0 plugin-remove_button" style="display: none; width: 852.5px; top: 61px; left: 0px;"><div class="selectize-dropdown-content"></div></div></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mb-3">
+                                        <div class="col-12 font-1">
+                                            نوع الحساب  
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="d-inline-block border "> 
+                                                <div class="px-3"> 
+                                                <div class="col-12 px-0 row mt-2 ">
+                                                    <div style="width: 40px">
+                                                        <div class="control-group py-2 px-2"> 
+                                                            <label class="control control-checkbox"> 
+                                                                
+                                                                <input type="checkbox" id="employer" name="user_type_employer" data-ui="" data-filter="specialize" value="employer" checked="" style="">
+                                                                <div class="control_indicator"></div>
+                                                            </label> 
+                                                        </div>
+
+
+
+                                                    </div>
+                                                    <div style="width: calc(100% - 40px)" class="pt-2">
+                                                        <label class="kufi mb-0" for="employer" style="cursor: pointer;color: var(--bg-font-4);font-size: 12px">صاحب مشاريع - مشتري خدمات</label>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                <hr class="mb-1">
+                                                <div class="px-3">
+
+                                                    
+                                                <div class="col-12 px-0 row" onclick="if($('#freelancer').is(':checked')) $('#available-freelancer').prop('checked', false);">
+                                                    <div style="width: 40px">
+                                                        <div class="control-group py-2 px-2"> 
+                                                            <label class="control control-checkbox"> 
+                                                                
+                                                                <input type="checkbox" id="freelancer" name="user_type_freelancer" data-ui="" data-filter="specialize" value="freelancer" checked="" style="">
+                                                                <div class="control_indicator"></div>
+                                                            </label> 
+                                                        </div>
+
+
+
+                                                    </div>
+                                                    <div style="width: calc(100% - 40px)" class="pt-2">
+                                                        <label class="kufi mb-0" for="freelancer" style="cursor: pointer;color: var(--bg-font-4);font-size: 12px">منفذ مشاريع - بائع خدمات</label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-12 px-0 row pr-4" onclick="if($('#available-freelancer').is(':checked')) $('#freelancer').prop('checked', true);">
+                                                    <div style="width: 40px">
+                                                        <div class="control-group py-0 px-2"> 
+                                                            <label class="control control-checkbox">  
+                                                                <input type="checkbox" id="available-freelancer" name="user_type_freelancer" data-ui="" data-filter="specialize" value="available-freelancer" checked="" style="">
+                                                                <div class="control_indicator"></div>
+                                                            </label> 
+                                                        </div> 
+                                                    </div>
+                                                    <div style="width: calc(100% - 40px)" class="pt-2">
+                                                        <label class="kufi mb-3" for="available-freelancer" style="cursor: pointer;color: var(--bg-font-4);font-size: 12px">متاح للتوظيف حالياً</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                           
+                                          
+
+
+
+
+                                            </div> 
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-12 mb-3">
+                                     
+                                        <div class="col-12 mt-2">
+                                            <div class="d-inline-block "> 
+                                                <div class="px-3"> 
+                                                <div class="col-12 px-0 row mt-2 ">
+                                                    <div style="width: 40px">
+                                                        <div class="control-group py-2 px-2"> 
+                                                            <label class="control control-checkbox"> 
+                                                                
+                                                                <input type="checkbox" id="subscribe_newsletter" name="subscribe_newsletter" data-ui="" data-filter="specialize" value="1" checked="" style="">
+                                                                <div class="control_indicator"></div>
+                                                            </label> 
+                                                        </div>
+
+
+
+                                                    </div>
+                                                    <div style="width: calc(100% - 40px)" class="pt-2">
+                                                        <label class="kufi mb-0" for="subscribe_newsletter" style="cursor: pointer;color: var(--bg-font-4);font-size: 12px">الإشتراك في القائمة البريدية</label>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    
+                                    <div class="col-12 mb-4 mt-2">
+                                        <div class="col-12 text-left">
+                                            <button class="btn btn-primary font-1">حفظ التغييرات</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+            </div> 
+        </main> 
+        
+        <div class="col-12 pt-0 px-0 nafezly-footer" style="background: var(--bg-main-bg)">
+            <div class="col-12 footer-area  py-0 px-0 pb-0 " style="background: var(--bg-second-bg); border-top: 1px solid var(--bg-main-bg)">
+                <div class="container  px-0">
+                    <div class="col-12 px-0  pt-4 row mt-md-3 pb-4">
+                        <div class="col-12  col-md-6   pt-2 pt-4 px-0 p-md-2">
+                            <div class="p-md-0 col-12 px-0">
+                                <div class="col-12 mb-0 pt-2 ">
+                                    <div class="kufi" style="color: var(--bg-font-1);font-size: 1.10rem"> تعلم </div>
+                                </div>
+                                <div class="col-12 mt-2 pt-2 ">
+                                    <div class="col-12 px-0">           
+                                                                                <ul style="list-style-type: none;" class="px-2">
+                                                                                                                                    <li style="font-size: 7px;" class="mb-2 py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://blog.nafezly.com/تأسيس-شركة-ذكاء-اصطناعي-دليلك-لتأسيس-و" class="kufi d-block" target="_blank">
+                                                            <div class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">تأسيس شركة ذكاء اصطناعي: دليلك لتأسيس وإطلاق شركة ذكاء اصطناعي في 2026</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                                                                                                                    <li style="font-size: 7px;" class="mb-2 py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://blog.nafezly.com/freelancers-communication-skills" class="kufi d-block" target="_blank">
+                                                            <div class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">مهارات التواصل للمستقلين: 10 استراتيجيات تواصل للمستقلين لبناء علاقات أفضل مع العملاء</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                                                                                                                    <li style="font-size: 7px;" class="mb-2 py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://blog.nafezly.com/ai-expert" class="kufi d-block" target="_blank">
+                                                            <div class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">خبير ذكاء اصطناعي: 7 نصائح عملية لتصبح خبيرًا في الذكاء الاصطناعي في مجالك</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                                                                                                                    <li style="font-size: 7px;" class="mb-2 py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://blog.nafezly.com/project-management-automation" class="kufi d-block" target="_blank">
+                                                            <div class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">أتمتة إدارة المشاريع: كيف تُغير أتمتة الذكاء الاصطناعي إدارة المشاريع</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                                                                                                                    <li style="font-size: 7px;" class="mb-2 py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://blog.nafezly.com/youtube-automation" class="kufi d-block" target="_blank">
+                                                            <div class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">أتمتة محتوى اليوتيوب: أفضل أدوات الذكاء الاصطناعي لأتمتة يوتيوب في 2026</div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                
+                                                
+                                            </li>
+                                                                                                                                </ul> 
+                                    </div>
+
+                        
+                                </div>
+                            </div>
+
+
+                            <div class="p-md-0 col-12 px-0 mt-4">
+                                <div class="col-12 px-0">
+
+
+                                  
+                                    <div class="col-12">
+                                        <div class="" style="color: var(--bg-font-1);font-size: 1.10rem">تابعنا</div>
+                                        <div style="display: block;padding: 0px;list-style: none;" class="mt-2 mb-2">
+                                            <a href="https://www.facebook.com/Nafezly" class="d-inline-block p-1" aria-label="facebook">
+                                                <span class="fab fa-facebook-f d-inline-block " style="width: 40px;height: 40px;padding: 11px 14px ;border:1px solid var(--bg-font-6);color: #3b5998;cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                            <a href="https://twitter.com/Nafezly" class="d-inline-block p-1" aria-label="twitter">
+                                                <span class="fab fa-twitter d-inline-block " style="width: 40px;height: 40px;padding: 11px 11px ;border:1px solid var(--bg-font-6);color: #00aced;cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                            <a href="https://www.youtube.com/channel/UC0lI3SXBt-Nn2Oyss4dAbOQ" class="d-inline-block p-1" aria-label="YouTube">
+                                                <span class="fab fa-youtube d-inline-block " style="width: 40px;height: 40px;padding: 11px 10px ;border:1px solid var(--bg-font-6);color: #FF0000;cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                            <a href="https://www.instagram.com/Nafezly" class="d-inline-block p-1" aria-label="instagram">
+                                                <span class="fab fa-instagram d-inline-block " style="width: 40px;height: 40px;padding: 11px 12px ;border:1px solid var(--bg-font-6);color: var(--bg-font-4);cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                            <a href="https://www.linkedin.com/company/Nafezly" class="d-inline-block p-1" aria-label="linkedin">
+                                                <span class="fab fa-linkedin-in d-inline-block " style="width: 40px;height: 40px;padding: 11px 12px ;border:1px solid var(--bg-font-6);color: #1976d2;cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                            <a href="https://www.t.me/Nafezly" class="d-inline-block p-1" aria-label="telegram">
+                                                <span class="fab fa-telegram-plane d-inline-block " style="width: 40px;height: 40px;padding: 11px 12px ;border:1px solid var(--bg-font-6);color: #1e96c8;cursor: pointer;background: var(--bg-second-bg);border-radius: 50%!important"></span>
+                                            </a>
+                                           
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="col-12  col-md-6   py-1 row px-0 px-md-2">
+                            <div class="col-md-6 px-0">
+
+
+
+                                  <div class="col-12 mb-0 pt-2 ">
+                                    <div class="kufi" style="color: var(--bg-font-1);font-size: 1.10rem"> روابط </div>
+                                </div>
+                                <div class="col-12 mt-2 pt-2 ">
+                                    <div class="col-12 px-0">   
+                                    <ul style="list-style-type: none;" class="px-2">
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/guide" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">الدليل الإرشادي</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/support" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">الدعم الفني</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/terms" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">شروط الاستخدام</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/privacy-policy" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">سياسة الخصوصية</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/guarantee" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">صفحة الضمان</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="https://nafezly.com/faq" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">الأسئلة الشائعة</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/referral" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">التسويق بالعمولة</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li style="font-size: 7px;" class="py-1">
+                                                <div class="col-12 px-0 row" style="overflow:hidden;white-space: nowrap;">
+                                                    <div style="width: 20px;margin-top: 1px" class="pt-1">
+                                                        <span class="fas fa-circle pl-2 d-inline-block" style="font-size: 12px;color: #03A9F4;border-radius: 50%;"></span>
+                                                    </div>
+                                                    <div style="width: calc(100% - 20px) ;">
+                                                        <a href="/about" class="kufi d-block">
+                                                            <p class="m-0 p-0 kufi  text-justify text-md-right text-truncate" style="font-size: 14px;color: var(--bg-color-0);line-height: 1.7">من نحن</p>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+
+                    
+                            </div>
+                            <div class="col-md-6 px-0">
+                                <div class="col-12 pt-2">
+                                    <div class="" style="color: var(--bg-font-1);font-size: 1.10rem">وسائل الدفع</div>
+                                    <div class="col-12 px-0 py-1">
+
+                                        <div style="display:inline-block;padding: 2px;width: 100%;margin-bottom: 5px;">
+                                             <img src="/site_images/payments/payments-min.png" style="max-width:100%;width:200px;cursor: pointer;" data-toggle="popover" data-placement="top" data-content="وسائل الدفع" data-trigger="hover" alt="وسائل الدفع" width="200" loading="lazy" data-original-title="" title="">
+                                        </div> 
+
+
+
+
+                                        
+                                        
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-12 pt-2">
+                                    <div class="mb-1" style="color: var(--bg-font-1);font-size: 1.10rem">وسائل السحب</div>
+
+
+
+                                    <div style="display:inline-block;padding: 2px;width: 100%;margin-bottom: 5px;">
+                                             <img src="/site_images/payments/payouts-min.png" style="max-width:100%;width:200px;cursor: pointer;" data-toggle="popover" data-placement="top" data-content="وسائل السحب" data-trigger="hover" alt="وسائل السحب" width="200" loading="lazy" data-original-title="" title="">
+                                        </div> 
+
+
+                                        
+
+                                    
+                                </div>
+
+                        
+
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div style="width:400px;position: fixed;right: 10px;bottom: 60px;z-index: 100;height: 500px;box-shadow: 0px 0px 15px var(--bg-font-6);max-width: calc(100% - 25px);display: none;" class="nafezly-robot main-nafez-box-styles">
+    <div class="col-12 px-0">
+        <div wire:id="36SZLuSuHoC84scJjgTj" class="col-12 px-0">
+    <div class="d-inline-block" style="position: absolute;top: -10px;right: -10px;z-index: 123;">
+        <span class="fal fa-times text-center " style="width: 30px;height: 30px;justify-content: center;align-items: center;justify-self: center;display: flex;z-index: 454545;box-shadow: 0px 0px 13px var(--bg-font-6);border-radius: 50%;background: var(--bg-second-bg);cursor: pointer;    " onclick="$('.nafezly-robot').slideToggle();"></span>
+    </div>
+    <div class="nafezly-robot-response-container" style="height:440px;">
+     
+                    <div class="col-12 text-center" style="height:440px;display: flex;align-items: center;justify-content: center;overflow: auto;">
+                <div class="col-12 m-auto text-center px-0">
+                    <img src="/site_images/nafezly-robot.gif" style="max-width:100%;width: 120px;height: 120px;">
+                    <div class="col-12 text-center px-0 py-2">
+                       <div class="spinner-grow text-success rounded-circle font-1 " role="status"></div> مرحباً أنا هنا للمساعدة
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    <div class="col-12 py-2">
+
+                <input type="" wire:model="key" class="form-control rounded-pill" placeholder="إسألني سؤالاً" style="">
+        <span wire:loading="" class="fas fa-spinner-third fa-spin   fast-spin" style="    position: absolute;left: 31px;top: 20px;"></span>
+            </div>
+    
+</div>
+
+<!-- Livewire Component wire-end:36SZLuSuHoC84scJjgTj -->    </div>
+</div>
+
+<div style="position:fixed;left: 5vw;bottom: 5vh;width: 350px;display: flex;align-content: flex-end;z-index: 222;max-width: calc(100% - 10vw);" id="express-notifications" class="row">
+</div>
+
+<span class="btn btn-primary font-1 support-widget" style="background: var(--bg-color-3);box-shadow: 0px 0px 7px var(--bg-color-3)!important;position: fixed;right: 10px;bottom: 15px;border-radius: 6px;cursor: pointer;z-index: 1200;" onclick="$('.contact-wedgit-toggle').slideToggle();$.ajax({url: 'https://nafezly.com/support/wedgit'});$('.nafezly-robot').slideUp();">
+     <span class="fas fa-life-ring" style="color: #fff"></span> <span style="color: #fff" class="d-none d-md-inline-block"> مركز المساعدة <div class="spinner-grow text-light rounded-circle font-1 " role="status" style="height:24px;width: 24px;color: #fff;"></div>  </span> 
+</span>
+
+
+<div style="width: 163px;position: fixed;right: 10px;bottom: 60px;display: none;z-index: 1212121212121;" class="contact-wedgit-toggle">
+    
+    <a href="https://nafezly.com/guide" style="color: var(--bg-color-0);">
+        <div class="col-12 font-1 shadow mt-1" style="background: var(--bg-second-bg);height: 35px;border-radius: 6px;padding: 6px 11px">
+            <span class="fal fa-book"></span> الدليل الإرشادي
+        </div>
+    </a>  
+    <span style="color: var(--bg-color-0);cursor: pointer;" onclick="$('.contact-wedgit-toggle').slideToggle();$('.nafezly-robot').slideToggle();">
+        <div class="col-12 font-1 shadow mt-1" style="background: var(--bg-second-bg);height: 35px;border-radius: 6px;padding: 6px 11px">
+            <span class="far fa-robot"></span> الروبوت الذكي <div class="spinner-grow text-success rounded-circle font-1 " role="status" style="height:24px;width: 24px;color: #fff;"></div>
+        </div>
+    </span> 
+
+
+    
+        <a href="/tickets/create" style="color: var(--bg-color-0)">
+        <div class="col-12 font-1 shadow mt-1 position-relative" style="background: var(--bg-second-bg);height: 35px;border-radius: 6px;padding: 6px 11px">
+        
+        <span class="far fa-ticket-alt"></span> الدعم الفني
+            </div>
+        </a>
+    </div>
+
+<div id="static-footer-frame">
+<style>@media only screen and (min-width:470px) and (max-width: 915px) {#static-footer-frame{height:345px!important}} @media only screen and (min-width: 915px) {#static-footer-frame{height:240px!important}} #static-footer-frame{height: 454px;}</style>
+<iframe width="100%" height="263px" frameborder="0" scrolling="no" allowtransparency="true" src="https://static.nafezly.com/" style="width: 100%;height: auto;border: none;display: flex;height: 100%;overflow:hidden"></iframe>
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+
+
+/*setInterval(function(){
+    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+        console.log('test');
+    }
+},200);*/
+
+</script>
+<audio id="notification_sound">
+<source src="/sounds/notification.mp3" type="audio/mpeg">
+</audio>
+
+
+<div id="id_response_container"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="/js/all-mixed.js?id=7b35db065d30042f6b7d?v=?v="></script><div class="notifier-container" id="notifier-container"></div>
+<script type="text/javascript">
+/*if(localStorage.getItem('whatsapp-support-btn-show')==null){
+    $.ajax({
+        method: "GET",
+        url:'https://nafezly.com/my/country'
+    }).done(function(res){
+        if(res==1){
+            localStorage.setItem('whatsapp-support-btn-show',1);
+            $('.whatsapp-support-btn').fadeIn();
+        }else{
+            localStorage.setItem('whatsapp-support-btn-show',0);
+        }
+    }); 
+}else if(localStorage.getItem('whatsapp-support-btn')==1){
+    $('.whatsapp-support-btn').fadeIn();
+}*/
+function play_notification(){
+    $('#notification_sound').trigger("play");
+}
+function play_typing(){
+    $('#typing_sound').trigger("play");
+}
+
+</script>
+<script type="text/javascript">
+$(document).on("focusin", function(){
+ $(".thumbnail-nafezly").fancybox({});
+});
+$('a.thumbnail-nafezly').on('click', function(e) { e.preventDefault(); });
+</script>
+<script type="text/javascript">
+      
+  
+    </script>
+<script type="text/javascript">
+     
+</script><script src="/livewire/livewire.js?id=90730a3b0e7144480175" data-turbo-eval="false" data-turbolinks-eval="false"></script><script data-turbo-eval="false" data-turbolinks-eval="false">window.livewire = new Livewire();window.Livewire = window.livewire;window.livewire_app_url = '';window.livewire_token = 'Qs6pUQzCv8oc4K3kmkytZXqHkWJXnXkGjEst2K85';window.deferLoadingAlpine = function (callback) {window.addEventListener('livewire:load', function () {callback();});};let started = false;window.addEventListener('alpine:initializing', function () {if (! started) {window.livewire.start();started = true;}});document.addEventListener("DOMContentLoaded", function () {if (! started) {window.livewire.start();started = true;}});</script>
+<script type="text/javascript">
+    $('#recorderNafezly').on('hide.bs.modal', function () {
+        $(this).find('audio').attr('src','');
+        $(this).find('audio,.recorder-send-audio-container').css('opacity','0.2');
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    function append_notification_notifications(msg) {
+        if (msg.count_unseen_notifications > 0) {
+            $('.count_unseen_notifications').fadeIn(0);
+            $('.count_unseen_notifications').text(msg.count_unseen_notifications);
+        } else {
+            $('.count_unseen_notifications').fadeOut(0);
+        }
+       
+        $('.notifications-notifications-area').empty();
+        $('.notifications-notifications-area').append(msg.response);
+        $('.notifications-notifications-area a').on('click', function() { window.location.href = $(this).attr('href'); });
+     
+    }
+    function append_notification_messages(msg) {
+        if (msg.count_unseen_messages > 0) {
+            $('.count_unseen_messages').fadeIn(0);
+            $('.count_unseen_messages').text(msg.count_unseen_messages);
+        } else {
+            $('.count_unseen_messages').fadeOut(0);
+        } 
+        $('.notifications-messages-area').empty();
+        $('.notifications-messages-area').append(msg.response);
+        $('.notifications-messages-area a').on('click', function() { window.location.href = $(this).attr('href'); });
+
+    }
+        localStorage.setItem('last_registered_mail',"ambdambd200@gmail.com");
+        $('.seen-notifications').on('click', function() {
+        $.ajax({
+            method: "GET",
+            url: "/notifications/seen_notifications", 
+            success: function(data, textStatus, xhr) {
+                $('.count_unseen_notifications').text('0');
+                $('.count_unseen_notifications').fadeOut();
+
+            }
+        });
+
+    });
+    var favicon = new Favico({
+        bgColor: '#dc0000',
+        textColor: '#fff',
+        animation: 'slide',
+        fontStyle: 'bold',
+        fontFamily: 'sans',
+        type: 'circle'
+    });
+    function get_notification_notifications() {
+        $.ajax({
+            method: "GET",
+            url: "/notifications/get-ajax-notifications-interval", 
+            success: function(data, textStatus, xhr) { 
+                favicon.badge(data.notifications.response.count_unseen_notifications + data.messages.response.count_unseen_messages); 
+                    append_notification_notifications(data.notifications.response); 
+                    append_notification_messages(data.messages.response);
+                if (data.alert) {
+                    $('#notification_sound').trigger("play");
+                }
+                if (data.notifications.response.count_unseen_notifications + data.messages.response.count_unseen_messages > 0) {
+                    $('title').text('(' + parseInt(data.notifications.response.count_unseen_notifications + data.messages.response.count_unseen_messages) + ')' + 
+                    document.querySelector('meta[name="nafezly-title"]').getAttribute('content'));
+
+                } else {
+                    $('title').text(document.querySelector('meta[name="nafezly-title"]').getAttribute('content'));
+                }
+            }
+        });
+    } 
+    
+    get_notification_notifications();
+</script>
+
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;e3146e29712049fe8454df255b17cf54&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+<span style="position: absolute; top: -99999px; left: -99999px; width: auto; padding: 0px; white-space: pre;">اختر من القائمة</span></body></html>

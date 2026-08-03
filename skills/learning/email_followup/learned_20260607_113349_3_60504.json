@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113349_3_60504",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi Synergy Effect team,\n\nFollowing up on my June 1st message. No pressure if it's not the right fit.\n\nIf helpful, I can build a small n8n sample for you: a workflow that monitors a Gmail inbox, classifies incoming messages with OpenAI, and routes them to the right Slack channel. Takes 2-3 days, no commitment.\n\nOpen to a 15-min call to scope it.\n\nBest,\nAlaa Fathi\nAI Automation Engineer\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "info@s-e.lt",
+    "subject": "Following up — small automation sample for Synergy Effect",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T14:33:49"
+  },
+  "created": "2026-06-07T11:33:49Z",
+  "version": 2
+}

@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_112727",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi team, just following up on my application from last week. I'd love to help you with workflow automation. Best, Alaa",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "test@example.com",
+    "subject": "Following up on our application",
+    "type": "email_followup",
+    "company": "Acme Corp",
+    "platform": "",
+    "learned_at": "2026-06-07T11:27:27Z"
+  },
+  "created": "2026-06-07T11:27:27Z",
+  "version": 2
+}

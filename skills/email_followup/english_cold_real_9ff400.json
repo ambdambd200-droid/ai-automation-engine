@@ -1,0 +1,26 @@
+{
+  "name": "email_followup/english_cold_real_9ff400",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "email",
+    "followup",
+    "english",
+    "cold"
+  ],
+  "template": "Hi {company} team,\n\nFollowing up on my June 1st message. No pressure if it's not the right fit.\n\nIf helpful, I can build a small n8n sample for you: a workflow that monitors a Gmail inbox, classifies incoming messages with OpenAI, and routes them to the right Slack channel. Takes 2-3 days, no commitment.\n\nOpen to a 15-min call to scope it.\n\nSalim Muhammad\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.079344+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "9ff400eaa6bb"
+}

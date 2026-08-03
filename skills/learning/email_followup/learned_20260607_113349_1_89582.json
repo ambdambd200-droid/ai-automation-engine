@@ -1,0 +1,23 @@
+{
+  "name": "learning/email_followup/learned_20260607_113349_1_89582",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup"
+  ],
+  "template": "Hi ZY IMMO team,\n\nFollowing up on my application from June 1st. No worries if the timing is off.\n\nIf it helps: I'm happy to do a small test task — e.g. a 2-day automation that pulls new property leads from a German portal (ImmoScout24 / Immowelt), enriches them with OpenAI, and writes them to Google Sheets. You'd see the value before any commitment.\n\nLet me know if useful.\n\nBest,\nAlaa Fathi\nAI Automation Engineer\nambdambd200@gmail.com",
+  "rules": [
+    "3-5 sentences max",
+    "sign off as Alaa Fathi"
+  ],
+  "source": {
+    "to": "info@zyimmo.de",
+    "subject": "Following up — quick test task for ZY IMMO",
+    "type": "email_followup",
+    "company": "",
+    "platform": "",
+    "learned_at": "2026-06-07T14:33:49"
+  },
+  "created": "2026-06-07T11:33:49Z",
+  "version": 2
+}

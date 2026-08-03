@@ -1,0 +1,26 @@
+{
+  "name": "email_followup/english_cold_real_4aa700",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "email",
+    "followup",
+    "english",
+    "cold"
+  ],
+  "template": "Hi {company} team,\n\nFollowing up on my June 1st application. Understand if priorities have shifted.\n\nQuick offer: I can build a working n8n workflow (3-5 nodes) that takes a LinkedIn profile URL, enriches it via OpenAI, and outputs a structured candidate summary to a Google Sheet — your team sees it work before signing anything.\n\nLet me know if that would help.\n\nSalim Muhammad\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.077342+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "4aa7008c4d0f"
+}

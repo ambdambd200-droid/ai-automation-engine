@@ -1,0 +1,25 @@
+{
+  "name": "email_followup/english_cold",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "followup",
+    "english",
+    "cold",
+    "no_reply",
+    "polite"
+  ],
+  "template": "Subject: Following up — AI Automation Engineer application\n\nHi {company} team,\n\nI reached out {days_ago} days ago about helping {company} automate workflows with n8n + OpenAI. I understand inboxes get busy, so this is a short follow-up.\n\nA few things I can offer right now:\n- A free 30-min audit of one workflow you already run\n- A 1-hour test task (build a small automation at no charge) so you can evaluate quality\n- Flexible scope — I work in short iterations, not big upfront commitments\n\nIf the timing isn't right, just let me know and I'll circle back later. If you'd like to chat, here are 3 times that work for me this week: [Tue 10:00, Wed 14:00, Thu 11:00].\n\nThanks for considering,\nAlaa Fathi\nAI Automation Engineer",
+  "rules": [
+    "3-4 short paragraphs",
+    "polite, no pressure",
+    "offer a concrete next step (audit or test task)",
+    "sign as Alaa Fathi",
+    "do not re-attach CV"
+  ],
+  "examples": [],
+  "uses": 2,
+  "last_used": "2026-06-07T07:20:15Z",
+  "created": "2026-06-07T00:00:00Z",
+  "version": 1
+}

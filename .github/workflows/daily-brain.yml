@@ -1,0 +1,142 @@
+name: Daily Freelance Brain
+
+on:
+  schedule:
+    # 4:00 AM UTC = 7:00 AM Gaza (winter) / 6:00 AM Gaza (summer)
+    - cron: '0 4 * * *'
+    # Also at 13:00 UTC = 4:00 PM Gaza (catch late-day projects)
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode'
+        required: false
+        default: 'daily'
+        type: choice
+        options:
+          - daily
+          - weekly
+          - dry-run
+          - monitor
+
+jobs:
+  run-brain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ai-automation-engine/requirements.txt
+          pip install playwright requests
+
+      - name: Install Playwright Chromium
+        run: |
+          playwright install --with-deps chromium
+
+      - name: Decode sessions from secrets
+        env:
+          MOSTAQL_SESSION_B64: ${{ secrets.MOSTAQL_SESSION_B64 }}
+          NAFEZLY_SESSION_B64: ${{ secrets.NAFEZLY_SESSION_B64 }}
+          N8N_COMMUNITY_SESSION_B64: ${{ secrets.N8N_COMMUNITY_SESSION_B64 }}
+        run: |
+          mkdir -p sessions
+          if [ -n "$MOSTAQL_SESSION_B64" ]; then
+            echo "$MOSTAQL_SESSION_B64" | base64 -d > sessions/mostaql.json
+          fi
+          if [ -n "$NAFEZLY_SESSION_B64" ]; then
+            echo "$NAFEZLY_SESSION_B64" | base64 -d > sessions/nafezly.json
+          fi
+          if [ -n "$N8N_COMMUNITY_SESSION_B64" ]; then
+            echo "$N8N_COMMUNITY_SESSION_B64" | base64 -d > sessions/n8n_community.json
+          fi
+          ls -la sessions/
+
+      - name: Start engine locally
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ENGINE_FROM_EMAIL: ${{ secrets.ENGINE_FROM_EMAIL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          cd ai-automation-engine
+          python app.py &
+          ENGINE_PID=$!
+          echo "ENGINE_PID=$ENGINE_PID" >> $GITHUB_ENV
+          sleep 8
+          curl -sS http://localhost:5000/health || echo "engine not ready"
+
+      - name: Trigger daily routine via local engine
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -sS -X POST "http://localhost:5000/webhook/daily_routine" \
+            -H "Content-Type: application/json" \
+            -d "{\"trigger\":\"github_actions_$(date -u +%Y%m%d_%H%M)\",\"trigger_date\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" \
+            --max-time 300 -o daily_response.json -w "HTTP_STATUS:%{http_code}\n"
+          cat daily_response.json | head -50
+
+      - name: Run daily freelance routine
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ENGINE_URL: "http://localhost:5000"
+          MODE: ${{ github.event.inputs.mode || 'daily' }}
+        run: |
+          if [ "$MODE" = "dry-run" ]; then
+            python run_daily_freelance.py --dry-run
+          elif [ "$MODE" = "weekly" ]; then
+            python run_daily_freelance.py --weekly
+          else
+            python run_daily_freelance.py
+          fi
+
+      - name: Stop engine
+        if: always()
+        run: |
+          if [ -n "$ENGINE_PID" ]; then
+            kill $ENGINE_PID 2>/dev/null || true
+          fi
+        env:
+          ENGINE_PID: ${{ env.ENGINE_PID }}
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-brain-logs-${{ github.run_id }}
+          path: |
+            hunter.log
+            telegram_log.md
+            daily_freelance_state.json
+            out/
+          retention-days: 14
+
+      - name: Telegram notification on failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python -c "
+import os, sys
+sys.path.insert(0, '.')
+from telegram_notifier import notify_error
+msg = f'\U0001F6A8 Daily Brain FAILED\nRun: \${{ github.run_id }}\nSee: \${{ github.server_url }}/\${{ github.repository }}/actions/runs/\${{ github.run_id }}'
+notify_error(msg)
+"

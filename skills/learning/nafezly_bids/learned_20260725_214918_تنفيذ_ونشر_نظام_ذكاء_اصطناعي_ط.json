@@ -1,0 +1,23 @@
+{
+  "name": "learning/nafezly_bids/learned_20260725_214918_تنفيذ_ونشر_نظام_ذكاء_اصطناعي_ط",
+  "type": "arabic_bid",
+  "language": "ar",
+  "tags": [
+    "nafezly",
+    "learned",
+    "worth_bid",
+    "arabic",
+    "n8n",
+    "automation"
+  ],
+  "uses": 0,
+  "version": 2,
+  "created": "2026-07-25T21:49:18.234119",
+  "source": {
+    "platform": "nafezly",
+    "project_title": "تنفيذ ونشر نظام ذكاء اصطناعي طبي (End-to-End Cloud-Based Medical Ch...",
+    "project_url": "https://nafezly.com/project/52577-%D8%AA%D9%86%D9%81%D9%8A%D8%B0-%D9%88%D9%86%D8%B4%D8%B1-%D9%86%D8%B8%D8%A7%D9%85-%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D8%B7%D8%A8%D9%8A-End-to-End-Cloud-Based-Medical-Chat-Assistant-%D8%B9%D9%84%D9%89-AWS",
+    "classification": "worth_bid",
+    "bid_preview": "السلام عليكم،\n\nشكرًا على نشر المشروع. قرأت التفاصيل وأعتقد أستطيع تقديم حل عملي ومُجرَّب.\n\nخبرتي:\nبنيت أكثر من {n_workflows} workflow في n8n تربط بين OpenAI و Google Sheets و Slack و Airtable. عندي مث"
+  }
+}

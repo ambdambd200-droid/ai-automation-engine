@@ -1,0 +1,26 @@
+{
+  "name": "email_followup/english_cold_real_ef2bfa",
+  "type": "email_followup",
+  "language": "en",
+  "tags": [
+    "email",
+    "followup",
+    "english",
+    "cold"
+  ],
+  "template": "Hey,\n\nFollowing up on my June 1st message. Hope your projects are going well.\n\nIf there's room to collaborate: I run a small automation studio and can take on overflow n8n work — lead enrichment pipelines, OpenAI integrations, SaaS sync. White-label friendly.\n\nOpen to a quick call whenever suits.\n\nSalim Muhammad\nAI Automation Engineer\nsalim.muhammad.work@gmail.com\nsalim.muhammad.work@gmail.com\n\n---",
+  "rules": [
+    "Fill {first_name} from recipient's known name",
+    "Fill {company} from recipient's company name",
+    "Fill {topic} from the email subject pattern",
+    "sign as Salim Muhammad"
+  ],
+  "examples": [],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-24T14:07:15.081347+00:00",
+  "version": 2,
+  "from_real": true,
+  "source": "extracted from hunt_decisions.md",
+  "body_hash": "ef2bfaf95a04"
+}

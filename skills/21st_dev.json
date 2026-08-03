@@ -1,0 +1,27 @@
+{
+  "name": "21st.dev",
+  "type": "design_system",
+  "language": "en",
+  "tags": ["ui", "components", "react", "tailwind", "shadcn", "design"],
+  "uses": 0,
+  "version": 1,
+  "created": "2026-07-21T23:45:00Z",
+  "description": "Component registry with 10,000+ React + Tailwind CSS components from 700+ design engineers",
+  "source": {
+    "url": "https://21st.dev",
+    "docs": "https://21st.dev/community/components",
+    "free_tier": "2 free component copies/day, browsing unlimited",
+    "install": "Copy prompt from 21st.dev → paste into Claude Code / Cursor / Lovable / v0"
+  },
+  "key_features": [
+    "10,000+ components (buttons, hero sections, nav, AI chats, galleries, sign-ins)",
+    "2,000+ marketing blocks (animated heroes, shaders, backgrounds)",
+    "Built by real design engineers (Aceternity UI, Magic UI, shadcn/ui, Origin UI)",
+    "Each component ships as an AI-ready prompt",
+    "shadcn/ui registry format — composes with your design tokens",
+    "Templates: full pages and multi-page apps available"
+  ],
+  "prompt_template": "Add the [COMPONENT_NAME] from 21st.dev to my project. Adapt it to my existing theme (Tailwind CSS, shadcn/ui conventions). Install using the shadcn CLI format.",
+  "works_with": ["Claude Code", "Cursor", "Lovable", "v0", "Codex", "OpenCode"],
+  "pricing": "Free tier: 2 copies/day. Membership: unlimited copies + AI credits."
+}

@@ -1,0 +1,37 @@
+{
+  "name": "email_reply/professional_provider_en_v2",
+  "type": "email_reply",
+  "language": "en",
+  "tags": [
+    "reply",
+    "english",
+    "professional",
+    "service_provider",
+    "modern",
+    "warm"
+  ],
+  "template": "Subject: Re: {client_subject} — quick read + proposed approach\n\nHi {client_name},\n\nThanks for reaching out about {topic_short}. I read your message carefully — {insight}.\n\nHere's how I'd run this:\n1. {step_1}\n2. {step_2}\n3. {step_3}\n4. Deliver a working {deliverable}, with a 15-min handover call so your team can run it after me.\n\nTimeline: {timeline}. Price range: {price_range}.\n\nTwo quick questions to lock the scope:\n- {question_1}\n- {question_2}\n\nIf helpful, I can do a free 15-min audit call this week — no commitment, just alignment. Pick a slot here: {booking_link_or_propose_times}.\n\nBest,\nSalim Muhammad\nAI Automation Engineer\nGaza, Palestine\nsalim.muhammad.work0@gmail.com",
+  "rules": [
+    "open with a specific acknowledgment (not generic 'thanks for reaching out')",
+    "show one technical insight that proves you understood the brief",
+    "give a 3-4 step execution plan in plain language",
+    "state timeline AND price range honestly (no hidden fees)",
+    "ask exactly 2 clarifying questions (not more — they delay replies)",
+    "offer ONE concrete next step (free audit call)",
+    "sign as Salim Muhammad with location + email",
+    "keep total body under 200 words",
+    "use British or American English consistently (pick one per email)",
+    "never use buzzwords like 'synergy', 'leverage', 'game-changer'",
+    "sound human — short sentences, occasional contractions, no corporate fluff"
+  ],
+  "examples": [
+    {
+      "input": "client asks for n8n workflow that monitors Gmail and forwards invoices to Slack",
+      "output": "Hi Mariam,\n\nThanks for reaching out about the Gmail-to-Slack invoice pipeline. I read your brief — looks like you need every PDF invoice arriving in your shared inbox to land in a dedicated Slack channel within seconds, with the vendor name and amount as the message text.\n\nHere's how I'd run this:\n1. Set up a Gmail trigger on a label like 'Invoices/Processed' so we only catch what matters.\n2. Parse the PDF with a small AI step (Groq or GPT-4o-mini) to extract vendor + amount.\n3. Post a clean Slack message to #finance-invoices with the extracted fields and a link back to the original email.\n4. Ship a working workflow + 15-min walkthrough so your team can tweak the label rules later.\n\nTimeline: 2-3 days. Price range: $50-80.\n\nTwo quick questions to lock the scope:\n- Roughly how many invoices per day should we expect?\n- Is one Slack channel enough, or do you want routing by vendor?\n\nIf helpful, I can do a free 15-min audit call this week — no commitment, just alignment.\n\nBest,\nSalim Muhammad\nAI Automation Engineer\nGaza, Palestine\nsalim.muhammad.work0@gmail.com"
+    }
+  ],
+  "uses": 0,
+  "last_used": null,
+  "created": "2026-07-31T00:00:00Z",
+  "version": 2
+}
