@@ -18,6 +18,13 @@ data.db
 storage/data.db
 gmail_log.md
 job_scan_*.json
+hunt_state.json
+hunt_raw.json
+appearance_state.json
+email_agent_state.json
+linkedin_agent_state.json
+nafezly_agent_state.json
+sentry_state.json
 
 # IDE
 .vscode/
@@ -27,11 +34,61 @@ job_scan_*.json
 # OS
 .DS_Store
 Thumbs.db
+
 # Browser automation data
 .playwright_userdata/
-# Embedded repos (use submodules instead)
-ai-automation-engine/
+
 # OS files
 nul
+
+# Temp/debug files
+Temp/
+*.tmp
+debug*.py
+test_*.py
+take_*.py
+real_*.py
+check_*.py
+step*.py
+gen_*.py
+create_*.py
+explore_*.py
+find_*.py
+diagnose_*.py
+render_*.py
+html_*.py
+bidi_*.py
+upload_*.py
+
 # Secrets and API keys
 A!1.txt
+*.key
+*.pem
+.env
+.env.local
+.env.*.local
+
+# Sensitive logs
+forum_post_log.md
+hunter.log
+hunter_sent.log
+profile_completion_log.md
+hunter_drafts.md
+hunt_context.md
+hunt_decisions.md
+gmail_log.md
+sent_applications.log
+job_queue.md
+application_pipeline.md
+
+# Large data directories
+hunter_screenshots/
+signup_screenshots/
+screenshots/
+
+# Repo-specific
+ai-automation-engine/.env
+ai-automation-engine/storage/data.db
+ai-automation-engine/__pycache__/
+ai-automation-engine/engine/__pycache__/
+ai-automation-engine/*.log
