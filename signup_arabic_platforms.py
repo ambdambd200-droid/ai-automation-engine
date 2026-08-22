@@ -47,6 +47,11 @@ def log_line(line: str):
 
 
 def get_password() -> str:
+    import os
+    pw = os.environ.get("ACCOUNT_PASSWORD") or os.environ.get("MOSTAQL_PASSWORD") \
+         or os.environ.get("NAFEZLY_PASSWORD")
+    if pw:
+        return pw
     return getpass.getpass("Enter password for the new account (will not be stored): ")
 
 
@@ -63,7 +68,7 @@ def signup_one(platform: str, signup_url: str, home_url: str, password: str) -> 
         signup_url=signup_url,
         home_url=home_url,
         headless=False,
-        wait_for_seconds_after_signup=8,
+        wait_for_seconds_after_signup=5,
     ) as sm:
         page = sm.page
 

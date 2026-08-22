@@ -30,6 +30,7 @@ from urllib.parse import quote
 try:
     import requests
     from session_manager import SessionManager
+    from selector_cache import get_selector_cache
 except ImportError as e:
     print(f"[post_arabic_bids] Import error: {e}", file=sys.stderr)
     sys.exit(1)
@@ -46,11 +47,31 @@ SEARCH_URLS = {
     "nafezly": "https://nafezly.com/projects?keyword={kw}",
 }
 
-# Project card selectors — best-effort extraction (platforms change often)
-PROJECT_CARD_SELECTORS = {
-    "mostaql": "article.project-card, .project-item, li.project-row",
-    "nafezly": ".project-card, .card.project, article.project",
+# Fallback selectors (used when cache is empty)
+FALLBACK_PROJECT_CARD_SELECTORS = {
+    "mostaql": "article, .project-card, .project-item, .card, li.project, .job-item, [data-testid='project-card'], .project",
+    "nafezly": "article, .project-card, .card, .project, .job-card, .project-item, .card-project, .item",
 }
+
+# Initialize selector cache
+_selector_cache = get_selector_cache()
+
+
+def trigger_auto_discovery(platform: str, keyword: str = "n8n") -> bool:
+    """Trigger auto-selector discovery for platform."""
+    try:
+        from auto_selectors import discover_selectors
+        log(f"  Triggering auto-discovery for {platform}...")
+        results = discover_selectors(platform, keyword=keyword)
+        if results and results.get("selectors"):
+            for elem_type, sels in results["selectors"].items():
+                if sels:
+                    _selector_cache.add_selectors(platform, elem_type, sels, source="auto_discovery")
+            log(f"  Auto-discovery completed for {platform}")
+            return True
+    except Exception as e:
+        log(f"  Auto-discovery failed: {e}")
+    return False
 
 # Bid form selectors (per project page)
 BID_FORM_SELECTORS = {
@@ -108,8 +129,17 @@ def engine_generate_bid(platform: str, project: dict) -> dict | None:
         return None
 
 
+def get_cached_selectors(platform: str, element_type: str = "card") -> list:
+    """Get selectors from cache with fallback."""
+    cached = _selector_cache.get_selectors(platform, element_type)
+    if cached:
+        return cached
+    # Fallback to hardcoded
+    return FALLBACK_PROJECT_CARD_SELECTORS.get(platform, "").split(", ")
+
+
 def search_platform(page, platform: str, keyword: str, top_n: int = 5) -> list:
-    """Open platform search and extract project cards."""
+    """Open platform search and extract project cards using cached selectors."""
     url = SEARCH_URLS[platform].format(kw=quote(keyword))
     log(f"  Searching {platform}: {url}")
     try:
@@ -118,34 +148,48 @@ def search_platform(page, platform: str, keyword: str, top_n: int = 5) -> list:
     except Exception as e:
         log(f"  Search page failed: {e}")
         return []
-    sel = PROJECT_CARD_SELECTORS.get(platform, "")
+    
+    # Try cached selectors first
+    selectors = get_cached_selectors(platform, "card")
     projects = []
-    try:
-        cards = page.locator(sel)
-        count = min(cards.count(), top_n * 3)  # grab more, then dedupe
-        log(f"  Found {count} cards (showing up to {count})")
-        for i in range(count):
-            try:
-                card = cards.nth(i)
-                title_loc = card.locator("h2, h3, .project-title, a").first
-                link_loc = card.locator("a").first
-                title = title_loc.inner_text().strip() if title_loc.count() > 0 else ""
-                href = link_loc.get_attribute("href") if link_loc.count() > 0 else ""
-                if title and href and "javascript" not in href:
-                    full_url = href if href.startswith("http") else f"https://{platform}.com{href}"
-                    if not any(p["url"] == full_url for p in projects):
-                        projects.append({
-                            "title": title[:200],
-                            "url": full_url,
-                            "budget": "",
-                            "description": "",
-                        })
-                        if len(projects) >= top_n:
-                            break
-            except Exception:
+    
+    for sel in selectors:
+        try:
+            cards = page.locator(sel)
+            count = min(cards.count(), top_n * 3)
+            if count == 0:
                 continue
-    except Exception as e:
-        log(f"  Card extraction failed: {e}")
+            log(f"  Selector '{sel}' found {count} cards")
+            for i in range(count):
+                try:
+                    card = cards.nth(i)
+                    title_loc = card.locator("h2, h3, .project-title, a").first
+                    link_loc = card.locator("a").first
+                    title = title_loc.inner_text().strip() if title_loc.count() > 0 else ""
+                    href = link_loc.get_attribute("href") if link_loc.count() > 0 else ""
+                    if title and href and "javascript" not in href:
+                        full_url = href if href.startswith("http") else f"https://{platform}.com{href}"
+                        if not any(p["url"] == full_url for p in projects):
+                            projects.append({
+                                "title": title[:200],
+                                "url": full_url,
+                                "budget": "",
+                                "description": "",
+                            })
+                            if len(projects) >= top_n:
+                                break
+                except Exception:
+                    continue
+            if projects:
+                _selector_cache.record_success(platform, "card", sel)
+                break  # Found working selector
+            else:
+                _selector_cache.record_failure(platform, "card", sel)
+        except Exception as e:
+            log(f"  Selector '{sel}' failed: {e}")
+            _selector_cache.record_failure(platform, "card", sel)
+            continue
+    
     log(f"  Extracted {len(projects)} unique projects")
     return projects
 
@@ -161,7 +205,8 @@ def post_bid(page, project: dict, bid_body: str, platform: str) -> bool:
         return False
     # Find bid form
     ta = None
-    for sel in BID_FORM_SELECTORS["textarea"].split(", "):
+    textarea_selectors = BID_FORM_SELECTORS["textarea"].split(", ")
+    for sel in textarea_selectors:
         loc = page.locator(sel).first
         if loc.count() > 0:
             try:
@@ -184,7 +229,8 @@ def post_bid(page, project: dict, bid_body: str, platform: str) -> bool:
         return False
     # Submit
     submit = None
-    for sel in BID_FORM_SELECTORS["submit"].split(", "):
+    submit_selectors = BID_FORM_SELECTORS["submit"].split(", ")
+    for sel in submit_selectors:
         loc = page.locator(sel).first
         if loc.count() > 0:
             try:
@@ -225,10 +271,21 @@ def run_platform(platform: str, keywords: list[str], top_n: int, dry_run: bool =
         page = sm.page
         all_results = []
         bids_posted = 0
+        discovery_triggered = False
+        
         for kw in keywords:
             if bids_posted >= top_n:
                 break
             projects = search_platform(page, platform, kw, top_n=top_n - bids_posted + 2)
+            
+            # If no projects found and we haven't tried discovery yet, trigger it
+            if not projects and not discovery_triggered:
+                log(f"  No projects found with cached selectors, triggering auto-discovery...")
+                if trigger_auto_discovery(platform, kw):
+                    discovery_triggered = True
+                    # Retry search with new selectors
+                    projects = search_platform(page, platform, kw, top_n=top_n - bids_posted + 2)
+            
             for proj in projects:
                 if bids_posted >= top_n:
                     break

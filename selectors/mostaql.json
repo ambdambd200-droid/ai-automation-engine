@@ -1,0 +1,157 @@
+{
+  "platform": "mostaql",
+  "version": 5,
+  "updated_at": "2026-08-08T20:28:39.629906",
+  "card": [
+    {
+      "selector": ".project-row",
+      "element_type": "card",
+      "success_count": 4,
+      "failure_count": 0,
+      "last_used": "2026-08-09T22:20:17.749608",
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".collection-browse--table",
+      "element_type": "card",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "table.projects-table",
+      "element_type": "card",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "title": [
+    {
+      "selector": ".card--title a",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "h3 a",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".project__title a",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "a[href*=\"/project/\"]",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "link": [
+    {
+      "selector": ".card--title a",
+      "element_type": "link",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "h3 a",
+      "element_type": "link",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "a[href*=\"/project/\"]",
+      "element_type": "link",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.624142",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "budget": [
+    {
+      "selector": ".project__meta .budget",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.629906",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".price",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.629906",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "[class*=\"price\"]",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.629906",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".amount",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:28:39.629906",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "description": [],
+  "client_name": [],
+  "client_rating": [],
+  "meta": {}
+}

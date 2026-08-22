@@ -1,70 +1,37 @@
-name: Weekly Freelance Review
+name: Weekly Portfolio Review
 
 on:
   schedule:
-    # 4:00 AM UTC every Sunday = 7:00 AM Gaza (winter)
-    - cron: '0 4 * * 0'
+    - cron: '0 4 * * 0'  # Sunday 4 AM UTC
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Run in dry-run mode'
-        required: false
-        default: 'false'
-        type: boolean
 
 jobs:
   weekly-review:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     env:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      ENGINE_URL: https://ai-automation-engine.onrender.com
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      ENGINE_FROM_EMAIL: ${{ secrets.ENGINE_FROM_EMAIL }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
-      - name: Install Playwright
-        run: |
-          pip install playwright
-          playwright install chromium
 
       - name: Install Python dependencies
         run: |
-          pip install -r ai-automation-engine/requirements.txt
+          pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run weekly review
+      - name: Run weekly portfolio creation (placeholder)
         run: |
-          cd $GITHUB_WORKSPACE
-          python run_daily_freelance.py --weekly --dry-run=${{ github.event.inputs.dry_run || 'false' }}
-
-      - name: Upload screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: weekly-screenshots
-          path: screenshots/
-          retention-days: 7
-
-      - name: Upload state
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: freelance-state
-          path: daily_freelance_state.json
-          retention-days: 30
+          python -c "
+from datetime import datetime
+from telegram_notifier import notify
+notify(f'📅 Weekly Review - {datetime.now().strftime(\"%Y-%m-%d\")}\n\nReminder: Create portfolio pieces manually:\n- Nafezly portfolio\n- Mostaql portfolio  \n- Nafezly service page\n\nSee create_portfolio.py for workflow.')
+          "

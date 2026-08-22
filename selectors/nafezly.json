@@ -1,0 +1,117 @@
+{
+  "platform": "nafezly",
+  "version": 5,
+  "updated_at": "2026-08-08T20:21:39.755487",
+  "card": [
+    {
+      "selector": ".project-box",
+      "element_type": "card",
+      "success_count": 4,
+      "failure_count": 0,
+      "last_used": "2026-08-09T22:20:31.281100",
+      "discovered_at": "2026-08-08T20:21:39.719976",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".main-nafez-box-styles",
+      "element_type": "card",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.719976",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "title": [
+    {
+      "selector": "a[href]",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.740472",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".text-truncate a",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.740472",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "h4 a",
+      "element_type": "title",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.740472",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "link": [
+    {
+      "selector": "a[href]",
+      "element_type": "link",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.740472",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "budget": [
+    {
+      "selector": ".price",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.755487",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".budget",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.755487",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": ".amount",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.755487",
+      "last_validated": null,
+      "source": "manual"
+    },
+    {
+      "selector": "[class*=\"price\"]",
+      "element_type": "budget",
+      "success_count": 0,
+      "failure_count": 0,
+      "last_used": null,
+      "discovered_at": "2026-08-08T20:21:39.755487",
+      "last_validated": null,
+      "source": "manual"
+    }
+  ],
+  "description": [],
+  "client_name": [],
+  "client_rating": [],
+  "meta": {}
+}

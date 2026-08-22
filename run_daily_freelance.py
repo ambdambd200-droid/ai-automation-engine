@@ -57,6 +57,14 @@ DAILY_KEYWORDS = {
     "nafezly": ["n8n", "أتمتة", "بوت", "API", "Python", "Make.com", "Zapier"],
 }
 
+# Import healing orchestrator
+try:
+    from healing_orchestrator import get_orchestrator
+    HEALING_ENABLED = True
+except ImportError:
+    HEALING_ENABLED = False
+    log("[run_daily_freelance] healing_orchestrator not available, running without self-healing")
+
 
 def load_profile() -> dict:
     if PROFILE_FILE.exists():
@@ -170,7 +178,7 @@ def increment_quota(state: dict, kind: str):
 
 
 def run_mostaql(state: dict, dry_run: bool) -> list:
-    """Mostaql: search + bid."""
+    """Mostaql: search + bid with self-healing."""
     from post_arabic_bids import run_platform
     remaining = check_quota(state, "mostaql_bids")
     if remaining <= 0:
@@ -178,7 +186,13 @@ def run_mostaql(state: dict, dry_run: bool) -> list:
         return []
     log(f"\n{'='*60}\n  MOSTAQL — daily run (quota: {remaining}/3)\n{'='*60}")
     keywords = DAILY_KEYWORDS["mostaql"][:3]  # rotate top 3
-    result = run_platform("mostaql", keywords, top_n=remaining, dry_run=dry_run)
+    
+    if HEALING_ENABLED:
+        orch = get_orchestrator("mostaql", max_retries=3)
+        result = orch.execute(run_platform, "mostaql", keywords, top_n=remaining, dry_run=dry_run)
+    else:
+        result = run_platform("mostaql", keywords, top_n=remaining, dry_run=dry_run)
+    
     n_posted = sum(1 for r in result["results"] if r.get("ok"))
     for _ in range(n_posted):
         increment_quota(state, "mostaql_bids")
@@ -187,7 +201,7 @@ def run_mostaql(state: dict, dry_run: bool) -> list:
 
 
 def run_nafezly(state: dict, dry_run: bool) -> list:
-    """Nafezly: search + bid."""
+    """Nafezly: search + bid with self-healing."""
     from post_arabic_bids import run_platform
     remaining = check_quota(state, "nafezly_bids")
     if remaining <= 0:
@@ -195,7 +209,13 @@ def run_nafezly(state: dict, dry_run: bool) -> list:
         return []
     log(f"\n{'='*60}\n  NAFEZLY — daily run (quota: {remaining}/3)\n{'='*60}")
     keywords = DAILY_KEYWORDS["nafezly"][:3]
-    result = run_platform("nafezly", keywords, top_n=remaining, dry_run=dry_run)
+    
+    if HEALING_ENABLED:
+        orch = get_orchestrator("nafezly", max_retries=3)
+        result = orch.execute(run_platform, "nafezly", keywords, top_n=remaining, dry_run=dry_run)
+    else:
+        result = run_platform("nafezly", keywords, top_n=remaining, dry_run=dry_run)
+    
     n_posted = sum(1 for r in result["results"] if r.get("ok"))
     for _ in range(n_posted):
         increment_quota(state, "nafezly_bids")
@@ -204,7 +224,7 @@ def run_nafezly(state: dict, dry_run: bool) -> list:
 
 
 def run_n8n_community(state: dict, dry_run: bool) -> list:
-    """n8n Community: post replies."""
+    """n8n Community: post replies with self-healing."""
     remaining = check_quota(state, "n8n_replies")
     if remaining <= 0:
         log(f"[n8n Community] Daily quota exhausted (2/2)")
@@ -217,9 +237,7 @@ def run_n8n_community(state: dict, dry_run: bool) -> list:
         log("  DRY-RUN: would post replies (see post_n8n_replies.py --dry-run)")
         return [{"ok": "dry-run"}]
     # Run the actual script
-    try:
-        # post_n8n_replies has its own __main__; we'll call its internal function
-        # For simplicity, just call the script as a subprocess
+    def _run_n8n():
         import subprocess
         proc = subprocess.run(
             [sys.executable, str(WORKSPACE / "post_n8n_replies.py"),
@@ -231,7 +249,17 @@ def run_n8n_community(state: dict, dry_run: bool) -> list:
             log(f"  stdout: {proc.stdout[-500:]}")
         if proc.stderr:
             log(f"  stderr: {proc.stderr[-500:]}")
-        ok = proc.returncode == 0
+        if proc.returncode != 0:
+            raise Exception(f"post_n8n_replies failed: {proc.stderr}")
+        return proc.returncode == 0
+    
+    try:
+        if HEALING_ENABLED:
+            orch = get_orchestrator("n8n", max_retries=2)
+            ok = orch.execute(_run_n8n)
+        else:
+            ok = _run_n8n()
+        
         increment_quota(state, "n8n_replies")
         engine_hunt_event("daily_n8n_run", {"ok": ok, "dry_run": False})
         return [{"ok": ok}]

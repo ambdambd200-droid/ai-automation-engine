@@ -1,70 +1,100 @@
-name: Daily Freelance Routine
+name: Daily Freelance Run with Self-Healing
 
 on:
   schedule:
-    # 4:00 AM UTC = 7:00 AM Gaza (winter) / 6:00 AM (summer)
-    - cron: '0 4 * * *'
+    - cron: '0 4 * * *'  # 4 AM UTC = 7 AM Gaza (winter)
   workflow_dispatch:
     inputs:
       dry_run:
-        description: 'Run in dry-run mode (no actual posts)'
-        required: false
-        default: 'false'
+        description: 'Dry run (no actual posts)'
         type: boolean
+        default: false
+      platform:
+        description: 'Platform to run (both|mostaql|nafezly|n8n)'
+        type: choice
+        choices: ['both', 'mostaql', 'nafezly', 'n8n']
+        default: 'both'
 
 jobs:
   daily-freelance:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      ENGINE_URL: https://ai-automation-engine.onrender.com
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      ENGINE_FROM_EMAIL: ${{ secrets.ENGINE_FROM_EMAIL }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      MOSTAQL_EMAIL: ${{ secrets.MOSTAQL_EMAIL }}
+      MOSTAQL_PASSWORD: ${{ secrets.MOSTAQL_PASSWORD }}
+      NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
+      NAFEZLY_PASSWORD: ${{ secrets.NAFEZLY_PASSWORD }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y chromium-browser
-
-      - name: Install Playwright
-        run: |
-          pip install playwright
-          playwright install chromium
+          sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
 
       - name: Install Python dependencies
         run: |
-          pip install -r ai-automation-engine/requirements.txt
+          pip install --upgrade pip
           pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Create sessions directory
+        run: mkdir -p sessions
+
+      - name: Restore sessions from cache
+        uses: actions/cache@v4
+        with:
+          path: sessions/
+          key: freelance-sessions-${{ runner.os }}-${{ hashFiles('sessions/*.json') }}
+          restore-keys: |
+            freelance-sessions-${{ runner.os }}-
 
       - name: Run daily freelance routine
         run: |
-          cd $GITHUB_WORKSPACE
-          python run_daily_freelance.py --dry-run=${{ github.event.inputs.dry_run || 'false' }}
+          python run_daily_freelance.py --platform ${{ github.event.inputs.platform || 'both' }}
+        env:
+          GITHUB_ACTIONS: 'true'
 
-      - name: Upload screenshots
+      - name: Save sessions to cache
+        uses: actions/cache@v4
+        with:
+          path: sessions/
+          key: freelance-sessions-${{ runner.os }}-${{ hashFiles('sessions/*.json') }}
+
+      - name: Upload logs and artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: daily-screenshots
-          path: screenshots/
+          name: daily-run-logs
+          path: |
+            out/
+            screenshots/
+            daily_freelance_state.json
+            telegram_controller.log
           retention-days: 7
 
-      - name: Upload state
+      - name: Send completion notification
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: freelance-state
-          path: daily_freelance_state.json
-          retention-days: 30
+        run: |
+          python -c "
+import os, sys, json
+sys.path.insert(0, '.')
+from telegram_notifier import notify
+status = '✅ SUCCESS' if os.environ.get('RUN_STATUS') == '0' else '❌ FAILED'
+notify(f'{status} Daily Freelance Run\nGitHub Actions: {os.environ.get(\"GITHUB_RUN_NUMBER\")}\nCommit: {os.environ.get(\"GITHUB_SHA\", \"\")[:8]}')
+          "
+        env:
+          RUN_STATUS: ${{ job.status }}

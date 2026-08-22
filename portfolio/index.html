@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="سليم محمد — مهندس أتمتة ذكاء اصطناعي متخصص في n8n وPython وبناء البوتات. أحوّل العمليات المتكررة إلى أنظمة ذكية تعمل 24/7.">
+    <meta name="keywords" content="n8n, AI automation, Python, bots, workflow automation, Telegram bot, WhatsApp bot, API integration, AI agent">
+    <meta name="author" content="Salim Muhammad">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="سليم محمد | مهندس أتمتة ذكاء اصطناعي">
+    <meta property="og:description" content="أبني تدفقات عمل n8n، وكلاء AI، وبوتات توفّر للعميل ساعات من العمل اليومي.">
+    <meta property="og:image" content="og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="سليم محمد | مهندس أتمتة ذكاء اصطناعي">
+    <meta name="twitter:description" content="أبني تدفقات عمل n8n، وكلاء AI، وبوتات توفّر للعميل ساعات من العمل اليومي.">
+    <title>سليم محمد | مهندس أتمتة ذكاء اصطناعي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-family='Arial' font-size='50' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <nav class="navbar" id="navbar" role="navigation" aria-label="القائمة الرئيسية">
+        <div class="nav-container">
+            <a href="#home" class="logo" aria-label="العودة للرئيسية">
+                <span class="logo-icon" aria-hidden="true">S</span>
+                <span class="logo-text">سليم محمد</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false" aria-controls="navMenu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu" role="menubar">
+                <li role="none"><a href="#home" class="nav-link active" role="menuitem">الرئيسية</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem">نبذة عني</a></li>
+                <li role="none"><a href="#services" class="nav-link" role="menuitem">الخدمات</a></li>
+                <li role="none"><a href="#portfolio" class="nav-link" role="menuitem">أعمالي</a></li>
+                <li role="none"><a href="#skills" class="nav-link" role="menuitem">المهارات</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem">تواصل</a></li>
+                <li role="none">
+                    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الداكن">
+                        <span class="theme-icon" aria-hidden="true">🌙</span>
+                    </button>
+                </li>
+                <li role="none">
+                    <button class="lang-toggle" id="langToggle" aria-label="تبديل اللغة">
+                        <span class="lang-icon" aria-hidden="true">EN</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero" id="home" aria-labelledby="hero-title">
+            <div class="hero-bg" aria-hidden="true">
+                <div class="grid-overlay"></div>
+                <div class="gradient-orb orb-1"></div>
+                <div class="gradient-orb orb-2"></div>
+                <div class="gradient-orb orb-3"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-badge" aria-live="polite">
+                    <span class="pulse-dot" aria-hidden="true"></span>
+                    متاح للعمل • Available for work
+                </div>
+                <h1 class="hero-title" id="hero-title">
+                    <span class="hero-greeting">مرحباً، أنا</span>
+                    <span class="hero-name">سليم محمد</span>
+                    <span class="hero-role">مهندس أتمتة ذكاء اصطناعي</span>
+                </h1>
+                <p class="hero-description">
+                    أبني تدفقات عمل n8n، وكلاء AI، وبوتات تعمل 24/7 — أحوّل العمليات المتكررة إلى أنظمة ذكية توفّر عليك ساعات من العمل اليومي.
+                </p>
+                <div class="hero-cta">
+                    <a href="#contact" class="btn btn-primary">
+                        <span>اطلب مشروعك الآن</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#portfolio" class="btn btn-secondary">
+                        <span>شاهد أعمالي</span>
+                    </a>
+                </div>
+                <div class="hero-stats" role="list" aria-label="إحصائيات">
+                    <div class="stat-item" role="listitem">
+                        <span class="stat-number">2+</span>
+                        <span class="stat-label">سنوات خبرة</span>
+                    </div>
+                    <div class="stat-item" role="listitem">
+                        <span class="stat-number">30+</span>
+                        <span class="stat-label">مشروع منجز</span>
+                    </div>
+                    <div class="stat-item" role="listitem">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">أنظمة تعمل</span>
+                    </div>
+                    <div class="stat-item" role="listitem">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">التزام بالموعد</span>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator" aria-hidden="true">
+                <span></span>
+            </div>
+        </section>
+
+        <section class="about" id="about" aria-labelledby="about-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">نبذة عني</span>
+                    <h2 class="section-title" id="about-title">من أنا؟</h2>
+                </div>
+                <div class="about-content">
+                    <div class="about-image">
+                        <div class="image-frame">
+                            <div class="image-placeholder" aria-hidden="true">
+                                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                            <div class="image-decoration" aria-hidden="true"></div>
+                        </div>
+                        <div class="floating-badge">
+                            <span aria-hidden="true">🤖</span>
+                            <div>
+                                <strong>متخصص</strong>
+                                <small>n8n • Python • AI</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-text">
+                        <p class="about-lead">
+                            أنا سليم محمد، مهندس أتمتة يعمل في مجال الأتمتة الذكية منذ أكثر من عامَين.
+                        </p>
+                        <p>
+                            تخصصي الدقيق هو بناء <strong>تدفقات عمل n8n</strong> تربط بين عشرات الخدمات والأنظمة تلقائياً، وتصميم <strong>بوتات AI</strong> للرد على العملاء، وربط APIs معقدة (Gmail، WhatsApp، CRM، منصات المتاجر الإلكترونية).
+                        </p>
+                        <p>
+                            أؤمن بأن الأتمتة لا تحل محل الإنسان، بل تحرّره من المهام المملة ليركّز على ما يبرع فيه حقاً: <em>الإبداع، الاستراتيجية، وبناء العلاقات.</em>
+                        </p>
+
+                        <div class="about-features">
+                            <div class="feature-item">
+                                <div class="feature-icon" aria-hidden="true">⚡</div>
+                                <div>
+                                    <strong>تسليم سريع</strong>
+                                    <p>24-72 ساعة للمهام الصغيرة</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon" aria-hidden="true">📋</div>
+                                <div>
+                                    <strong>توثيق كامل</strong>
+                                    <p>تسليم مع شرح مفصّل</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon" aria-hidden="true">🛠️</div>
+                                <div>
+                                    <strong>دعم مستمر</strong>
+                                    <p>صيانة بعد التسليم</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon" aria-hidden="true">🔒</div>
+                                <div>
+                                    <strong>سرية تامة</strong>
+                                    <p>حماية بيانات العملاء</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" id="services" aria-labelledby="services-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">خدماتي</span>
+                    <h2 class="section-title" id="services-title">ماذا أقدّم؟</h2>
+                    <p class="section-subtitle">حلول أتمتة متكاملة تناسب احتياجاتك</p>
+                </div>
+                <div class="services-grid">
+                    <article class="service-card featured">
+                        <div class="service-badge">الأكثر طلباً</div>
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">تدفقات عمل n8n</h3>
+                        <p class="service-description">
+                            بناء تدفقات عمل متقدمة تربط بين خدماتك المختلفة (Gmail، WhatsApp، CRM، إلخ) وتعمل تلقائياً على مدار الساعة.
+                        </p>
+                        <ul class="service-features">
+                            <li>✓ ربط APIs متعددة</li>
+                            <li>✓ معالجة البيانات تلقائياً</li>
+                            <li>✓ تنبيهات ذكية</li>
+                            <li>✓ تقارير دورية</li>
+                        </ul>
+                        <div class="service-price">
+                            <span class="price-from">يبدأ من</span>
+                            <span class="price-amount">$75</span>
+                        </div>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">وكلاء AI ذكيون</h3>
+                        <p class="service-description">
+                            بناء وكلاء ذكاء اصطناعي يقومون بمهام كاملة دون تدخّل بشري: رد على العملاء، تلخيص الإيميلات، استخراج البيانات.
+                        </p>
+                        <ul class="service-features">
+                            <li>✓ بوتات رد ذكية</li>
+                            <li>✓ تلخيص تلقائي</li>
+                            <li>✓ تحليل البيانات</li>
+                            <li>✓ Prompt Engineering</li>
+                        </ul>
+                        <div class="service-price">
+                            <span class="price-from">يبدأ من</span>
+                            <span class="price-amount">$150</span>
+                        </div>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">بوتات WhatsApp & Telegram</h3>
+                        <p class="service-description">
+                            تطوير بوتات مخصصة للتواصل مع عملائك عبر واتساب وتلقرام، تعمل 24/7 وترد على الاستفسارات تلقائياً.
+                        </p>
+                        <ul class="service-features">
+                            <li>✓ ردود تلقائية ذكية</li>
+                            <li>✓ تكامل مع CRM</li>
+                            <li>✓ إرسال إشعارات</li>
+                            <li>✓ تقارير الأداء</li>
+                        </ul>
+                        <div class="service-price">
+                            <span class="price-from">يبدأ من</span>
+                            <span class="price-amount">$100</span>
+                        </div>
+                    </article>
+
+                    <article class="service-card">
+                        <div class="service-icon" aria-hidden="true">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <polyline points="16 18 22 12 16 6"/>
+                                <polyline points="8 6 2 12 8 18"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">برمجة Python</h3>
+                        <p class="service-description">
+                            برمجة سكريبتات Python لأتمتة المهام المتكررة بدون واجهة، استخراج البيانات من الويب، ومعالجة الملفات.
+                        </p>
+                        <ul class="service-features">
+                            <li>✓ Web Scraping</li>
+                            <li>✓ معالجة البيانات</li>
+                            <li>✓ سكريبتات CLI</li>
+                            <li>✓ APIs مخصصة</li>
+                        </ul>
+                        <div class="service-price">
+                            <span class="price-from">يبدأ من</span>
+                            <span class="price-amount">$25</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">أعمالي</span>
+                    <h2 class="section-title" id="portfolio-title">مشاريع مختارة</h2>
+                    <p class="section-subtitle">نماذج من الأعمال التي قمت بتنفيذها</p>
+                </div>
+                <div class="portfolio-grid">
+                    <article class="portfolio-item">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">n8n</span>
+                                <h4>نظام إدارة عملاء آلي</h4>
+                                <p>تدفق عمل n8n يربط Gmail، WhatsApp، وGoogle Sheets لإدارة العملاء تلقائياً</p>
+                                <div class="portfolio-tech">
+                                    <span>n8n</span>
+                                    <span>Gmail API</span>
+                                    <span>WhatsApp</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-item">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">AI Agent</span>
+                                <h4>وكيل تلخيص البريد الإلكتروني</h4>
+                                <p>وكيل ذكي يقرأ الإيميلات، يلخصها، ويصنّفها حسب الأولوية</p>
+                                <div class="portfolio-tech">
+                                    <span>Groq AI</span>
+                                    <span>Python</span>
+                                    <span>IMAP</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-item">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">Telegram Bot</span>
+                                <h4>بوت تلقرام لإدارة الفريلانس</h4>
+                                <p>بوت يعمل 24/7 لإدارة عروض العمل، البحث عن مشاريع، والرد التلقائي</p>
+                                <div class="portfolio-tech">
+                                    <span>Telegram API</span>
+                                    <span>Python</span>
+                                    <span>Playwright</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-item">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <polyline points="16 18 22 12 16 6"/>
+                                    <polyline points="8 6 2 12 8 18"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">Web Scraping</span>
+                                <h4>مستخرج بيانات المنتجات</h4>
+                                <p>سكريبت Python لاستخراج بيانات المنتجات من المتاجر الإلكترونية تلقائياً</p>
+                                <div class="portfolio-tech">
+                                    <span>Python</span>
+                                    <span>BeautifulSoup</span>
+                                    <span>CSV/JSON</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="skills" id="skills" aria-labelledby="skills-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">المهارات</span>
+                    <h2 class="section-title" id="skills-title">التقنيات التي أتقنها</h2>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">أدوات الأتمتة</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">n8n</span>
+                            <span class="skill-tag">Make.com</span>
+                            <span class="skill-tag">Zapier</span>
+                            <span class="skill-tag">Webhooks</span>
+                            <span class="skill-tag">Flow Diagrams</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">الذكاء الاصطناعي</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Prompt Engineering</span>
+                            <span class="skill-tag">AI Agents</span>
+                            <span class="skill-tag">Groq</span>
+                            <span class="skill-tag">OpenAI</span>
+                            <span class="skill-tag">LLMs</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">البرمجة</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">HTML/CSS</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">البوتات والمنصات</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Telegram Bots</span>
+                            <span class="skill-tag">WhatsApp API</span>
+                            <span class="skill-tag">Discord Bots</span>
+                            <span class="skill-tag">Playwright</span>
+                            <span class="skill-tag">Puppeteer</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">التكامل والبيانات</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">REST APIs</span>
+                            <span class="skill-tag">Webhooks</span>
+                            <span class="skill-tag">SQLite</span>
+                            <span class="skill-tag">Google Sheets</span>
+                            <span class="skill-tag">Airtable</span>
+                            <span class="skill-tag">Notion</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category">
+                        <h3 class="skill-category-title">أخرى</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Web Scraping</span>
+                            <span class="skill-tag">Data Processing</span>
+                            <span class="skill-tag">Email Automation</span>
+                            <span class="skill-tag">No-Code</span>
+                            <span class="skill-tag">Low-Code</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact" id="contact" aria-labelledby="contact-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">تواصل</span>
+                    <h2 class="section-title" id="contact-title">دعنا نعمل معاً</h2>
+                    <p class="section-subtitle">لديك مشروع؟ تواصل معي وسأرد عليك خلال 24 ساعة</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <article class="contact-card">
+                            <div class="contact-icon" aria-hidden="true">📧</div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>salim.muhammad.work@gmail.com</p>
+                            <a href="mailto:salim.muhammad.work@gmail.com" class="contact-link">أرسل إيميل</a>
+                        </article>
+
+                        <article class="contact-card">
+                            <div class="contact-icon" aria-hidden="true">💼</div>
+                            <h4>منصات العمل الحر</h4>
+                            <p>Mostaql • Nafezly • n8n Community</p>
+                            <div class="contact-links">
+                                <a href="https://mostaql.com/u/salim_muhammad" target="_blank" rel="noopener">مستقل</a>
+                                <a href="https://nafezly.com/u/salim" target="_blank" rel="noopener">نفذلي</a>
+                            </div>
+                        </article>
+
+                        <article class="contact-card">
+                            <div class="contact-icon" aria-hidden="true">⚡</div>
+                            <h4>وقت الاستجابة</h4>
+                            <p>24 ساعة • 7 أيام</p>
+                            <small>متاح للعمل على فترتين (صباحاً ومساءً)</small>
+                        </article>
+                    </div>
+
+                    <form class="contact-form" id="contactForm" novalidate>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">الاسم <span aria-hidden="true">*</span></label>
+                                <input type="text" id="name" name="name" required aria-required="true">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">البريد الإلكتروني <span aria-hidden="true">*</span></label>
+                                <input type="email" id="email" name="email" required aria-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="service">نوع الخدمة</label>
+                            <select id="service" name="service">
+                                <option value="">اختر الخدمة...</option>
+                                <option value="n8n">تدفقات عمل n8n</option>
+                                <option value="ai-agent">وكيل AI ذكي</option>
+                                <option value="bot">بوت Telegram/WhatsApp</option>
+                                <option value="python">سكريبت Python</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">تفاصيل المشروع <span aria-hidden="true">*</span></label>
+                            <textarea id="message" name="message" rows="5" required aria-required="true" placeholder="اشرح لي مشروعك وما تحتاجه..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span>إرسال الطلب</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                        <div class="form-note" aria-live="polite">
+                            💡 ملاحظة: هذا النموذج يصل مباشرة إلى بريدي الإلكتروني
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-icon" aria-hidden="true">S</span>
+                        <span class="logo-text">سليم محمد</span>
+                    </div>
+                    <p>مهندس أتمتة ذكاء اصطناعي متخصص في بناء حلول ذكية توفّر الوقت.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#about">نبذة عني</a></li>
+                        <li><a href="#services">الخدمات</a></li>
+                        <li><a href="#portfolio">أعمالي</a></li>
+                        <li><a href="#contact">تواصل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>الخدمات</h4>
+                    <ul>
+                        <li>تدفقات n8n</li>
+                        <li>وكلاء AI</li>
+                        <li>بوتات Telegram</li>
+                        <li>سكريبتات Python</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>التواصل</h4>
+                    <ul>
+                        <li>📧 salim.muhammad.work@gmail.com</li>
+                        <li>💼 Mostaql • Nafezly</li>
+                        <li>🌐 n8n Community</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span id="year">2026</span> سليم محمد. جميع الحقوق محفوظة.</p>
+                <p class="footer-arabic">صُنع بـ ❤️ في غزة</p>
+            </div>
+        </footer>
+
+        <button class="back-to-top" id="backToTop" aria-label="العودة للأعلى">↑</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

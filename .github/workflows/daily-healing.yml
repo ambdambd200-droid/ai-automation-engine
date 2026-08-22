@@ -1,0 +1,83 @@
+name: Daily Self-Healing Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to heal (mostaql|nafezly|n8n|all)'
+        type: choice
+        choices: ['all', 'mostaql', 'nafezly', 'n8n']
+        default: 'all'
+
+jobs:
+  healing-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ENGINE_URL: https://ai-automation-engine.onrender.com
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      MOSTAQL_EMAIL: ${{ secrets.MOSTAQL_EMAIL }}
+      MOSTAQL_PASSWORD: ${{ secrets.MOSTAQL_PASSWORD }}
+      NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Create sessions directory
+        run: mkdir -p sessions
+
+      - name: Restore sessions from cache
+        uses: actions/cache@v4
+        with:
+          path: sessions/
+          key: freelance-sessions-${{ runner.os }}-${{ hashFiles('sessions/*.json') }}
+          restore-keys: |
+            freelance-sessions-${{ runner.os }}-
+
+      - name: Run self-healing check
+        run: |
+          python -c "
+import os, sys
+sys.path.insert(0, '.')
+from healing_orchestrator import get_orchestrator
+from telegram_notifier import notify
+
+platform = os.environ.get('HEAL_PLATFORM', 'all')
+platforms = ['mostaql', 'nafezly', 'n8n'] if platform == 'all' else [platform]
+
+for p in platforms:
+    try:
+        orch = get_orchestrator(p)
+        stats = orch.get_stats()
+        msg = f'🔧 Healing Check: {p}\nCalls: {stats.get(\"total_calls\",0)}\nHealed: {stats.get(\"healing_successes\",0)}/{stats.get(\"healing_attempts\",0)}'
+        notify(msg)
+    except Exception as e:
+        from telegram_notifier import notify_error
+        notify_error(f'Healing Check Failed: {p}\nError: {e}')
+          "
+        env:
+          HEAL_PLATFORM: ${{ github.event.inputs.platform || 'all' }}
+
+      - name: Save sessions to cache
+        uses: actions/cache@v4
+        with:
+          path: sessions/
+          key: freelance-sessions-${{ runner.os }}-${{ hashFiles('sessions/*.json') }}
