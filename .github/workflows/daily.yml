@@ -80,7 +80,11 @@ jobs:
 
       - name: Run daily freelance routine
         run: |
-          python run_daily_freelance.py --platform ${{ github.event.inputs.platform || 'both' }}
+          if [ "${{ github.event.inputs.platform }}" = "both" ]; then
+            python run_daily_freelance.py
+          else
+            python run_daily_freelance.py --only ${{ github.event.inputs.platform || 'both' }}
+          fi
         env:
           GITHUB_ACTIONS: 'true'
 
