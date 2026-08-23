@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      ENGINE_URL: https://ai-automation-engine.onrender.com
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
@@ -29,6 +28,9 @@ jobs:
       MOSTAQL_PASSWORD: ${{ secrets.MOSTAQL_PASSWORD }}
       NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
       NAFEZLY_PASSWORD: ${{ secrets.NAFEZLY_PASSWORD }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      ENGINE_URL: http://localhost:5000
+      ENGINE_FROM_EMAIL: ${{ secrets.ENGINE_FROM_EMAIL }}
 
     steps:
       - name: Checkout repository
@@ -44,12 +46,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
 
-      - name: Install Python dependencies
+      - name: Install Python dependencies (root)
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           playwright install chromium
           playwright install-deps chromium
+
+      - name: Install Python dependencies (engine)
+        run: |
+          cd ai-automation-engine
+          pip install -r requirements.txt
 
       - name: Create sessions directory
         run: mkdir -p sessions
@@ -62,11 +69,29 @@ jobs:
           restore-keys: |
             freelance-sessions-${{ runner.os }}-
 
+      - name: Start AI engine locally
+        run: |
+          cd ai-automation-engine
+          python app.py &
+          ENGINE_PID=$!
+          echo "ENGINE_PID=$ENGINE_PID" >> $GITHUB_ENV
+          sleep 8
+          curl -sS http://localhost:5000/health || echo "engine not ready"
+
       - name: Run daily freelance routine
         run: |
           python run_daily_freelance.py --platform ${{ github.event.inputs.platform || 'both' }}
         env:
           GITHUB_ACTIONS: 'true'
+
+      - name: Stop engine
+        if: always()
+        run: |
+          if [ -n "$ENGINE_PID" ]; then
+            kill $ENGINE_PID 2>/dev/null || true
+          fi
+        env:
+          ENGINE_PID: ${{ env.ENGINE_PID }}
 
       - name: Save sessions to cache
         uses: actions/cache@v4

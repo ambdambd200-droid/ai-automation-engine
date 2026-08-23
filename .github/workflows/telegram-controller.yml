@@ -32,7 +32,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          ENGINE_URL: ${{ secrets.ENGINE_URL || 'https://ai-automation-engine.onrender.com' }}
+          ENGINE_URL: ${{ secrets.ENGINE_URL || 'http://localhost:5000' }}
           MOSTAQL_EMAIL: ${{ secrets.MOSTAQL_EMAIL }}
           MOSTAQL_PASSWORD: ${{ secrets.MOSTAQL_PASSWORD }}
           NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
