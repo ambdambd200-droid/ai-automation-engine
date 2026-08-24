@@ -1,6 +1,6 @@
 name: Weekly Portfolio Review
 
-on:
+"on":
   schedule:
     - cron: '0 4 * * 0'  # Sunday 4 AM UTC
   workflow_dispatch:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      ENGINE_URL: https://ai-automation-engine.onrender.com
+      ENGINE_URL: http://localhost:5000
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
@@ -28,10 +28,28 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Start AI engine locally
+        run: |
+          cd ai-automation-engine
+          python app.py &
+          ENGINE_PID=$!
+          echo "ENGINE_PID=$ENGINE_PID" >> $GITHUB_ENV
+          sleep 8
+          curl -sS http://localhost:5000/health || echo "engine not ready"
+
       - name: Run weekly portfolio creation (placeholder)
         run: |
           python -c "
-from datetime import datetime
-from telegram_notifier import notify
-notify(f'📅 Weekly Review - {datetime.now().strftime(\"%Y-%m-%d\")}\n\nReminder: Create portfolio pieces manually:\n- Nafezly portfolio\n- Mostaql portfolio  \n- Nafezly service page\n\nSee create_portfolio.py for workflow.')
+            from datetime import datetime
+            from telegram_notifier import notify
+            notify(f'📅 Weekly Review - {datetime.now().strftime(\"%Y-%m-%d\")}\n\nReminder: Create portfolio pieces manually:\n- Nafezly portfolio\n- Mostaql portfolio  \n- Nafezly service page\n\nSee create_portfolio.py for workflow.')
           "
+
+      - name: Stop engine
+        if: always()
+        run: |
+          if [ -n "$ENGINE_PID" ]; then
+            kill $ENGINE_PID 2>/dev/null || true
+          fi
+        env:
+          ENGINE_PID: ${{ env.ENGINE_PID }}

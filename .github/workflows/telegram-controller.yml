@@ -1,6 +1,6 @@
 name: Telegram Controller 24/7
 
-on:
+"on":
   schedule:
     # Run every 5 hours (GitHub Actions max is 6 hours for scheduled jobs)
     - cron: '0 */5 * * *'
@@ -26,13 +26,22 @@ jobs:
           pip install requests
           pip install -r ai-automation-engine/requirements.txt || true
 
+      - name: Start AI engine locally
+        run: |
+          cd ai-automation-engine
+          python app.py &
+          ENGINE_PID=$!
+          echo "ENGINE_PID=$ENGINE_PID" >> $GITHUB_ENV
+          sleep 8
+          curl -sS http://localhost:5000/health || echo "engine not ready"
+
       - name: Run Telegram controller
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          ENGINE_URL: ${{ secrets.ENGINE_URL || 'http://localhost:5000' }}
+          ENGINE_URL: http://localhost:5000
           MOSTAQL_EMAIL: ${{ secrets.MOSTAQL_EMAIL }}
           MOSTAQL_PASSWORD: ${{ secrets.MOSTAQL_PASSWORD }}
           NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
@@ -40,15 +49,24 @@ jobs:
           echo "Starting Telegram Controller at $(date -u)"
           # Send startup notification
           python -c "
-import os, sys
-sys.path.insert(0, '.')
-from telegram_notifier import notify
-notify('🤖 Telegram Controller started on GitHub Actions\nRun ID: ${{ github.run_id }}')
-"
+            import os, sys
+            sys.path.insert(0, '.')
+            from telegram_notifier import notify
+            notify('🤖 Telegram Controller started on GitHub Actions\nRun ID: ${{ github.run_id }}')
+          "
           # Run the controller in foreground (will run until timeout)
           python telegram_controller.py 2>&1 | tee telegram_controller_run.log
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
+
+      - name: Stop engine
+        if: always()
+        run: |
+          if [ -n "$ENGINE_PID" ]; then
+            kill $ENGINE_PID 2>/dev/null || true
+          fi
+        env:
+          ENGINE_PID: ${{ env.ENGINE_PID }}
 
       - name: Send completion notification
         if: always()
@@ -57,12 +75,12 @@ notify('🤖 Telegram Controller started on GitHub Actions\nRun ID: ${{ github.r
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python -c "
-import os, sys
-sys.path.insert(0, '.')
-from telegram_notifier import notify
-status = '✅ Completed' if os.environ.get('JOB_STATUS') == 'success' else '⚠️ Timed out (restarting)'
-notify(f'🤖 Telegram Controller: {status}\nRun: ${{ github.run_id }}\nNext run in ~5 hours')
-"
+            import os, sys
+            sys.path.insert(0, '.')
+            from telegram_notifier import notify
+            status = '✅ Completed' if os.environ.get('JOB_STATUS') == 'success' else '⚠️ Timed out (restarting)'
+            notify(f'🤖 Telegram Controller: {status}\nRun: ${{ github.run_id }}\nNext run in ~5 hours')
+          "
         env:
           JOB_STATUS: ${{ job.status }}
 

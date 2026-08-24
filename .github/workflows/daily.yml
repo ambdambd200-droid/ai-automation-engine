@@ -1,6 +1,6 @@
 name: Daily Freelance Run with Self-Healing
 
-on:
+"on":
   schedule:
     - cron: '0 4 * * *'  # 4 AM UTC = 7 AM Gaza (winter)
   workflow_dispatch:
