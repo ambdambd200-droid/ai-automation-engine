@@ -23,9 +23,14 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Python dependencies
+      - name: Install Python dependencies (root)
         run: |
           pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install Python dependencies (engine)
+        run: |
+          cd ai-automation-engine
           pip install -r requirements.txt
 
       - name: Start AI engine locally

@@ -34,12 +34,17 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install Python dependencies (root)
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           playwright install chromium
           playwright install-deps chromium
+
+      - name: Install Python dependencies (engine)
+        run: |
+          cd ai-automation-engine
+          pip install -r requirements.txt
 
       - name: Create sessions directory
         run: mkdir -p sessions
@@ -80,7 +85,7 @@ jobs:
                     notify(msg)
                 except Exception as e:
                     from telegram_notifier import notify_error
-                    notify_error(f'Healing Check Failed: {p}\nError: {e}')
+                    notify_error(f'Healing Check Failed: {p}\nError: {e})
           "
         env:
           HEAL_PLATFORM: ${{ github.event.inputs.platform || 'all' }}
