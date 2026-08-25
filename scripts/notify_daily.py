@@ -1,8 +1,10 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import os
 import sys
 import json
-
-sys.path.insert(0, '.')
 
 from telegram_notifier import notify
 
