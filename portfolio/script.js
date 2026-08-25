@@ -75,7 +75,7 @@ const html = document.documentElement;
 
 const savedTheme = localStorage.getItem('theme') || 'light';
 html.setAttribute('data-theme', savedTheme);
-updateThemeIcon(savedTheme);
+// No need to update theme icon - SVG uses currentColor and adapts via CSS variables
 
 if (themeToggle) {
   themeToggle.addEventListener('click', () => {
@@ -83,15 +83,8 @@ if (themeToggle) {
     const newTheme = current === 'dark' ? 'light' : 'dark';
     html.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    // Icon is SVG with currentColor, adapts automatically
   });
-}
-
-function updateThemeIcon(theme) {
-  const icon = themeToggle?.querySelector('.theme-icon');
-  if (icon) {
-    icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-  }
 }
 
 // ========================================
@@ -184,7 +177,7 @@ function applyLanguage(lang) {
 
   // Hero
   if (t.hero) {
-    const heroBadge = document.querySelector('.hero-badge');
+    const heroBadge = document.query('.hero-badge');
     if (heroBadge && t.hero.badge) heroBadge.lastChild.textContent = ' ' + t.hero.badge;
     const heroGreeting = document.querySelector('.hero-greeting');
     if (heroGreeting) heroGreeting.textContent = t.hero.greeting;
@@ -229,8 +222,9 @@ if (contactForm) {
 
     const submitBtn = contactForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.querySelector('span').textContent;
+    const isArabic = html.getAttribute('lang') === 'ar';
     submitBtn.disabled = true;
-    submitBtn.querySelector('span').textContent = langToggle?.textContent?.includes('EN') ? 'جاري الإرسال...' : 'Sending...';
+    submitBtn.querySelector('span').textContent = isArabic ? 'جاري الإرسال...' : 'Sending...';
 
     const formData = {
       name: document.getElementById('name').value,
