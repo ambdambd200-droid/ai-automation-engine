@@ -43,12 +43,7 @@ jobs:
           curl -sS http://localhost:5000/health || echo "engine not ready"
 
       - name: Run weekly portfolio creation (placeholder)
-        run: |
-          python -c "
-            from datetime import datetime
-            from telegram_notifier import notify
-            notify(f'📅 Weekly Review - {datetime.now().strftime(\"%Y-%m-%d\")}\n\nReminder: Create portfolio pieces manually:\n- Nafezly portfolio\n- Mostaql portfolio  \n- Nafezly service page\n\nSee create_portfolio.py for workflow.')
-          "
+        run: python scripts/notify_weekly.py
 
       - name: Stop engine
         if: always()

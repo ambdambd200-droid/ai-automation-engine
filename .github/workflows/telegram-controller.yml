@@ -51,14 +51,7 @@ jobs:
           NAFEZLY_EMAIL: ${{ secrets.NAFEZLY_EMAIL }}
         run: |
           echo "Starting Telegram Controller at $(date -u)"
-          # Send startup notification
-          python -c "
-            import os, sys
-            sys.path.insert(0, '.')
-            from telegram_notifier import notify
-            notify('🤖 Telegram Controller started on GitHub Actions\nRun ID: ${{ github.run_id }}')
-          "
-          # Run the controller in foreground (will run until timeout)
+          python scripts/notify_telegram_start.py
           python telegram_controller.py 2>&1 | tee telegram_controller_run.log
         env:
           GITHUB_RUN_ID: ${{ github.run_id }}
@@ -77,14 +70,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python -c "
-            import os, sys
-            sys.path.insert(0, '.')
-            from telegram_notifier import notify
-            status = '✅ Completed' if os.environ.get('JOB_STATUS') == 'success' else '⚠️ Timed out (restarting)'
-            notify(f'🤖 Telegram Controller: {status}\nRun: ${{ github.run_id }}\nNext run in ~5 hours')
-          "
+        run: python scripts/notify_telegram_end.py
         env:
           JOB_STATUS: ${{ job.status }}
 
