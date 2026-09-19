@@ -21,25 +21,36 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-family='Arial' font-size='50' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
 </head>
 <body>
+    <!-- Theme Transition Overlay -->
+    <div class="theme-transition-overlay" aria-hidden="true"></div>
+
     <nav class="navbar" id="navbar" role="navigation" aria-label="القائمة الرئيسية">
         <div class="nav-container">
             <a href="#home" class="logo" aria-label="العودة للرئيسية">
-                <span class="logo-icon" aria-hidden="true">S</span>
+                <span class="logo-icon" aria-hidden="true">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                        <line x1="12" y1="22" x2="12" y2="15.5"/>
+                        <polyline points="22 8.5 12 15.5 2 8.5"/>
+                    </svg>
+                </span>
                 <span class="logo-text">سليم محمد</span>
             </a>
             <button class="nav-toggle" id="navToggle" aria-label="فتح القائمة" aria-expanded="false" aria-controls="navMenu">
-                <span></span><span></span><span></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
             </button>
             <ul class="nav-menu" id="navMenu" role="menubar">
-                <li role="none"><a href="#home" class="nav-link active" role="menuitem">الرئيسية</a></li>
-                <li role="none"><a href="#about" class="nav-link" role="menuitem">نبذة عني</a></li>
-                <li role="none"><a href="#services" class="nav-link" role="menuitem">الخدمات</a></li>
-                <li role="none"><a href="#portfolio" class="nav-link" role="menuitem">أعمالي</a></li>
-                <li role="none"><a href="#skills" class="nav-link" role="menuitem">المهارات</a></li>
-                <li role="none"><a href="#contact" class="nav-link" role="menuitem">تواصل</a></li>
+                <li role="none"><a href="#home" class="nav-link active" role="menuitem" data-section="home">الرئيسية</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem" data-section="about">نبذة عني</a></li>
+                <li role="none"><a href="#services" class="nav-link" role="menuitem" data-section="services">الخدمات</a></li>
+                <li role="none"><a href="#portfolio" class="nav-link" role="menuitem" data-section="portfolio">أعمالي</a></li>
+                <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills">المهارات</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact">تواصل</a></li>
                 <li role="none">
-                    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الداكن">
-                        <span class="theme-icon" aria-hidden="true">
+                    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الداكن" type="button">
+                        <span class="theme-icon sun-icon" aria-hidden="true">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="5"/>
                                 <line x1="12" y1="1" x2="12" y2="3"/>
@@ -52,10 +63,15 @@
                                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                             </svg>
                         </span>
+                        <span class="theme-icon moon-icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                        </span>
                     </button>
                 </li>
                 <li role="none">
-                    <button class="lang-toggle" id="langToggle" aria-label="تبديل اللغة">
+                    <button class="lang-toggle" id="langToggle" aria-label="تبديل اللغة" type="button">
                         <span class="lang-icon" aria-hidden="true">EN</span>
                     </button>
                 </li>
@@ -70,20 +86,26 @@
                 <div class="gradient-orb orb-1"></div>
                 <div class="gradient-orb orb-2"></div>
                 <div class="gradient-orb orb-3"></div>
+                <div class="floating-particles" id="floatingParticles" aria-hidden="true"></div>
             </div>
             <div class="hero-content">
                 <div class="hero-badge" aria-live="polite">
                     <span class="pulse-dot" aria-hidden="true"></span>
-                    متاح للعمل • Available for work
+                    <span class="badge-text">متاح للعمل • Available for work</span>
                 </div>
                 <h1 class="hero-title" id="hero-title">
-                    <span class="hero-greeting">مرحباً، أنا</span>
-                    <span class="hero-name">سليم محمد</span>
-                    <span class="hero-role">مهندس أتمتة ذكاء اصطناعي</span>
+                    <span class="hero-greeting" data-text="مرحباً، أنا">مرحباً، أنا</span>
+                    <br>
+                    <span class="hero-name" data-text="سليم محمد">سليم محمد</span>
+                    <br>
+                    <span class="hero-role" data-text="مهندس أتمتة ذكاء اصطناعي">مهندس أتمتة ذكاء اصطناعي</span>
                 </h1>
-                <p class="hero-description">
-                    أبني تدفقات عمل n8n، وكلاء AI، وبوتات تعمل 24/7 — أحوّل العمليات المتكررة إلى أنظمة ذكية توفّر عليك ساعات من العمل اليومي.
-                </p>
+                <div class="hero-description-container">
+                    <p class="hero-description" id="heroDescription"></p>
+                    <div class="typing-indicator" id="typingIndicator" aria-hidden="true">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
                 <div class="hero-cta">
                     <a href="#contact" class="btn btn-primary">
                         <span>اطلب مشروعك الآن</span>
@@ -93,29 +115,35 @@
                     </a>
                     <a href="#portfolio" class="btn btn-secondary">
                         <span>شاهد أعمالي</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
                     </a>
                 </div>
                 <div class="hero-stats" role="list" aria-label="إحصائيات">
                     <div class="stat-item" role="listitem">
-                        <span class="stat-number">2+</span>
+                        <span class="stat-number" data-target="2">0</span>
                         <span class="stat-label">سنوات خبرة</span>
                     </div>
                     <div class="stat-item" role="listitem">
-                        <span class="stat-number">30+</span>
+                        <span class="stat-number" data-target="30">0</span>
                         <span class="stat-label">مشروع منجز</span>
                     </div>
                     <div class="stat-item" role="listitem">
-                        <span class="stat-number">24/7</span>
-                        <span class="stat-label">أنظمة تعمل</span>
+                        <span class="stat-number" data-target="24">0</span>
+                        <span class="stat-label">ساعات عمل</span>
                     </div>
                     <div class="stat-item" role="listitem">
-                        <span class="stat-number">100%</span>
-                        <span class="stat-label">التزام بالموعد</span>
+                        <span class="stat-number" data-target="100">0</span>
+                        <span class="stat-label">% التزام</span>
                     </div>
                 </div>
             </div>
             <div class="scroll-indicator" aria-hidden="true">
-                <span></span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
             </div>
         </section>
 
@@ -135,6 +163,7 @@
                                 </svg>
                             </div>
                             <div class="image-decoration" aria-hidden="true"></div>
+                            <div class="image-glow" aria-hidden="true"></div>
                         </div>
                         <div class="floating-badge">
                             <span class="badge-icon" aria-hidden="true">
@@ -236,10 +265,10 @@
                             بناء تدفقات عمل متقدمة تربط بين خدماتك المختلفة (Gmail، WhatsApp، CRM، إلخ) وتعمل تلقائياً على مدار الساعة.
                         </p>
                         <ul class="service-features">
-                            <li>✓ ربط APIs متعددة</li>
-                            <li>✓ معالجة البيانات تلقائياً</li>
-                            <li>✓ تنبيهات ذكية</li>
-                            <li>✓ تقارير دورية</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ربط APIs متعددة</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> معالجة البيانات تلقائياً</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تنبيهات ذكية</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تقارير دورية</li>
                         </ul>
                         <div class="service-price">
                             <span class="price-from">يبدأ من</span>
@@ -259,10 +288,10 @@
                             بناء وكلاء ذكاء اصطناعي يقومون بمهام كاملة دون تدخّل بشري: رد على العملاء، تلخيص الإيميلات، استخراج البيانات.
                         </p>
                         <ul class="service-features">
-                            <li>✓ بوتات رد ذكية</li>
-                            <li>✓ تلخيص تلقائي</li>
-                            <li>✓ تحليل البيانات</li>
-                            <li>✓ Prompt Engineering</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> بوتات رد ذكية</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تلخيص تلقائي</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تحليل البيانات</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Prompt Engineering</li>
                         </ul>
                         <div class="service-price">
                             <span class="price-from">يبدأ من</span>
@@ -281,10 +310,10 @@
                             تطوير بوتات مخصصة للتواصل مع عملائك عبر واتساب وتلقرام، تعمل 24/7 وترد على الاستفسارات تلقائياً.
                         </p>
                         <ul class="service-features">
-                            <li>✓ ردود تلقائية ذكية</li>
-                            <li>✓ تكامل مع CRM</li>
-                            <li>✓ إرسال إشعارات</li>
-                            <li>✓ تقارير الأداء</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ردود تلقائية ذكية</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تكامل مع CRM</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> إرسال إشعارات</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تقارير الأداء</li>
                         </ul>
                         <div class="service-price">
                             <span class="price-from">يبدأ من</span>
@@ -304,10 +333,10 @@
                             برمجة سكريبتات Python لأتمتة المهام المتكررة بدون واجهة، استخراج البيانات من الويب، ومعالجة الملفات.
                         </p>
                         <ul class="service-features">
-                            <li>✓ Web Scraping</li>
-                            <li>✓ معالجة البيانات</li>
-                            <li>✓ سكريبتات CLI</li>
-                            <li>✓ APIs مخصصة</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Web Scraping</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> معالجة البيانات</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> سكريبتات CLI</li>
+                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> APIs مخصصة</li>
                         </ul>
                         <div class="service-price">
                             <span class="price-from">يبدأ من</span>
@@ -325,8 +354,15 @@
                     <h2 class="section-title" id="portfolio-title">مشاريع مختارة</h2>
                     <p class="section-subtitle">نماذج من الأعمال التي قمت بتنفيذها</p>
                 </div>
-                <div class="portfolio-grid">
-                    <article class="portfolio-item">
+                <div class="portfolio-filter" role="tablist" aria-label="تصفية المشاريع">
+                    <button class="filter-btn active" role="tab" aria-selected="true" data-filter="all">الكل</button>
+                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="n8n">n8n</button>
+                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="ai-agent">AI Agent</button>
+                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="bot">Bot</button>
+                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="python">Python</button>
+                </div>
+                <div class="portfolio-grid" id="portfolioGrid">
+                    <article class="portfolio-item" data-category="n8n">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder" aria-hidden="true">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -346,7 +382,7 @@
                         </div>
                     </article>
 
-                    <article class="portfolio-item">
+                    <article class="portfolio-item" data-category="ai-agent">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder" aria-hidden="true">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -367,7 +403,7 @@
                         </div>
                     </article>
 
-                    <article class="portfolio-item">
+                    <article class="portfolio-item" data-category="bot">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder" aria-hidden="true">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -387,7 +423,7 @@
                         </div>
                     </article>
 
-                    <article class="portfolio-item">
+                    <article class="portfolio-item" data-category="python">
                         <div class="portfolio-image">
                             <div class="portfolio-placeholder" aria-hidden="true">
                                 <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -403,6 +439,48 @@
                                     <span>Python</span>
                                     <span>BeautifulSoup</span>
                                     <span>CSV/JSON</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-item" data-category="n8n ai-agent">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">n8n + AI</span>
+                                <h4>نظام فريلانس ذكي متكامل</h4>
+                                <p>نظام يجمع بين n8n ووكلاء AI لإدارة كاملة للعمل الحر</p>
+                                <div class="portfolio-tech">
+                                    <span>n8n</span>
+                                    <span>Groq AI</span>
+                                    <span>Telegram</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="portfolio-item" data-category="bot python">
+                        <div class="portfolio-image">
+                            <div class="portfolio-placeholder" aria-hidden="true">
+                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7"/>
+                                    <polyline points="16 18 22 12 16 6"/>
+                                </svg>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <span class="portfolio-tag">Bot + Python</span>
+                                <h4>بوت ذكي مع معالجة بيانات</h4>
+                                <p>بوت Telegram مع سكريبتات Python لتحليل البيانات وإرسال تقارير</p>
+                                <div class="portfolio-tech">
+                                    <span>Telegram API</span>
+                                    <span>Python</span>
+                                    <span>Pandas</span>
                                 </div>
                             </div>
                         </div>
@@ -541,16 +619,16 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="name">الاسم <span aria-hidden="true">*</span></label>
-                                <input type="text" id="name" name="name" required aria-required="true">
+                                <input type="text" id="name" name="name" required aria-required="true" autocomplete="name">
                             </div>
                             <div class="form-group">
                                 <label for="email">البريد الإلكتروني <span aria-hidden="true">*</span></label>
-                                <input type="email" id="email" name="email" required aria-required="true">
+                                <input type="email" id="email" name="email" required aria-required="true" autocomplete="email">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="service">نوع الخدمة</label>
-                            <select id="service" name="service">
+                            <select id="service" name="service" autocomplete="off">
                                 <option value="">اختر الخدمة...</option>
                                 <option value="n8n">تدفقات عمل n8n</option>
                                 <option value="ai-agent">وكيل AI ذكي</option>
@@ -588,7 +666,11 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <span class="logo-icon" aria-hidden="true">S</span>
+                        <span class="logo-icon" aria-hidden="true">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                            </svg>
+                        </span>
                         <span class="logo-text">سليم محمد</span>
                     </div>
                     <p>مهندس أتمتة ذكاء اصطناعي متخصص في بناء حلول ذكية توفّر الوقت.</p>
