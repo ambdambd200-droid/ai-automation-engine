@@ -16,22 +16,54 @@
     <title>سليم محمد | مهندس أتمتة ذكاء اصطناعي</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%237C3AED'/%3E%3Ctext x='50' y='65' font-family='Arial' font-size='50' font-weight='bold' text-anchor='middle' fill='%23FFFFFF'%3ES%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 90 Q30 70 20 40 Q15 25 25 15 Q35 5 50 15 Q65 5 75 15 Q85 25 80 40 Q70 70 50 90' fill='none' stroke='%236B8F3C' stroke-width='3'/%3E%3Ccircle cx='50' cy='15' r='4' fill='%23D8952B'/%3E%3C/svg%3E">
 </head>
 <body>
     <!-- Theme Transition Overlay -->
     <div class="theme-transition-overlay" aria-hidden="true"></div>
 
+    <!-- Welcome Animation Overlay -->
+    <div class="welcome-overlay" id="welcomeOverlay" aria-hidden="true">
+        <svg class="welcome-svg" viewBox="0 0 1200 800" aria-hidden="true">
+            <defs>
+                <path id="trunkPath" d="M600 800 Q500 600 450 400 Q420 300 480 200 Q520 150 600 150 Q680 150 720 200 Q780 300 750 400 Q700 600 600 800" fill="none" stroke="#6B8F3C" stroke-width="4"/>
+                <path id="branch1Path" d="M520 450 Q400 400 350 300" fill="none" stroke="#6B8F3C" stroke-width="2.5"/>
+                <path id="branch2Path" d="M680 450 Q800 400 850 300" fill="none" stroke="#6B8F3C" stroke-width="2.5"/>
+                <path id="branch3Path" d="M500 300 Q400 250 380 150" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+                <path id="branch4Path" d="M700 300 Q800 250 820 150" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+            </defs>
+            <g class="trunk-group">
+                <use href="#trunkPath" class="trunk-draw"/>
+            </g>
+            <g class="branches-group">
+                <use href="#branch1Path" class="branch-draw"/>
+                <use href="#branch2Path" class="branch-draw"/>
+                <use href="#branch3Path" class="branch-draw"/>
+                <use href="#branch4Path" class="branch-draw"/>
+            </g>
+            <g class="leaves-group" aria-hidden="true">
+                <circle class="leaf" cx="350" cy="280" r="8" fill="#6B8F3C" opacity="0"/>
+                <circle class="leaf" cx="850" cy="280" r="8" fill="#6B8F3C" opacity="0"/>
+                <circle class="leaf" cx="380" cy="130" r="6" fill="#6B8F3C" opacity="0"/>
+                <circle class="leaf" cx="820" cy="130" r="6" fill="#6B8F3C" opacity="0"/>
+                <circle class="leaf" cx="480" cy="180" r="10" fill="#D8952B" opacity="0"/>
+                <circle class="leaf" cx="720" cy="180" r="10" fill="#D8952B" opacity="0"/>
+            </g>
+            <text class="welcome-text" x="600" y="400" text-anchor="middle" fill="#F1E9D8" font-family="Fraunces" font-size="48" font-weight="500" opacity="0">سليم محمد</text>
+            <text class="welcome-subtext" x="600" y="460" text-anchor="middle" fill="#B8AE9A" font-family="Manrope" font-size="20" opacity="0">مهندس أتمتة ذكاء اصطناعي</text>
+        </svg>
+        <button class="welcome-skip" id="welcomeSkip" aria-label="تخطي الترحيب">تخطي</button>
+    </div>
+
     <nav class="navbar" id="navbar" role="navigation" aria-label="القائمة الرئيسية">
         <div class="nav-container">
             <a href="#home" class="logo" aria-label="العودة للرئيسية">
                 <span class="logo-icon" aria-hidden="true">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
-                        <line x1="12" y1="22" x2="12" y2="15.5"/>
-                        <polyline points="22 8.5 12 15.5 2 8.5"/>
+                    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                        <path d="M50 90 Q30 70 20 40 Q15 25 25 15 Q35 5 50 15 Q65 5 75 15 Q85 25 80 40 Q70 70 50 90" fill="none" stroke="#6B8F3C" stroke-width="3"/>
+                        <circle cx="50" cy="15" r="4" fill="#D8952B"/>
                     </svg>
                 </span>
                 <span class="logo-text">سليم محمد</span>
@@ -45,8 +77,8 @@
                 <li role="none"><a href="#home" class="nav-link active" role="menuitem" data-section="home">الرئيسية</a></li>
                 <li role="none"><a href="#about" class="nav-link" role="menuitem" data-section="about">نبذة عني</a></li>
                 <li role="none"><a href="#services" class="nav-link" role="menuitem" data-section="services">الخدمات</a></li>
-                <li role="none"><a href="#portfolio" class="nav-link" role="menuitem" data-section="portfolio">أعمالي</a></li>
                 <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills">المهارات</a></li>
+                <li role="none"><a href="#work" class="nav-link" role="menuitem" data-section="work">أعمالي</a></li>
                 <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact">تواصل</a></li>
                 <li role="none">
                     <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الداكن" type="button">
@@ -70,11 +102,6 @@
                         </span>
                     </button>
                 </li>
-                <li role="none">
-                    <button class="lang-toggle" id="langToggle" aria-label="تبديل اللغة" type="button">
-                        <span class="lang-icon" aria-hidden="true">EN</span>
-                    </button>
-                </li>
             </ul>
         </div>
     </nav>
@@ -82,11 +109,12 @@
     <main>
         <section class="hero" id="home" aria-labelledby="hero-title">
             <div class="hero-bg" aria-hidden="true">
-                <div class="grid-overlay"></div>
-                <div class="gradient-orb orb-1"></div>
-                <div class="gradient-orb orb-2"></div>
-                <div class="gradient-orb orb-3"></div>
-                <div class="floating-particles" id="floatingParticles" aria-hidden="true"></div>
+                <div class="soil-particles" id="soilParticles" aria-hidden="true"></div>
+                <div class="trunk-silhouette" aria-hidden="true">
+                    <svg viewBox="0 0 200 300" fill="none">
+                        <path d="M100 300 Q80 220 50 120 Q40 80 60 40 Q80 10 100 10 Q120 10 140 40 Q160 80 150 120 Q150 220 100 300" fill="#1B1712" opacity="0.3"/>
+                    </svg>
+                </div>
             </div>
             <div class="hero-content">
                 <div class="hero-badge" aria-live="polite">
@@ -94,11 +122,11 @@
                     <span class="badge-text">متاح للعمل • Available for work</span>
                 </div>
                 <h1 class="hero-title" id="hero-title">
-                    <span class="hero-greeting" data-text="مرحباً، أنا">مرحباً، أنا</span>
+                    <span class="hero-greeting">مرحباً، أنا</span>
                     <br>
-                    <span class="hero-name" data-text="سليم محمد">سليم محمد</span>
+                    <span class="hero-name">سليم محمد</span>
                     <br>
-                    <span class="hero-role" data-text="مهندس أتمتة ذكاء اصطناعي">مهندس أتمتة ذكاء اصطناعي</span>
+                    <span class="hero-role">مهندس أتمتة ذكاء اصطناعي</span>
                 </h1>
                 <div class="hero-description-container">
                     <p class="hero-description" id="heroDescription"></p>
@@ -113,7 +141,7 @@
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </a>
-                    <a href="#portfolio" class="btn btn-secondary">
+                    <a href="#work" class="btn btn-secondary">
                         <span>شاهد أعمالي</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -132,11 +160,11 @@
                     </div>
                     <div class="stat-item" role="listitem">
                         <span class="stat-number" data-target="24">0</span>
-                        <span class="stat-label">ساعات عمل</span>
+                        <span class="stat-label">أنظمة تعمل 24/7</span>
                     </div>
                     <div class="stat-item" role="listitem">
                         <span class="stat-number" data-target="100">0</span>
-                        <span class="stat-label">% التزام</span>
+                        <span class="stat-label">% التزام بالمواعيد</span>
                     </div>
                 </div>
             </div>
@@ -252,239 +280,128 @@
                     <h2 class="section-title" id="services-title">ماذا أقدّم؟</h2>
                     <p class="section-subtitle">حلول أتمتة متكاملة تناسب احتياجاتك</p>
                 </div>
-                <div class="services-grid">
-                    <article class="service-card featured">
-                        <div class="service-badge">الأكثر طلباً</div>
-                        <div class="service-icon" aria-hidden="true">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">تدفقات عمل n8n</h3>
-                        <p class="service-description">
-                            بناء تدفقات عمل متقدمة تربط بين خدماتك المختلفة (Gmail، WhatsApp، CRM، إلخ) وتعمل تلقائياً على مدار الساعة.
-                        </p>
-                        <ul class="service-features">
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ربط APIs متعددة</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> معالجة البيانات تلقائياً</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تنبيهات ذكية</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تقارير دورية</li>
-                        </ul>
-                        <div class="service-price">
-                            <span class="price-from">يبدأ من</span>
-                            <span class="price-amount">$75</span>
-                        </div>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon" aria-hidden="true">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">وكلاء AI ذكيون</h3>
-                        <p class="service-description">
-                            بناء وكلاء ذكاء اصطناعي يقومون بمهام كاملة دون تدخّل بشري: رد على العملاء، تلخيص الإيميلات، استخراج البيانات.
-                        </p>
-                        <ul class="service-features">
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> بوتات رد ذكية</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تلخيص تلقائي</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تحليل البيانات</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Prompt Engineering</li>
-                        </ul>
-                        <div class="service-price">
-                            <span class="price-from">يبدأ من</span>
-                            <span class="price-amount">$150</span>
-                        </div>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon" aria-hidden="true">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">بوتات WhatsApp & Telegram</h3>
-                        <p class="service-description">
-                            تطوير بوتات مخصصة للتواصل مع عملائك عبر واتساب وتلقرام، تعمل 24/7 وترد على الاستفسارات تلقائياً.
-                        </p>
-                        <ul class="service-features">
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> ردود تلقائية ذكية</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تكامل مع CRM</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> إرسال إشعارات</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> تقارير الأداء</li>
-                        </ul>
-                        <div class="service-price">
-                            <span class="price-from">يبدأ من</span>
-                            <span class="price-amount">$100</span>
-                        </div>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon" aria-hidden="true">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <polyline points="16 18 22 12 16 6"/>
-                                <polyline points="8 6 2 12 8 18"/>
-                            </svg>
-                        </div>
-                        <h3 class="service-title">برمجة Python</h3>
-                        <p class="service-description">
-                            برمجة سكريبتات Python لأتمتة المهام المتكررة بدون واجهة، استخراج البيانات من الويب، ومعالجة الملفات.
-                        </p>
-                        <ul class="service-features">
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Web Scraping</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> معالجة البيانات</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> سكريبتات CLI</li>
-                            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> APIs مخصصة</li>
-                        </ul>
-                        <div class="service-price">
-                            <span class="price-from">يبدأ من</span>
-                            <span class="price-amount">$25</span>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-tag">أعمالي</span>
-                    <h2 class="section-title" id="portfolio-title">مشاريع مختارة</h2>
-                    <p class="section-subtitle">نماذج من الأعمال التي قمت بتنفيذها</p>
-                </div>
-                <div class="portfolio-filter" role="tablist" aria-label="تصفية المشاريع">
-                    <button class="filter-btn active" role="tab" aria-selected="true" data-filter="all">الكل</button>
-                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="n8n">n8n</button>
-                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="ai-agent">AI Agent</button>
-                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="bot">Bot</button>
-                    <button class="filter-btn" role="tab" aria-selected="false" data-filter="python">Python</button>
-                </div>
-                <div class="portfolio-grid" id="portfolioGrid">
-                    <article class="portfolio-item" data-category="n8n">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                
+                <!-- Trunk-based layout for services -->
+                <div class="services-trunk" role="list" aria-label="قائمة الخدمات">
+                    <div class="trunk-center" aria-hidden="true">
+                        <svg class="main-trunk" viewBox="0 0 40 600" fill="none">
+                            <path d="M20 600 Q15 450 10 300 Q8 200 18 100 Q22 50 30 20 Q38 10 39 10" fill="none" stroke="#6B8F3C" stroke-width="3"/>
+                            <!-- Branch points for services -->
+                            <circle cx="18" cy="150" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="250" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="18" cy="350" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="450" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="services-branches">
+                        <!-- Service 1: n8n Workflows -->
+                        <article class="service-card branch-left" role="listitem" data-service="n8n">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="service-icon" aria-hidden="true">
+                                <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+                                    <path d="M24 4 L4 16 L4 32 L24 44 L44 32 L44 16 L24 4 Z M4 16 L24 28 L44 16 M4 32 L24 28 L44 32" fill="none" stroke="#6B8F3C" stroke-width="2.5"/>
+                                    <circle cx="24" cy="28" r="4" fill="#D8952B"/>
                                 </svg>
                             </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">n8n</span>
-                                <h4>نظام إدارة عملاء آلي</h4>
-                                <p>تدفق عمل n8n يربط Gmail، WhatsApp، وGoogle Sheets لإدارة العملاء تلقائياً</p>
-                                <div class="portfolio-tech">
-                                    <span>n8n</span>
-                                    <span>Gmail API</span>
-                                    <span>WhatsApp</span>
+                            <div class="service-content">
+                                <h3 class="service-title">تدفقات عمل n8n</h3>
+                                <p class="service-description">بناء تدفقات عمل متقدمة تربط بين خدماتك المختلفة (Gmail، WhatsApp، CRM، إلخ) وتعمل تلقائياً على مدار الساعة.</p>
+                                <ul class="service-features">
+                                    <li><span class="feature-dot" aria-hidden="true"></span>ربط APIs متعددة</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>معالجة البيانات تلقائياً</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تنبيهات ذكية</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تقارير دورية</li>
+                                </ul>
+                                <div class="service-price">
+                                    <span class="price-from">يبدأ من</span>
+                                    <span class="price-amount">$75</span>
                                 </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
 
-                    <article class="portfolio-item" data-category="ai-agent">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        <!-- Service 2: AI Agents -->
+                        <article class="service-card branch-right" role="listitem" data-service="ai-agent">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="service-icon" aria-hidden="true">
+                                <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+                                    <path d="M24 4 C13 4 4 13 4 24 C4 35 13 44 24 44 C35 44 44 35 44 24 C44 13 35 4 24 4 Z" fill="none" stroke="#6B8F3C" stroke-width="2.5"/>
+                                    <path d="M16 24 L22 30 L32 18" fill="none" stroke="#D8952B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="24" cy="24" r="3" fill="#D8952B"/>
                                 </svg>
                             </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">AI Agent</span>
-                                <h4>وكيل تلخيص البريد الإلكتروني</h4>
-                                <p>وكيل ذكي يقرأ الإيميلات، يلخصها، ويصنّفها حسب الأولوية</p>
-                                <div class="portfolio-tech">
-                                    <span>Groq AI</span>
-                                    <span>Python</span>
-                                    <span>IMAP</span>
+                            <div class="service-content">
+                                <h3 class="service-title">وكلاء AI ذكيون</h3>
+                                <p class="service-description">بناء وكلاء ذكاء اصطناعي يقومون بمهام كاملة دون تدخّل بشري: رد على العملاء، تلخيص الإيميلات، استخراج البيانات.</p>
+                                <ul class="service-features">
+                                    <li><span class="feature-dot" aria-hidden="true"></span>بوتات رد ذكية</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تلخيص تلقائي</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تحليل البيانات</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>Prompt Engineering</li>
+                                </ul>
+                                <div class="service-price">
+                                    <span class="price-from">يبدأ من</span>
+                                    <span class="price-amount">$150</span>
                                 </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
 
-                    <article class="portfolio-item" data-category="bot">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        <!-- Service 3: Bots -->
+                        <article class="service-card branch-left" role="listitem" data-service="bot">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="service-icon" aria-hidden="true">
+                                <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+                                    <ellipse cx="24" cy="20" rx="14" ry="10" fill="none" stroke="#6B8F3C" stroke-width="2.5"/>
+                                    <path d="M16 20 Q16 15 20 13 Q24 11 28 13 Q32 15 32 20" fill="none" stroke="#D8952B" stroke-width="2" stroke-linecap="round"/>
+                                    <circle cx="20" cy="19" r="2" fill="#D8952B" opacity="0.8"/>
+                                    <circle cx="28" cy="19" r="2" fill="#D8952B" opacity="0.8"/>
+                                    <path d="M24 30 Q24 26 28 24 Q32 22 32 18" fill="none" stroke="#D8952B" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
                                 </svg>
                             </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">Telegram Bot</span>
-                                <h4>بوت تلقرام لإدارة الفريلانس</h4>
-                                <p>بوت يعمل 24/7 لإدارة عروض العمل، البحث عن مشاريع، والرد التلقائي</p>
-                                <div class="portfolio-tech">
-                                    <span>Telegram API</span>
-                                    <span>Python</span>
-                                    <span>Playwright</span>
+                            <div class="service-content">
+                                <h3 class="service-title">بوتات WhatsApp & Telegram</h3>
+                                <p class="service-description">تطوير بوتات مخصصة للتواصل مع عملائك عبر واتساب وتلقرام، تعمل 24/7 وترد على الاستفسارات تلقائياً.</p>
+                                <ul class="service-features">
+                                    <li><span class="feature-dot" aria-hidden="true"></span>ردود تلقائية ذكية</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تكامل مع CRM</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>إرسال إشعارات</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>تقارير الأداء</li>
+                                </ul>
+                                <div class="service-price">
+                                    <span class="price-from">يبدأ من</span>
+                                    <span class="price-amount">$100</span>
                                 </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
 
-                    <article class="portfolio-item" data-category="python">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <polyline points="16 18 22 12 16 6"/>
-                                    <polyline points="8 6 2 12 8 18"/>
+                        <!-- Service 4: Python Scripts -->
+                        <article class="service-card branch-right" role="listitem" data-service="python">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="service-icon" aria-hidden="true">
+                                <svg width="56" height="56" viewBox="0 0 48 48" fill="none">
+                                    <path d="M24 4 L24 44" fill="none" stroke="#6B8F3C" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path d="M24 16 L10 24 L24 32" fill="none" stroke="#6B8F3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M24 20 L38 28 L24 36" fill="none" stroke="#D8952B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="10" cy="24" r="2.5" fill="#D8952B"/>
+                                    <circle cx="38" cy="28" r="2.5" fill="#D8952B"/>
                                 </svg>
                             </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">Web Scraping</span>
-                                <h4>مستخرج بيانات المنتجات</h4>
-                                <p>سكريبت Python لاستخراج بيانات المنتجات من المتاجر الإلكترونية تلقائياً</p>
-                                <div class="portfolio-tech">
-                                    <span>Python</span>
-                                    <span>BeautifulSoup</span>
-                                    <span>CSV/JSON</span>
+                            <div class="service-content">
+                                <h3 class="service-title">برمجة Python</h3>
+                                <p class="service-description">برمجة سكريبتات Python لأتمتة المهام المتكررة بدون واجهة، استخراج البيانات من الويب، ومعالجة الملفات.</p>
+                                <ul class="service-features">
+                                    <li><span class="feature-dot" aria-hidden="true"></span>Web Scraping</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>معالجة البيانات</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>سكريبتات CLI</li>
+                                    <li><span class="feature-dot" aria-hidden="true"></span>APIs مخصصة</li>
+                                </ul>
+                                <div class="service-price">
+                                    <span class="price-from">يبدأ من</span>
+                                    <span class="price-amount">$25</span>
                                 </div>
                             </div>
-                        </div>
-                    </article>
-
-                    <article class="portfolio-item" data-category="n8n ai-agent">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                </svg>
-                            </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">n8n + AI</span>
-                                <h4>نظام فريلانس ذكي متكامل</h4>
-                                <p>نظام يجمع بين n8n ووكلاء AI لإدارة كاملة للعمل الحر</p>
-                                <div class="portfolio-tech">
-                                    <span>n8n</span>
-                                    <span>Groq AI</span>
-                                    <span>Telegram</span>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="portfolio-item" data-category="bot python">
-                        <div class="portfolio-image">
-                            <div class="portfolio-placeholder" aria-hidden="true">
-                                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7"/>
-                                    <polyline points="16 18 22 12 16 6"/>
-                                </svg>
-                            </div>
-                            <div class="portfolio-overlay">
-                                <span class="portfolio-tag">Bot + Python</span>
-                                <h4>بوت ذكي مع معالجة بيانات</h4>
-                                <p>بوت Telegram مع سكريبتات Python لتحليل البيانات وإرسال تقارير</p>
-                                <div class="portfolio-tech">
-                                    <span>Telegram API</span>
-                                    <span>Python</span>
-                                    <span>Pandas</span>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>
@@ -495,72 +412,302 @@
                     <span class="section-tag">المهارات</span>
                     <h2 class="section-title" id="skills-title">التقنيات التي أتقنها</h2>
                 </div>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">أدوات الأتمتة</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">n8n</span>
-                            <span class="skill-tag">Make.com</span>
-                            <span class="skill-tag">Zapier</span>
-                            <span class="skill-tag">Webhooks</span>
-                            <span class="skill-tag">Flow Diagrams</span>
+                <div class="skills-trunk" role="list" aria-label="المهارات التقنية">
+                    <div class="trunk-center" aria-hidden="true">
+                        <svg class="main-trunk" viewBox="0 0 40 500" fill="none">
+                            <path d="M20 500 Q15 375 10 250 Q8 166 18 83 Q22 41 30 20 Q38 10 39 10" fill="none" stroke="#6B8F3C" stroke-width="3"/>
+                            <circle cx="18" cy="125" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="208" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="18" cy="291" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="374" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="18" cy="416" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="458" r="6" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="skills-branches">
+                        <div class="skill-category branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">أدوات الأتمتة</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>n8n</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Make.com</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Zapier</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Webhooks</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Flow Diagrams</span>
+                            </div>
+                        </div>
+                        <div class="skill-category branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">الذكاء الاصطناعي</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Prompt Engineering</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>AI Agents</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Groq</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>OpenAI</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>LLMs</span>
+                            </div>
+                        </div>
+                        <div class="skill-category branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">البرمجة</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Python</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>JavaScript</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Node.js</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>SQL</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>HTML/CSS</span>
+                            </div>
+                        </div>
+                        <div class="skill-category branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">البوتات والمنصات</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Telegram Bots</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>WhatsApp API</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Discord Bots</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Playwright</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Puppeteer</span>
+                            </div>
+                        </div>
+                        <div class="skill-category branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">التكامل والبيانات</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>REST APIs</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Webhooks</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>SQLite</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Google Sheets</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Airtable</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Notion</span>
+                            </div>
+                        </div>
+                        <div class="skill-category branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <h3 class="skill-category-title">أخرى</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Web Scraping</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Data Processing</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Email Automation</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>No-Code</span>
+                                <span class="skill-tag"><span class="leaf-icon" aria-hidden="true"></span>Low-Code</span>
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">الذكاء الاصطناعي</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Prompt Engineering</span>
-                            <span class="skill-tag">AI Agents</span>
-                            <span class="skill-tag">Groq</span>
-                            <span class="skill-tag">OpenAI</span>
-                            <span class="skill-tag">LLMs</span>
-                        </div>
+        <section class="work" id="work" aria-labelledby="work-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">أعمالي</span>
+                    <h2 class="section-title" id="work-title">مشاريع مختارة</h2>
+                    <p class="section-subtitle">نماذج من الأعمال التي قمت بتنفيذها</p>
+                </div>
+                <div class="work-trunk" role="list" aria-label="المشاريع المنجزة">
+                    <div class="trunk-center" aria-hidden="true">
+                        <svg class="main-trunk" viewBox="0 0 40 700" fill="none">
+                            <path d="M20 700 Q15 525 10 350 Q8 262 18 175 Q22 131 30 87 Q38 65 39 10" fill="none" stroke="#6B8F3C" stroke-width="3"/>
+                            <circle cx="18" cy="210" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="336" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="18" cy="462" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="552" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="18" cy="600" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                            <circle cx="22" cy="642" r="8" fill="#241F18" stroke="#6B8F3C" stroke-width="2"/>
+                        </svg>
                     </div>
+                    <div class="work-branches">
+                        <article class="work-item branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <path d="M24 4 L4 16 L4 32 L24 44 L44 32 L44 16 L24 4 Z M4 16 L24 28 L44 16 M4 32 L24 28 L44 32" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+                                        <circle cx="24" cy="28" r="4" fill="#D8952B"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">n8n</span>
+                                    <h4>نظام إدارة عملاء آلي</h4>
+                                    <p>تدفق عمل n8n يربط Gmail، WhatsApp، وGoogle Sheets لإدارة العملاء تلقائياً</p>
+                                    <div class="work-tech">
+                                        <span>n8n</span>
+                                        <span>Gmail API</span>
+                                        <span>WhatsApp</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>نظام إدارة عملاء آلي</h4>
+                                <p>تدفق عمل n8n يربط Gmail، WhatsApp، وGoogle Sheets لإدارة العملاء تلقائياً</p>
+                                <div class="work-tech">
+                                    <span>n8n</span>
+                                    <span>Gmail API</span>
+                                    <span>WhatsApp</span>
+                                </div>
+                            </div>
+                        </article>
 
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">البرمجة</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Python</span>
-                            <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">Node.js</span>
-                            <span class="skill-tag">SQL</span>
-                            <span class="skill-tag">HTML/CSS</span>
-                        </div>
-                    </div>
+                        <article class="work-item branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <path d="M24 4 C13 4 4 13 4 24 C4 35 13 44 24 44 C35 44 44 35 44 24 C44 13 35 4 24 4 Z" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+                                        <path d="M16 24 L22 30 L32 18" fill="none" stroke="#D8952B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="24" cy="24" r="3" fill="#D8952B"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">AI Agent</span>
+                                    <h4>وكيل تلخيص البريد الإلكتروني</h4>
+                                    <p>وكيل ذكي يقرأ الإيميلات، يلخصها، ويصنّفها حسب الأولوية</p>
+                                    <div class="work-tech">
+                                        <span>Groq AI</span>
+                                        <span>Python</span>
+                                        <span>IMAP</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>وكيل تلخيص البريد الإلكتروني</h4>
+                                <p>وكيل ذكي يقرأ الإيميلات، يلخصها، ويصنّفها حسب الأولوية</p>
+                                <div class="work-tech">
+                                    <span>Groq AI</span>
+                                    <span>Python</span>
+                                    <span>IMAP</span>
+                                </div>
+                            </div>
+                        </article>
 
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">البوتات والمنصات</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Telegram Bots</span>
-                            <span class="skill-tag">WhatsApp API</span>
-                            <span class="skill-tag">Discord Bots</span>
-                            <span class="skill-tag">Playwright</span>
-                            <span class="skill-tag">Puppeteer</span>
-                        </div>
-                    </div>
+                        <article class="work-item branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <ellipse cx="24" cy="20" rx="14" ry="10" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+                                        <path d="M16 20 Q16 15 20 13 Q24 11 28 13 Q32 15 32 20" fill="none" stroke="#D8952B" stroke-width="2" stroke-linecap="round"/>
+                                        <circle cx="20" cy="19" r="2" fill="#D8952B" opacity="0.8"/>
+                                        <circle cx="28" cy="19" r="2" fill="#D8952B" opacity="0.8"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">Telegram Bot</span>
+                                    <h4>بوت تلقرام لإدارة الفريلانس</h4>
+                                    <p>بوت يعمل 24/7 لإدارة عروض العمل، البحث عن مشاريع، والرد التلقائي</p>
+                                    <div class="work-tech">
+                                        <span>Telegram API</span>
+                                        <span>Python</span>
+                                        <span>Playwright</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>بوت تلقرام لإدارة الفريلانس</h4>
+                                <p>بوت يعمل 24/7 لإدارة عروض العمل، البحث عن مشاريع، والرد التلقائي</p>
+                                <div class="work-tech">
+                                    <span>Telegram API</span>
+                                    <span>Python</span>
+                                    <span>Playwright</span>
+                                </div>
+                            </div>
+                        </article>
 
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">التكامل والبيانات</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">REST APIs</span>
-                            <span class="skill-tag">Webhooks</span>
-                            <span class="skill-tag">SQLite</span>
-                            <span class="skill-tag">Google Sheets</span>
-                            <span class="skill-tag">Airtable</span>
-                            <span class="skill-tag">Notion</span>
-                        </div>
-                    </div>
+                        <article class="work-item branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <path d="M24 4 L24 44" fill="none" stroke="#6B8F3C" stroke-width="2.5" stroke-linecap="round"/>
+                                        <path d="M24 16 L10 24 L24 32" fill="none" stroke="#6B8F3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M24 20 L38 28 L24 36" fill="none" stroke="#D8952B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="10" cy="24" r="2.5" fill="#D8952B"/>
+                                        <circle cx="38" cy="28" r="2.5" fill="#D8952B"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">Python</span>
+                                    <h4>مستخرج بيانات المنتجات</h4>
+                                    <p>سكريبت Python لاستخراج بيانات المنتجات من المتاجر الإلكترونية تلقائياً</p>
+                                    <div class="work-tech">
+                                        <span>Python</span>
+                                        <span>BeautifulSoup</span>
+                                        <span>CSV/JSON</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>مستخرج بيانات المنتجات</h4>
+                                <p>سكريبت Python لاستخراج بيانات المنتجات من المتاجر الإلكترونية تلقائياً</p>
+                                <div class="work-tech">
+                                    <span>Python</span>
+                                    <span>BeautifulSoup</span>
+                                    <span>CSV/JSON</span>
+                                </div>
+                            </div>
+                        </article>
 
-                    <div class="skill-category">
-                        <h3 class="skill-category-title">أخرى</h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">Web Scraping</span>
-                            <span class="skill-tag">Data Processing</span>
-                            <span class="skill-tag">Email Automation</span>
-                            <span class="skill-tag">No-Code</span>
-                            <span class="skill-tag">Low-Code</span>
-                        </div>
+                        <article class="work-item branch-left" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <path d="M24 4 L4 16 L4 32 L24 44 L44 32 L44 16 L24 4 Z" fill="none" stroke="#6B8F3C" stroke-width="2"/>
+                                        <path d="M24 4 C13 4 4 13 4 24 C4 35 13 44 24 44" fill="none" stroke="#6B8F3C" stroke-width="1.5" opacity="0.5"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">n8n + AI</span>
+                                    <h4>نظام فريلانس ذكي متكامل</h4>
+                                    <p>نظام يجمع بين n8n ووكلاء AI لإدارة كاملة للعمل الحر</p>
+                                    <div class="work-tech">
+                                        <span>n8n</span>
+                                        <span>Groq AI</span>
+                                        <span>Telegram</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>نظام فريلانس ذكي متكامل</h4>
+                                <p>نظام يجمع بين n8n ووكلاء AI لإدارة كاملة للعمل الحر</p>
+                                <div class="work-tech">
+                                    <span>n8n</span>
+                                    <span>Groq AI</span>
+                                    <span>Telegram</span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="work-item branch-right" role="listitem">
+                            <div class="branch-connector" aria-hidden="true"></div>
+                            <div class="work-image">
+                                <div class="work-placeholder" aria-hidden="true">
+                                    <svg width="80" height="80" viewBox="0 0 48 48" fill="none">
+                                        <ellipse cx="24" cy="20" rx="14" ry="10" fill="none" stroke="#6B8F3C" stroke-width="1.5"/>
+                                        <path d="M24 16 L10 24 L24 32" fill="none" stroke="#D8952B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="work-overlay">
+                                    <span class="work-tag">Bot + Python</span>
+                                    <h4>بوت ذكي مع معالجة بيانات</h4>
+                                    <p>بوت Telegram مع سكريبتات Python لتحليل البيانات وإرسال تقارير</p>
+                                    <div class="work-tech">
+                                        <span>Telegram API</span>
+                                        <span>Python</span>
+                                        <span>Pandas</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="work-content">
+                                <h4>بوت ذكي مع معالجة بيانات</h4>
+                                <p>بوت Telegram مع سكريبتات Python لتحليل البيانات وإرسال تقارير</p>
+                                <div class="work-tech">
+                                    <span>Telegram API</span>
+                                    <span>Python</span>
+                                    <span>Pandas</span>
+                                </div>
+                            </div>
+                        </article>
                     </div>
                 </div>
             </div>
@@ -667,8 +814,9 @@
                 <div class="footer-section">
                     <div class="footer-logo">
                         <span class="logo-icon" aria-hidden="true">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                            <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+                                <path d="M50 90 Q30 70 20 40 Q15 25 25 15 Q35 5 50 15 Q65 5 75 15 Q85 25 80 40 Q70 70 50 90" fill="none" stroke="#6B8F3C" stroke-width="3"/>
+                                <circle cx="50" cy="15" r="4" fill="#D8952B"/>
                             </svg>
                         </span>
                         <span class="logo-text">سليم محمد</span>
@@ -680,7 +828,8 @@
                     <ul>
                         <li><a href="#about">نبذة عني</a></li>
                         <li><a href="#services">الخدمات</a></li>
-                        <li><a href="#portfolio">أعمالي</a></li>
+                        <li><a href="#skills">المهارات</a></li>
+                        <li><a href="#work">أعمالي</a></li>
                         <li><a href="#contact">تواصل</a></li>
                     </ul>
                 </div>
@@ -737,6 +886,9 @@
             </svg>
         </button>
     </div>
+
+    <div class="cursor-particles" id="cursorParticles" aria-hidden="true"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
