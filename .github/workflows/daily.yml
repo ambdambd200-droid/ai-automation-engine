@@ -14,6 +14,9 @@ name: Daily Freelance Run with Self-Healing
         type: choice
         choices: ['both', 'mostaql', 'nafezly', 'n8n']
         default: 'both'
+  # Backup trigger to bypass GitHub UI bug with /actions/manual
+  repository_dispatch:
+    types: [daily-run]
 
 jobs:
   daily-freelance:
