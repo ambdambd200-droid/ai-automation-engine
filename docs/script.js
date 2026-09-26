@@ -1780,70 +1780,106 @@ const ReducedMotionHandler = {
 // INITIALIZATION
 // ========================================
 
-document.addEventListener('DOMContentLoaded', () => {
+// ========================================
+// INITIALIZATION
+// ========================================
+
+// Safe init wrapper with error handling
+function safeInit(name, fn) {
+  try {
+    fn();
+    console.log('[init] ' + name + ' OK');
+  } catch (e) {
+    console.error('[init] ' + name + ' FAILED:', e);
+  }
+}
+
+// Safe async init wrapper
+function safeAsyncInit(name, fn) {
+  try {
+    var result = fn();
+    if (result instanceof Promise) {
+      result.catch(function(e) { console.error('[init] ' + name + ' Promise FAILED:', e); });
+    }
+    console.log('[init] ' + name + ' OK');
+  } catch (e) {
+    console.error('[init] ' + name + ' FAILED:', e);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Global error handler - force hide welcome on any error
+  window.addEventListener('error', function(e) {
+    console.error('Global error:', e.error);
+    var overlay = $('#welcomeOverlay');
+    if (overlay) overlay.classList.add('hidden');
+  });
+
   // Core managers
-  WelcomeManager.init();
-  ThemeManager.init();
-  LanguageManager.init();
-  Navigation.init();
-  ProfilePhotoManager.init();
+  safeInit('WelcomeManager', function() { WelcomeManager.init(); });
+  safeInit('ThemeManager', function() { ThemeManager.init(); });
+  safeInit('LanguageManager', function() { LanguageManager.init(); });
+  safeInit('Navigation', function() { Navigation.init(); });
+  safeInit('ProfilePhotoManager', function() { ProfilePhotoManager.init(); });
 
   // Animations
-  ScrollAnimations.init();
-  new TrunkGrowth().init();
-  new ScrollTrunkGrowth().init();
-  new CounterAnimation().init();
+  safeInit('ScrollAnimations', function() { ScrollAnimations.init(); });
+  safeInit('TrunkGrowth', function() { new TrunkGrowth().init(); });
+  safeInit('ScrollTrunkGrowth', function() { new ScrollTrunkGrowth().init(); });
+  safeInit('CounterAnimation', function() { new CounterAnimation().init(); });
 
   // Interactive features
-  new PortfolioFilter().init();
-  new SoilParticles().init();
-  new FloatingParticles().init();
-  new IconInteractions().init();
-  new CursorParticles().init();
-  new MagneticButtons().init();
-  new ParallaxScroll().init();
-  new TextReveal().init();
-  new ScrollProgress().init();
-  new ThemeAwareParticles().init();
-  new ScrollTrunkGrowth().init();
-  new ReducedMotionHandler().init();
+  safeInit('PortfolioFilter', function() { new PortfolioFilter().init(); });
+  safeInit('SoilParticles', function() { new SoilParticles().init(); });
+  safeInit('FloatingParticles', function() { new FloatingParticles().init(); });
+  safeInit('IconInteractions', function() { new IconInteractions().init(); });
+  safeInit('CursorParticles', function() { new CursorParticles().init(); });
+  safeInit('MagneticButtons', function() { new MagneticButtons().init(); });
+  safeInit('ParallaxScroll', function() { new ParallaxScroll().init(); });
+  safeInit('TextReveal', function() { new TextReveal().init(); });
+  safeInit('ScrollProgress', function() { new ScrollProgress().init(); });
+  safeInit('ThemeAwareParticles', function() { new ThemeAwareParticles().init(); });
+  safeInit('ScrollTrunkGrowth', function() { new ScrollTrunkGrowth().init(); });
+  safeInit('ReducedMotionHandler', function() { new ReducedMotionHandler().init(); });
 
   // Interactive features
-  new PortfolioFilter().init();
-  new SoilParticles().init();
-  new FloatingParticles().init();
-  new IconInteractions().init();
-  new CursorParticles().init();
-  ContactForm.init();
-  BackToTop.init();
-  ExternalLinkHandler.init();
+  safeInit('PortfolioFilter', function() { new PortfolioFilter().init(); });
+  safeInit('SoilParticles', function() { new SoilParticles().init(); });
+  safeInit('FloatingParticles', function() { new FloatingParticles().init(); });
+  safeInit('IconInteractions', function() { new IconInteractions().init(); });
+  safeInit('CursorParticles', function() { new CursorParticles().init(); });
+  safeInit('ContactForm', function() { ContactForm.init(); });
+  safeInit('BackToTop', function() { BackToTop.init(); });
+  safeInit('ExternalLinkHandler', function() { ExternalLinkHandler.init(); });
 
   // Streaming text for hero description
-  const heroDesc = $('#heroDescription');
-  if (heroDesc) {
-    heroDesc.setAttribute('data-text', heroDesc.textContent || 'I build n8n workflows, AI agents, and 24/7 bots — turning repetitive tasks into smart systems that save you hours every day.');
-    // Streaming text will start after welcome animation
-  }
+  safeInit('StreamingText', function() {
+    var heroDesc = $('#heroDescription');
+    if (heroDesc) {
+      heroDesc.setAttribute('data-text', heroDesc.textContent || 'I build n8n workflows, AI agents, and 24/7 bots — turning repetitive tasks into smart systems that save you hours every day.');
+      // Streaming text will start after welcome animation
+    }
+  });
 
   // Update year
-  updateYear();
+  safeInit('updateYear', function() { updateYear(); });
 
   // Console easter egg
-  console.log('%c🌱 Welcome to Digital Grove', 'color: #6B8F3C; font-size: 24px; font-weight: bold; font-family: Fraunces, serif;');
+  console.log('%c[SEEDLING] Welcome to Digital Grove', 'color: #6B8F3C; font-size: 24px; font-weight: bold; font-family: Fraunces, serif;');
   console.log('%cI am Salim Muhammad, AI Automation Engineer', 'color: #D8952B; font-size: 16px;');
   console.log('%cContact: salim.muhammad.work@gmail.com', 'color: #B8AE9A; font-size: 14px;');
   console.log('%cStack: n8n • Python • AI Agents • Telegram/WhatsApp Bots', 'color: #6B8F3C; font-size: 13px;');
 
   // Handle page visibility for theme transition
-  document.addEventListener('visibilitychange', () => {
+  document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'visible') {
-      const savedTheme = localStorage.getItem('theme');
+      var savedTheme = localStorage.getItem('theme');
       if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
       }
     }
   });
-});
+}););
 
 // ========================================
 // EXPORTS (for testing)
