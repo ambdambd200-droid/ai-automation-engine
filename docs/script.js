@@ -123,15 +123,64 @@ const WelcomeManager = {
       return;
     }
 
+    // Ensure elements exist
+    if (!this.overlay) {
+      console.warn('WelcomeManager: welcomeOverlay not found');
+      return;
+    }
+    if (!this.skipBtn) {
+      console.warn('WelcomeManager: welcomeSkip button not found');
+      // Create fallback skip button
+      this.createFallbackSkipButton();
+    }
+
     this.bindEvents();
     this.handleSkipTimeout();
   },
 
+  createFallbackSkipButton() {
+    const overlay = this.overlay;
+    if (!overlay) return;
+    
+    const btn = document.createElement('button');
+    btn.id = 'welcomeSkip';
+    btn.className = 'welcome-skip';
+    btn.setAttribute('aria-label', 'Skip welcome');
+    btn.textContent = 'Skip';
+    btn.style.cssText = `
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 24px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.2s ease;
+    `;
+    overlay.appendChild(btn);
+    this.skipBtn = btn;
+    console.log('WelcomeManager: Created fallback skip button');
+  },
+
   bindEvents() {
-    this.skipBtn?.addEventListener('click', () => this.skip());
+    // Multiple event listeners for robustness
+    const skip = () => this.skip();
+    
+    if (this.skipBtn) {
+      this.skipBtn.addEventListener('click', skip);
+      this.skipBtn.addEventListener('touchend', skip); // Mobile support
+    }
+    
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === ' ') this.skip();
     });
+    
     document.addEventListener('click', (e) => {
       if (!this.skipRequested && e.target !== this.skipBtn) {
         this.skip();
@@ -147,12 +196,15 @@ const WelcomeManager = {
   },
 
   skip() {
+    if (this.skipRequested) return; // Prevent multiple calls
     this.skipRequested = true;
     this.hide();
   },
 
   hide() {
-    this.overlay?.classList.add('hidden');
+    if (this.overlay) {
+      this.overlay.classList.add('hidden');
+    }
     sessionStorage.setItem('welcomeShown', 'true');
     
     // Trigger hero entrance after welcome
@@ -1356,7 +1408,7 @@ const ProfilePhotoManager = {
     try {
       localStorage.removeItem('salim-profile-photo');
     } catch (e) {
-      console.warn('Could to remove photo from localStorage:', e);
+      console.warn('Could not remove photo from localStorage:', e);
     }
   },
 
