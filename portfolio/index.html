@@ -74,12 +74,12 @@
                 <span class="hamburger-line"></span>
             </button>
             <ul class="nav-menu" id="navMenu" role="menubar">
-                <li role="none"><a href="#home" class="nav-link active" role="menuitem" data-section="home">Home</a></li>
-                <li role="none"><a href="#about" class="nav-link" role="menuitem" data-section="about">About</a></li>
-                <li role="none"><a href="#services" class="nav-link" role="menuitem" data-section="services">Services</a></li>
-                <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills">Skills</a></li>
-                <li role="none"><a href="#work" class="nav-link" role="menuitem" data-section="work">Work</a></li>
-                <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact">Contact</a></li>
+                <li role="none"><a href="#home" class="nav-link active" role="menuitem" data-section="home" data-text="Home">Home</a></li>
+                <li role="none"><a href="#about" class="nav-link" role="menuitem" data-section="about" data-text="About">About</a></li>
+                <li role="none"><a href="#services" class="nav-link" role="menuitem" data-section="services" data-text="Services">Services</a></li>
+                <li role="none"><a href="#skills" class="nav-link" role="menuitem" data-section="skills" data-text="Skills">Skills</a></li>
+                <li role="none"><a href="#work" class="nav-link" role="menuitem" data-section="work" data-text="Work">Work</a></li>
+                <li role="none"><a href="#contact" class="nav-link" role="menuitem" data-section="contact" data-text="Contact">Contact</a></li>
                 <li role="none">
                     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button">
                         <span class="theme-icon sun-icon" aria-hidden="true">
@@ -116,12 +116,21 @@
             <div class="hero-bg" aria-hidden="true">
                 <div class="soil-particles" id="soilParticles" aria-hidden="true"></div>
                 <div class="ambient-glow" id="ambientGlow" aria-hidden="true"></div>
-                <div class="trunk-silhouette" aria-hidden="true">
-                    <svg viewBox="0 0 200 300" fill="none">
-                        <path d="M100 300 Q80 220 50 120 Q40 80 60 40 Q80 10 100 10 Q120 10 140 40 Q160 80 150 120 Q150 220 100 300" fill="#1B1712" opacity="0.3"/>
-                    </svg>
+                
+                <!-- Parallax Layers -->
+                <div class="parallax-layer" data-parallax="0.1" aria-hidden="true">
+                    <div class="floating-seeds" id="floatingSeeds" aria-hidden="true"></div>
                 </div>
-                <div class="floating-seeds" id="floatingSeeds" aria-hidden="true"></div>
+                <div class="parallax-layer" data-parallax="0.3" aria-hidden="true">
+                    <div class="trunk-silhouette" aria-hidden="true">
+                        <svg viewBox="0 0 200 300" fill="none">
+                            <path d="M100 300 Q80 220 50 120 Q40 80 60 40 Q80 10 100 10 Q120 10 140 40 Q160 80 150 120 Q150 220 100 300" fill="#1B1712" opacity="0.3"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="parallax-layer" data-parallax="0.5" aria-hidden="true">
+                    <div class="floating-seeds" id="floatingSeeds" aria-hidden="true"></div>
+                </div>
             </div>
             <div class="hero-content">
                 <div class="hero-badge" aria-live="polite">
@@ -910,8 +919,14 @@
         </button>
     </div>
 
+    <!-- Cursor Particles Container -->
     <div class="cursor-particles" id="cursorParticles" aria-hidden="true"></div>
-    <div class="magnetic-field" id="magneticField" aria-hidden="true"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress-bar" aria-hidden="true"></div>
+
+    <!-- Theme-Aware Particles Container -->
+    <div class="theme-particles" aria-hidden="true"></div>
 
     <script src="script.js"></script>
 </body>
