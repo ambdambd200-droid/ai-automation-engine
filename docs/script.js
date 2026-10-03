@@ -2,7 +2,10 @@
  * Digital Grove Portfolio — Interactive JavaScript
  * Animations: Welcome sequence, streaming text, typing indicator, counter animations,
  * scroll reveal, trunk growth, icon interactions, cursor particles, theme/language toggle,
- * form handling, back to top
+ * form handling, back to top, magnetic buttons, parallax scroll, text reveal,
+ * scroll progress, theme-aware particles, scroll-trunk growth, particle bursts,
+ * external link departure animations
+ * Design System: Digital Grove (Fraunces + Manrope, Purple/Pink palette)
  */
 
 // ========================================
@@ -141,7 +144,7 @@ const WelcomeManager = {
   createFallbackSkipButton() {
     const overlay = this.overlay;
     if (!overlay) return;
-    
+
     const btn = document.createElement('button');
     btn.id = 'welcomeSkip';
     btn.className = 'welcome-skip';
@@ -160,7 +163,6 @@ const WelcomeManager = {
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      z-index: 100;
       transition: all 0.2s ease;
     `;
     overlay.appendChild(btn);
@@ -171,16 +173,16 @@ const WelcomeManager = {
   bindEvents() {
     // Multiple event listeners for robustness
     const skip = () => this.skip();
-    
+
     if (this.skipBtn) {
       this.skipBtn.addEventListener('click', skip);
       this.skipBtn.addEventListener('touchend', skip); // Mobile support
     }
-    
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === ' ') this.skip();
     });
-    
+
     document.addEventListener('click', (e) => {
       if (!this.skipRequested && e.target !== this.skipBtn) {
         this.skip();
@@ -206,7 +208,7 @@ const WelcomeManager = {
       this.overlay.classList.add('hidden');
     }
     sessionStorage.setItem('welcomeShown', 'true');
-    
+
     // Trigger hero entrance after welcome
     setTimeout(() => {
       this.startHeroAnimations();
@@ -367,6 +369,12 @@ const LanguageManager = {
       }
     });
 
+    // Update filter buttons
+    $$('.filter-btn').forEach(btn => {
+      const filter = btn.dataset.filter;
+      if (t.workFilter[filter]) btn.textContent = t.workFilter[filter];
+    });
+
     // Update hero
     if (t.hero) {
       const badge = $('.hero-badge .badge-text');
@@ -391,12 +399,6 @@ const LanguageManager = {
       if (cta1) cta1.textContent = t.hero.cta1;
       if (cta2) cta2.textContent = t.hero.cta2;
     }
-
-    // Update filter buttons
-    $$('.filter-btn').forEach(btn => {
-      const filter = btn.dataset.filter;
-      if (t.workFilter[filter]) btn.textContent = t.workFilter[filter];
-    });
 
     // Update document title
     document.title = lang === 'ar'
@@ -430,7 +432,7 @@ class StreamingText {
   }
 
   init() {
-    this.fullText = this.element.getAttribute('data-text') || this.element.textContent || 'أبني تدفقات عمل n8n، وكلاء AI، وبوتات تعمل 24/7 — أحوّل العمليات المتكررة إلى أنظمة ذكية توفّر عليك ساعات من العمل اليومي.';
+    this.fullText = this.element.getAttribute('data-text') || this.element.textContent || 'I build n8n workflows, AI agents, and 24/7 bots — turning repetitive tasks into smart systems that save you hours every day.';
     this.element.textContent = '';
     this.start();
   }
@@ -518,307 +520,30 @@ class CounterAnimation {
 class TrunkGrowth {
   init() {
     this.trunks = $$('.main-trunk path');
-    this.nodes = $$('.main-trunk circle');
-    
     this.observer = new IntersectionObserver(
       entries => this.handleIntersection(entries),
       { threshold: 0.3 }
     );
-    
     this.trunks.forEach(trunk => this.observer.observe(trunk.parentElement));
-    this.nodes.forEach(node => this.observer.observe(node.parentElement));
   }
 
   handleIntersection(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const trunk = entry.target.querySelector('path');
-        const nodes = entry.target.querySelectorAll('circle');
-        
+        const trunk = entry.target.querySelector('.main-trunk path');
+        const nodes = entry.target.querySelectorAll('.main-trunk circle');
+
         if (trunk) {
           trunk.style.animation = 'trunkGrow 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
         }
-        
+
         nodes.forEach((node, index) => {
           node.style.animation = `nodeAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards`;
           node.style.animationDelay = `${index * 0.15}s`;
         });
-        
+
         this.observer.unobserve(entry.target);
-      }
-    });
-  }
-}
-
-// ========================================
-// PORTFOLIO/WORK FILTER
-// ========================================
-
-class PortfolioFilter {
-  init() {
-    this.buttons = $$('.filter-btn');
-    this.items = $$('.portfolio-item, .work-item');
-    this.bindEvents();
-  }
-
-  bindEvents() {
-    this.buttons.forEach(btn => {
-      btn.addEventListener('click', () => this.filter(btn.dataset.filter, btn));
-    });
-  }
-
-  filter(category, activeBtn) {
-    // Update active button
-    this.buttons.forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-selected', 'false');
-    });
-    activeBtn.classList.add('active');
-    activeBtn.setAttribute('aria-selected', 'true');
-
-    // Filter items with animation
-    this.items.forEach((item, index) => {
-      const categories = item.dataset.category.split(' ');
-      const matches = category === 'all' || categories.includes(category);
-
-      if (matches) {
-        item.classList.remove('hidden');
-        item.style.transitionDelay = `${index * 50}ms`;
-        requestAnimationFrame(() => {
-          item.style.opacity = '1';
-          item.style.transform = 'scale(1) translateX(0)';
-        });
-      } else {
-        item.style.opacity = '0';
-        item.style.transform = 'scale(0.95) translateX(-20px)';
-        setTimeout(() => {
-          if (!item.classList.contains('hidden')) {
-            item.classList.add('hidden');
-          }
-        }, 300);
-      }
-    });
-  }
-}
-
-// ========================================
-// NAVIGATION
-// ========================================
-
-const Navigation = {
-  init() {
-    this.navbar = $('#navbar');
-    this.navToggle = $('#navToggle');
-    this.navMenu = $('#navMenu');
-    this.navLinks = $$('.nav-link');
-    this.sections = $$('section[id]');
-    this.lastScroll = 0;
-
-    this.bindEvents();
-  },
-
-  bindEvents() {
-    // Mobile menu toggle
-    this.navToggle?.addEventListener('click', () => this.toggleMobileMenu());
-
-    // Close menu on link click
-    this.navLinks.forEach(link => {
-      link.addEventListener('click', () => this.closeMobileMenu());
-    });
-
-    // Scroll events
-    window.addEventListener('scroll', throttle(() => this.handleScroll(), 16), { passive: true });
-  },
-
-  toggleMobileMenu() {
-    const isActive = this.navMenu.classList.toggle('active');
-    this.navToggle.classList.toggle('active');
-    this.navToggle.setAttribute('aria-expanded', isActive);
-    document.body.style.overflow = isActive ? 'hidden' : '';
-  },
-
-  closeMobileMenu() {
-    this.navMenu.classList.remove('active');
-    this.navToggle.classList.remove('active');
-    this.navToggle.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
-  },
-
-  handleScroll() {
-    const currentScroll = window.pageYOffset;
-
-    // Navbar scroll effect
-    if (currentScroll > 50) {
-      this.navbar.classList.add('scrolled');
-    } else {
-      this.navbar.classList.remove('scrolled');
-    }
-
-    // Active link on scroll
-    const scrollY = currentScroll + 100;
-    this.sections.forEach(section => {
-      const sectionHeight = section.offsetHeight;
-      const sectionTop = section.offsetTop;
-      const sectionId = section.getAttribute('id');
-
-      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-        this.navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${sectionId}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-    });
-
-    this.lastScroll = currentScroll;
-  }
-};
-
-// ========================================
-// SCROLL ANIMATIONS
-// ========================================
-
-const ScrollAnimations = {
-  init() {
-    this.observer = new IntersectionObserver(
-      entries => this.handleIntersection(entries),
-      CONFIG.scrollAnimation
-    );
-
-    // Observe fade-in elements
-    $$('.section-header, .service-card, .work-item, .skill-category, .contact-card, .feature-item, .about-image, .about-text, .hero-content, .about-content > *').forEach(el => {
-      el.classList.add('fade-in');
-      this.observer.observe(el);
-    });
-
-    // Observe stagger grids
-    $$('.services-branches, .skills-branches, .work-branches, .hero-stats, .about-features, .skills-branches > *').forEach(el => {
-      el.classList.add('stagger-in');
-      this.observer.observe(el);
-    });
-
-    // Observe trunk elements
-    $$('.trunk-center').forEach(el => {
-      this.observer.observe(el);
-    });
-  },
-
-  handleIntersection(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        this.observer.unobserve(entry.target);
-      }
-    });
-  }
-};
-
-// ========================================
-// ICON INTERACTIONS
-// ========================================
-
-class IconInteractions {
-  init() {
-    // Service card icons
-    $$('.service-card').forEach(card => {
-      const icon = card.querySelector('.service-icon');
-      if (!icon) return;
-
-      card.addEventListener('mouseenter', () => this.animateIcon(icon, 'grow'));
-      card.addEventListener('mouseleave', () => this.animateIcon(icon, 'reset'));
-      card.addEventListener('touchstart', () => this.animateIcon(icon, 'grow'), { passive: true });
-      card.addEventListener('touchend', () => this.animateIcon(icon, 'reset'), { passive: true });
-    });
-
-    // Skill tag leaf icons
-    $$('.skill-tag').forEach(tag => {
-      const leaf = tag.querySelector('.leaf-icon svg');
-      if (!leaf) return;
-
-      tag.addEventListener('mouseenter', () => {
-        leaf.style.animation = 'leafPulse 0.4s ease-out';
       });
-      tag.addEventListener('mouseleave', () => {
-        leaf.style.animation = '';
-      });
-    });
-
-    // Work item icons
-    $$('.work-placeholder svg').forEach(svg => {
-      const item = svg.closest('.work-item');
-      if (!item) return;
-
-      item.addEventListener('mouseenter', () => {
-        svg.style.transform = 'scale(1.05)';
-        svg.style.transition = 'transform 0.3s ease-out';
-      });
-      item.addEventListener('mouseleave', () => {
-        svg.style.transform = 'scale(1)';
-      });
-    });
-
-    // Contact icons
-    $$('.contact-card').forEach(card => {
-      const icon = card.querySelector('.contact-icon');
-      if (!icon) return;
-
-      card.addEventListener('mouseenter', () => this.animateIcon(icon, 'bounce'));
-      card.addEventListener('mouseleave', () => this.animateIcon(icon, 'reset'));
-    });
-
-    // Feature icons
-    $$('.feature-item').forEach(item => {
-      const icon = item.querySelector('.feature-icon');
-      if (!icon) return;
-
-      item.addEventListener('mouseenter', () => this.animateIcon(icon, 'rotate'));
-      item.addEventListener('mouseleave', () => this.animateIcon(icon, 'reset'));
-    });
-
-    // Floating badge
-    const floatingBadge = $('.floating-badge');
-    if (floatingBadge) {
-      floatingBadge.addEventListener('mouseenter', () => {
-        floatingBadge.style.animation = 'none';
-        floatingBadge.style.transform = 'translateY(-12px) scale(1.02)';
-      });
-      floatingBadge.addEventListener('mouseleave', () => {
-        floatingBadge.style.animation = 'badgeFloat 4s ease-in-out infinite';
-      });
-    }
-
-    // Scroll indicator
-    const scrollIndicator = $('.scroll-indicator');
-    if (scrollIndicator) {
-      scrollIndicator.addEventListener('click', () => {
-        const aboutSection = $('#about');
-        if (aboutSection) {
-          aboutSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    }
-  },
-
-  animateIcon(icon, type) {
-    switch (type) {
-      case 'grow':
-        icon.style.transform = 'scale(1.15) rotate(-5deg)';
-        icon.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        break;
-      case 'bounce':
-        icon.style.transform = 'scale(1.2)';
-        icon.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        break;
-      case 'rotate':
-        icon.style.transform = 'rotate(8deg) scale(1.1)';
-        icon.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        break;
-      case 'reset':
-        icon.style.transform = 'scale(1) rotate(0deg)';
-        icon.style.transition = 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        break;
-    }
   }
 }
 
@@ -829,21 +554,28 @@ class IconInteractions {
 class CursorParticles {
   init() {
     this.container = $('#cursorParticles');
-    if (!this.container) return;
-
+    if (!this.container) {
+      this.container = document.createElement('div');
+      this.container.id = 'cursorParticles';
+      this.container.style.cssText = `
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: var(--z-cursor);
+      `;
+      document.body.appendChild(this.container);
+    }
     this.particles = [];
     this.mouseX = 0;
     this.mouseY = 0;
     this.lastSpawn = 0;
 
-    // Create particles on mouse move
     document.addEventListener('mousemove', throttle((e) => {
       this.mouseX = e.clientX;
       this.mouseY = e.clientY;
       this.spawnParticle();
-    }, 50));
+    }, 30));
 
-    // Touch support
     document.addEventListener('touchmove', throttle((e) => {
       const touch = e.touches[0];
       if (touch) {
@@ -851,18 +583,17 @@ class CursorParticles {
         this.mouseY = touch.clientY;
         this.spawnParticle();
       }
-    }, 80), { passive: true });
+    }, 50), { passive: true });
 
     this.animate();
   },
 
   spawnParticle() {
     const now = Date.now();
-    if (now - this.lastSpawn < 60) return;
-    this.lastSpawn = now;
+    if (now - this.lastSpawn < 50) return;
+    this.lastSpawn = Date.now();
 
     const particle = document.createElement('div');
-    particle.className = 'cursor-particle';
     const size = getRandom(2, 5);
     const color = Math.random() > 0.5 ? '#6B8F3C' : '#D8952B';
     const angle = getRandom(0, Math.PI * 2);
@@ -883,19 +614,16 @@ class CursorParticles {
     this.container.appendChild(particle);
     this.particles.push({ el: particle, angle, velocity, x: this.mouseX, y: this.mouseY, born: Date.now() });
 
-    // Limit particles
-    if (this.particles.length > CONFIG.cursorParticles.maxParticles) {
+    if (this.particles.length > 20) {
       const old = this.particles.shift();
       if (old.el.parentNode) old.el.remove();
     }
   },
 
   animate() {
-    const now = Date.now();
-
     this.particles.forEach((p, index) => {
-      const age = now - p.born;
-      const progress = age / CONFIG.cursorParticles.lifetime;
+      const age = Date.now() - p.born;
+      const progress = age / 800;
 
       if (progress >= 1) {
         if (p.el.parentNode) p.el.remove();
@@ -903,8 +631,8 @@ class CursorParticles {
         return;
       }
 
-      const moveX = Math.cos(p.angle) * p.velocity * (progress * 0.5);
-      const moveY = Math.sin(p.angle) * p.velocity * (progress * 0.5) + age * 0.05;
+      const moveX = Math.cos(p.angle) * p.velocity * progress;
+      const moveY = Math.sin(p.angle) * p.velocity * progress + age * 0.05;
 
       p.el.style.transform = `translate(${moveX}px, ${moveY}px)`;
       p.el.style.opacity = (1 - progress) * 0.8;
@@ -912,284 +640,61 @@ class CursorParticles {
 
     requestAnimationFrame(() => this.animate());
   }
-}
+};
 
 // ========================================
-// SOIL PARTICLES (Hero Background)
+// PARTICLE BURST SYSTEM (for CTA clicks)
 // ========================================
 
-class SoilParticles {
-  init() {
-    this.container = $('#soilParticles');
-    if (!this.container) return;
-
-    this.particles = [];
-    this.createParticles();
-    this.animate();
-  },
-
-  createParticles() {
-    for (let i = 0; i < CONFIG.particles.count; i++) {
+class ParticleBurst {
+  static create(x, y, color = '#D8952B', count = 12) {
+    for (let i = 0; i < count; i++) {
       const particle = document.createElement('div');
-      const size = getRandom(CONFIG.particles.size.min, CONFIG.particles.size.max);
-      const color = Math.random() > 0.5 ? '#B8AE9A' : '#D8952B';
-      const startX = getRandom(0, 100);
-      const startY = getRandom(0, 100);
-      const speed = getRandom(CONFIG.particles.speed.min, CONFIG.particles.speed.max);
-      const direction = Math.random() > 0.5 ? 1 : -1;
+      const angle = (i / 12) * Math.PI * 2;
+      const distance = getRandom(30, 60);
+      const size = getRandom(4, 10);
 
       particle.style.cssText = `
-        position: absolute;
+        position: fixed;
         width: ${size}px;
         height: ${size}px;
         background: ${color};
         border-radius: 50%;
-        opacity: ${getRandom(0.1, 0.3)};
-        left: ${startX}%;
-        top: ${startY}%;
+        left: ${x}px;
+        top: ${y}px;
         pointer-events: none;
-        transition: transform ${speed}s linear, opacity ${speed}s linear;
+        z-index: 9999;
+        opacity: 1;
       `;
 
-      this.container.appendChild(particle);
-      this.particles.push({ el: particle, speed, direction, x: startX, y: startY });
+      document.body.appendChild(particle);
+
+      const tx = Math.cos((i / 12) * Math.PI * 2) * getRandom(40, 80);
+      const ty = Math.sin((i / 12) * Math.PI * 2) * getRandom(40, 80);
+
+      particle.animate([
+        { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+        { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+      ], {
+        duration: getRandom(600, 1000),
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }).onfinish = () => particle.remove();
     }
-  },
-
-  animate() {
-    this.particles.forEach(p => {
-      const moveX = (Math.random() - 0.5) * 8;
-      const moveY = (Math.random() - 0.5) * 8;
-      const newX = Math.max(0, Math.min(100, p.x + moveX * p.direction));
-      const newY = Math.max(0, Math.min(100, p.y + moveY * p.direction));
-
-      p.el.style.transform = `translate(${newX - p.x}%, ${newY - p.y}%)`;
-      p.x = newX;
-      p.y = newY;
-    });
-
-    requestAnimationFrame(() => this.animate());
   }
-}
 
-// ========================================
-// FLOATING PARTICLES (Welcome)
-// ========================================
-
-class FloatingParticles {
-  init() {
-    this.container = $('#floatingParticles');
-    if (!this.container) return;
-
-    this.particles = [];
-    this.createParticles();
-    this.animate();
-  },
-
-  createParticles() {
-    for (let i = 0; i < 15; i++) {
-      const particle = document.createElement('div');
-      const size = getRandom(3, 8);
-      const color = Math.random() > 0.5 ? '#6B8F3C' : '#D8952B';
-      const startX = getRandom(10, 90);
-      const startY = getRandom(10, 90);
-
-      particle.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        background: ${color};
-        border-radius: 50%;
-        opacity: ${getRandom(0.3, 0.6)};
-        left: ${startX}%;
-        top: ${startY}%;
-        pointer-events: none;
-      `;
-
-      this.container.appendChild(particle);
-      this.particles.push({ el: particle, x: startX, y: startY, vx: getRandom(-0.5, 0.5), vy: getRandom(-0.5, 0.5) });
-    }
-  },
-
-  animate() {
-    this.particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Boundary bounce
-      if (p.x <= 5 || p.x >= 95) p.vx *= -1;
-      if (p.y <= 5 || p.y >= 95) p.vy *= -1;
-
-      p.el.style.left = `${p.x}%`;
-      p.el.style.top = `${p.y}%`;
-    });
-
-    requestAnimationFrame(() => this.animate());
-  }
-}
-
-// ========================================
-// CONTACT FORM
-// ========================================
-
-const ContactForm = {
-  init() {
-    this.form = $('#contactForm');
-    this.submitBtn = this.form?.querySelector('button[type="submit"]');
-    this.bindEvents();
-  },
-
-  bindEvents() {
-    this.form?.addEventListener('submit', e => this.handleSubmit(e));
-
-    // Real-time validation
-    $$('.form-group input, .form-group textarea, .form-group select').forEach(input => {
-      input.addEventListener('blur', () => this.validateField(input));
-      input.addEventListener('input', () => {
-        if (input.hasAttribute('aria-invalid') && input.value.trim()) {
-          input.removeAttribute('aria-invalid');
-        }
-      });
-    });
-  },
-
-  validateField(field) {
-    if (field.required && !field.value.trim()) {
-      field.setAttribute('aria-invalid', 'true');
-      return false;
-    }
-    if (field.type === 'email' && field.value.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(field.value)) {
-        field.setAttribute('aria-invalid', 'true');
-        return false;
-      }
-    }
-    field.removeAttribute('aria-invalid');
-    return true;
-  },
-
-  async handleSubmit(e) {
-    e.preventDefault();
-
-    // Validate all fields
-    let isValid = true;
-    $$('.form-group input, .form-group textarea', this.form).forEach(field => {
-      if (!this.validateField(field)) isValid = false;
-    });
-
-    if (!isValid) return;
-
-    const originalText = this.submitBtn.querySelector('span').textContent;
-    const isArabic = document.documentElement.getAttribute('lang') === 'ar';
-
-    this.submitBtn.disabled = true;
-    this.submitBtn.querySelector('span').textContent = isArabic ? 'جاري الإرسال...' : 'Sending...';
-
-    const formData = {
-      name: $('#name').value,
-      email: $('#email').value,
-      service: $('#service').value,
-      message: $('#message').value,
-      timestamp: new Date().toISOString(),
-    };
-
-    try {
-      const ENGINE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000'
-        : 'https://ai-automation-engine.onrender.com';
-
-      const response = await fetch(`${ENGINE_URL}/webhook/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        this.showSuccess();
-        this.form.reset();
-      } else {
-        this.fallbackMailto(formData);
-      }
-    } catch (err) {
-      this.fallbackMailto(formData);
-    } finally {
-      this.submitBtn.disabled = false;
-      this.submitBtn.querySelector('span').textContent = originalText;
-    }
-  },
-
-  fallbackMailto(data) {
-    const subject = encodeURIComponent(`New inquiry from ${data.name}`);
-    const body = encodeURIComponent(
-      `Name: ${data.name}\n` +
-      `Email: ${data.email}\n` +
-      `Service: ${data.service || 'Not specified'}\n\n` +
-      `Message:\n${data.message}`
-    );
-    window.location.href = `mailto:salim.muhammad.work@gmail.com?subject=${subject}&body=${body}`;
-    this.showSuccess();
-  },
-
-  showSuccess() {
-    const note = $('.form-note');
-    if (note) {
-      const orig = note.textContent;
-      const isArabic = document.documentElement.getAttribute('lang') === 'ar';
-      note.textContent = isArabic ? '✅ تم إرسال رسالتك بنجاح! سأرد عليك خلال 24 ساعة.' : '✅ Message sent! I will reply within 24 hours.';
-      note.classList.add('success');
-      note.style.color = '#6B8F3C';
-      note.style.background = 'rgba(107, 143, 60, 0.15)';
-      note.style.borderColor = '#6B8F3C';
-
-      setTimeout(() => {
-        note.textContent = orig;
-        note.classList.remove('success');
-        note.style.color = '';
-        note.style.background = '';
-        note.style.borderColor = '';
-      }, 5000);
-    }
+  static createOnElement(element, color = '#D8952B') {
+    const rect = element.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    this.create(x, y, color);
   }
 };
-
-// ========================================
-// BACK TO TOP
-// ========================================
-
-const BackToTop = {
-  init() {
-    this.btn = $('#backToTop');
-    if (!this.btn) return;
-
-    window.addEventListener('scroll', throttle(() => {
-      if (window.pageYOffset > 500) {
-        this.btn.classList.add('visible');
-      } else {
-        this.btn.classList.remove('visible');
-      }
-    }, 100));
-
-    this.btn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  }
-};
-
-// ========================================
-// YEAR UPDATE
-// ========================================
-
-function updateYear() {
-  const yearEl = $('#year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
-}
 
 // ========================================
 // EXTERNAL LINK DEPARTURE ANIMATION
 // ========================================
 
-const ExternalLinkHandler = {
+class ExternalLinkHandler {
   init() {
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a[href^="http"], a[href^="mailto:"]');
@@ -1205,15 +710,15 @@ const ExternalLinkHandler = {
 
   animateDeparture(link) {
     const button = link.closest('.btn, .contact-link, .contact-links a, .footer-section a');
-    
+
     if (button) {
       // Bloom animation
       button.style.transform = 'scale(1.1)';
       button.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      
+
       // Create bloom particles
       this.createBloomParticles(button);
-      
+
       setTimeout(() => {
         button.style.transform = 'scale(1)';
         window.open(link.href, link.target || '_blank');
@@ -1232,7 +737,7 @@ const ExternalLinkHandler = {
       const particle = document.createElement('div');
       const angle = (i / 6) * Math.PI * 2;
       const distance = 30;
-      
+
       particle.style.cssText = `
         position: fixed;
         width: 6px;
@@ -1259,262 +764,12 @@ const ExternalLinkHandler = {
 };
 
 // ========================================
-// PROFILE PHOTO MANAGER
-// ========================================
-
-const ProfilePhotoManager = {
-  init() {
-    this.wrapper = $('#profilePhotoWrapper');
-    this.placeholder = $('#profilePhotoPlaceholder');
-    this.input = $('#profilePhotoInput');
-    this.uploadBtn = $('#photoUploadBtn');
-    this.photo = $('#profilePhoto');
-    this.hint = this.placeholder?.querySelector('.photo-hint');
-    
-    if (!this.wrapper) return;
-    
-    this.loadSavedPhoto();
-    this.bindEvents();
-  },
-
-  bindEvents() {
-    // Click on upload button
-    this.uploadBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.input?.click();
-    });
-
-    // Click on placeholder to upload
-    this.placeholder?.addEventListener('click', () => {
-      this.input?.click();
-    });
-
-    // File input change
-    this.input?.addEventListener('change', (e) => this.handleFileSelect(e));
-
-    // Drag and drop
-    this.wrapper?.addEventListener('dragover', (e) => this.handleDragOver(e));
-    this.wrapper?.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-    this.wrapper?.addEventListener('drop', (e) => this.handleDrop(e));
-
-    // Remove photo on double click
-    this.photo?.addEventListener('dblclick', () => this.removePhoto());
-  },
-
-  handleDragOver(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.wrapper.classList.add('drag-over');
-  },
-
-  handleDragLeave(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.wrapper.classList.remove('drag-over');
-  },
-
-  handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.wrapper.classList.remove('drag-over');
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      this.processFile(file);
-    }
-  },
-
-  handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      this.processFile(file);
-    }
-    // Reset input value to allow selecting same file again
-    e.target.value = '';
-  },
-
-  processFile(file) {
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      this.showNotification('Photo too large. Maximum size is 5MB.', 'error');
-      return;
-    }
-
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
-      this.showNotification('Invalid file type. Please use JPG, PNG, WebP, or GIF.', 'error');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      this.setPhoto(dataUrl);
-      this.savePhoto(dataUrl);
-      this.showNotification('Profile photo updated!', 'success');
-    };
-    reader.onerror = () => {
-      this.showNotification('Failed to read file.', 'error');
-    };
-    reader.readAsDataURL(file);
-  },
-
-  setPhoto(dataUrl) {
-    this.photo.src = dataUrl;
-    this.photo.style.display = 'block';
-    this.placeholder.style.display = 'none';
-    this.wrapper.classList.add('has-photo');
-    
-    // Animate photo appearance
-    this.photo.style.opacity = '0';
-    this.photo.style.transform = 'scale(0.8)';
-    requestAnimationFrame(() => {
-      this.photo.style.transition = 'opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-      this.photo.style.opacity = '1';
-      this.photo.style.transform = 'scale(1)';
-    });
-  },
-
-  removePhoto() {
-    this.photo.src = '';
-    this.photo.style.display = 'none';
-    this.placeholder.style.display = 'flex';
-    this.wrapper.classList.remove('has-photo');
-    this.removeSavedPhoto();
-    this.showNotification('Profile photo removed', 'info');
-  },
-
-  savePhoto(dataUrl) {
-    try {
-      localStorage.setItem('salim-profile-photo', dataUrl);
-    } catch (e) {
-      console.warn('Could not save photo to localStorage:', e);
-    }
-  },
-
-  loadSavedPhoto() {
-    try {
-      const saved = localStorage.getItem('salim-profile-photo');
-      if (saved) {
-        this.setPhoto(saved);
-      }
-    } catch (e) {
-      console.warn('Could not load photo from localStorage:', e);
-    }
-  },
-
-  removeSavedPhoto() {
-    try {
-      localStorage.removeItem('salim-profile-photo');
-    } catch (e) {
-      console.warn('Could not remove photo from localStorage:', e);
-    }
-  },
-
-  showNotification(message, type = 'info') {
-    // Remove existing notification
-    const existing = $('.photo-notification');
-    if (existing) existing.remove();
-
-    const notification = document.createElement('div');
-    notification.className = `photo-notification photo-notification-${type}`;
-    notification.textContent = message;
-    notification.style.cssText = `
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 1000;
-      opacity: 0;
-      transform: translateX(-50%) translateY(100px);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    `;
-
-    const colors = {
-      success: '#6B8F3C',
-      error: '#B14C2E',
-      info: '#6B8F3C',
-      warning: '#D8952B'
-    };
-    notification.style.background = colors[type] || colors.info;
-    notification.style.color = '#1B1712';
-
-    document.body.appendChild(notification);
-
-    requestAnimationFrame(() => {
-      notification.style.opacity = '1';
-      notification.style.transform = 'translateX(-50%) translateY(0)';
-    });
-
-    setTimeout(() => {
-      notification.style.opacity = '0';
-      notification.style.transform = 'translateX(-50%) translateY(100px)';
-      setTimeout(() => notification.remove(), 400);
-    }, 3000);
-  }
-};
-
-// ========================================
-// PARTICLE BURST SYSTEM (for CTA clicks, etc.)
-// ========================================
-
-class ParticleBurst {
-  static create(x, y, color = '#D8952B', count = 12) {
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement('div');
-      const angle = (i / 12) * Math.PI * 2;
-      const distance = getRandom(30, 60);
-      const size = getRandom(4, 10);
-      
-      particle.style.cssText = `
-        position: fixed;
-        width: ${size}px;
-        height: ${size}px;
-        background: ${color};
-        border-radius: 50%;
-        left: ${x}px;
-        top: ${y}px;
-        pointer-events: none;
-        z-index: 9999;
-        opacity: 1;
-      `;
-
-      document.body.appendChild(particle);
-
-      const tx = Math.cos((i / 12) * Math.PI * 2) * getRandom(40, 80);
-      const ty = Math.sin((i / 12) * Math.PI * 2) * getRandom(40, 80);
-
-      particle.animate([
-        { transform: `translate(0, 0) scale(1) rotate(0deg)`, opacity: 1 },
-        { transform: `translate(${tx}px, ${ty}px) scale(0) rotate(${getRandom(-180, 180)}deg)`, opacity: 0 }
-      ], {
-        duration: getRandom(600, 1000),
-        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-      }).onfinish = () => particle.remove();
-    }
-  }
-
-  static createOnElement(element, color = '#D8952B') {
-    const rect = element.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-    this.create(x, y, color);
-  }
-};
-
-// ========================================
-// MAGNETIC BUTTON EFFECT
+// MAGNETIC BUTTONS
 // ========================================
 
 class MagneticButtons {
   init() {
-    this.buttons = $$('.btn, .service-card, .work-item, .skill-category, .contact-card, .feature-item, .filter-btn, .theme-toggle, .lang-toggle, .filter-btn');
+    this.buttons = $$('.btn, .service-card, .work-item, .skill-category, .contact-card, .feature-item, .filter-btn, .theme-toggle, .lang-toggle');
     this.bindEvents();
   },
 
@@ -1534,10 +789,10 @@ class MagneticButtons {
     const rect = btn.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    
+
     const deltaX = (e.clientX - centerX) * 0.15;
     const deltaY = (e.clientY - centerY) * 0.15;
-    
+
     btn.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.02)`;
     btn.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
   },
@@ -1574,14 +829,14 @@ class ParallaxScroll {
 
   updateParallax() {
     const scrollY = window.pageYOffset;
-    
+
     this.elements.forEach(el => {
       const speed = parseFloat(el.dataset.parallax) || 0.3;
       const rect = el.getBoundingClientRect();
       const viewportCenter = window.innerHeight / 2;
       const elementCenter = rect.top + rect.height / 2;
       const distance = (elementCenter - viewportCenter) * speed;
-      
+
       el.style.transform = `translateY(${distance}px)`;
     });
   }
@@ -1598,7 +853,7 @@ class TextReveal {
       entries => this.handleIntersection(entries),
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     );
-    
+
     this.elements.forEach((el, index) => {
       el.style.opacity = '0';
       el.style.transform = 'translateY(30px)';
@@ -1620,7 +875,7 @@ class TextReveal {
 };
 
 // ========================================
-// ENHANCED SCROLL PROGRESS INDICATOR
+// SCROLL PROGRESS INDICATOR
 // ========================================
 
 class ScrollProgress {
@@ -1639,7 +894,7 @@ class ScrollProgress {
       box-shadow: 0 2px 8px rgba(107, 143, 60, 0.4);
     `;
     document.body.appendChild(this.bar);
-    
+
     window.addEventListener('scroll', throttle(() => this.update(), 16), { passive: true });
   },
 
@@ -1668,10 +923,10 @@ class ThemeAwareParticles {
       overflow: hidden;
     `;
     document.body.appendChild(this.container);
-    
+
     this.createParticles();
     this.animate();
-    
+
     // Recreate on theme change
     const observer = new MutationObserver(() => this.recreateParticles());
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -1725,10 +980,10 @@ class ThemeAwareParticles {
       p.y += p.speedY;
 
       // Wrap around
-      if (p.y < -5) p.y = 105;
-      if (p.y > 105) p.y = -5;
       if (p.x < -5) p.x = 105;
       if (p.x > 105) p.x = -5;
+      if (p.y < -5) p.y = 105;
+      if (p.y > 105) p.y = -5;
 
       p.el.style.left = `${p.x}%`;
       p.el.style.top = `${p.y}%`;
@@ -1762,14 +1017,14 @@ class ScrollTrunkGrowth {
       if (entry.isIntersecting) {
         const trunk = entry.target.querySelector('.main-trunk path');
         const nodes = entry.target.querySelectorAll('.main-trunk circle');
-        
+
         if (trunk && !trunk.classList.contains('grown')) {
           trunk.classList.add('grown');
           trunk.style.strokeDasharray = trunk.getTotalLength();
           trunk.style.strokeDashoffset = trunk.getTotalLength();
           trunk.style.animation = 'trunkGrow 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
         }
-        
+
         nodes.forEach((node, index) => {
           if (!node.classList.contains('appeared')) {
             node.classList.add('appeared');
@@ -1806,7 +1061,7 @@ const ReducedMotionHandler = {
   handleChange(e) {
     const reduced = e.matches;
     document.documentElement.classList.toggle('reduced-motion', reduced);
-    
+
     if (reduced) {
       // Disable all animations
       const style = document.createElement('style');
@@ -1827,10 +1082,6 @@ const ReducedMotionHandler = {
     }
   }
 };
-
-// ========================================
-// INITIALIZATION
-// ========================================
 
 // ========================================
 // INITIALIZATION
@@ -1903,6 +1154,13 @@ document.addEventListener('DOMContentLoaded', function() {
   safeInit('ContactForm', function() { ContactForm.init(); });
   safeInit('BackToTop', function() { BackToTop.init(); });
   safeInit('ExternalLinkHandler', function() { ExternalLinkHandler.init(); });
+  safeInit('MagneticButtons', function() { new MagneticButtons().init(); });
+  safeInit('ParallaxScroll', function() { new ParallaxScroll().init(); });
+  safeInit('TextReveal', function() { new TextReveal().init(); });
+  safeInit('ScrollProgress', function() { new ScrollProgress().init(); });
+  safeInit('ThemeAwareParticles', function() { new ThemeAwareParticles().init(); });
+  safeInit('ScrollTrunkGrowth', function() { new ScrollTrunkGrowth().init(); });
+  safeInit('ReducedMotionHandler', function() { new ReducedMotionHandler().init(); });
 
   // Streaming text for hero description
   safeInit('StreamingText', function() {
@@ -1931,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
-}););
+});
 
 // ========================================
 // EXPORTS (for testing)
@@ -1953,6 +1211,15 @@ if (typeof module !== 'undefined' && module.exports) {
     CursorParticles,
     ContactForm,
     BackToTop,
+    ExternalLinkHandler,
+    MagneticButtons,
+    ParallaxScroll,
+    TextReveal,
+    ScrollProgress,
+    ThemeAwareParticles,
+    ScrollTrunkGrowth,
+    ReducedMotionHandler,
+    ParticleBurst,
     ExternalLinkHandler
   };
 }
