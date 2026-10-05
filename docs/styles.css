@@ -1,340 +1,47 @@
-}
-2700: 
+/* ========================================
+   TEXT REVEAL ANIMATIONS
+   ======================================== */
 
-2701: /* ========================================
-2702:    SCROLL PROGRESS BAR
-2705:    ======================================== */
-2706: 
-2706: .scroll-progress-bar {
-2707:   position: fixed;
-2708:   top: 0;
-2710:   left: 0;
-2711:   width: 0%;
-2712:   height: 3px;
-2713:   background: linear-gradient(90deg, #6B8F3C, #D8952B);
-2714:   z-index: 9999;
-2717:   transition: width 0.1s linear;
-2718:   box-shadow: 0 2px 8px rgba(107, 143, 60, 0.4);
-2718: }
-2719: 
-2720: /* ========================================
-2721:    THEME PARTICLES
-2721:    ======================================== */
-2722: 
-2722: .theme-particles > div {
-2723:   will-change: transform, opacity;
-2724: }
-2725: 
-2725: /* ========================================
-2726:    SCROLL TRUNK GROWTH
-2729:    ======================================== */
-2730: 
-2730: .main-trunk path.grown {
-2731:   animation: trunkGrow 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2732: }
-2733: 
-2734: .main-trunk circle.appeared {
-2735:   animation: nodeAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-2736: }
-2737: 
-2738: .service-card.animate-in,
-2739: .skill-category.animate-in,
-2740: .work-item.animate-in {
-2741:   animation: branchGrow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2742:   opacity: 0;
-2743: }
-2744: 
-2745: .service-card.branch-left.animate-in {
-2746:   animation-name: branchGrowLeft;
-2747: }
-2748: 
-2749: .service-card.branch-right.animate-in {
-2750:   animation-name: branchGrowRight;
-2751: }
-2752: 
-2753: .work-item.branch-left.animate-in {
-2754:   animation-name: branchGrowLeft;
-2755: }
-2755: 
-2756: .work-item.branch-right.animate-in {
-2756:   animation-name: branchGrowRight;
-2757: }
-2757: 
-2758: /* ========================================
-2759:    MAGNETIC BUTTONS
-2761:    ======================================== */
-2761: 
-2762: .btn,
-2762: .service-card,
-2763: .work-item,
-2763: .skill-category,
-2764: .contact-card,
-2764: .feature-item,
-2765: .filter-btn,
-2765: .theme-toggle,
-2765: .lang-toggle {
-2766:   will-change: transform;
-2767:   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-2768: }
-2769: 
-2769: .btn:hover,
-2770: .service-card:hover,
-2770: .work-item:hover,
-2771: .skill-category:hover,
-2771: .contact-card:hover,
-2772: .feature-item:hover {
-2773:   transform: translateY(-4px) scale(1.02);
-2774:   box-shadow: 0 12px 32px rgba(107, 143, 60, 0.2);
-2775: }
-2776: 
-2776: .btn:active,
-2777: .service-card:active,
-2777: .work-item:active,
-2777: .skill-category:active,
-2778: .contact-card:active,
-2777: .feature-item:active {
-2778:   transform: scale(0.98);
-2779: }
-2780: 
-2781: /* ========================================
-2782:    CURSOR PARTICLES
-2782:    ======================================== */
-2783: 
-2784: .cursor-particles {
-2785:   position: fixed;
-2786:   inset: 0;
-2786:   pointer-events: none;
-2787:   z-index: var(--z-cursor);
-2787:   overflow: hidden;
-2788: }
-2788: 
-2788: .cursor-particle {
-2789:   position: absolute;
-2789:   width: 4px;
-2789:   height: 4px;
-2790:   border-radius: 50%;
-2790:   pointer-events: none;
-2790:   will-change: transform, opacity;
-2790:   animation: particleFade 1s ease-out forwards;
-2791: }
-2791: 
-2791: @keyframes particleFade {
-2792:   0% { transform: scale(1); opacity: 0.6; }
-2792:   100% { transform: scale(0); opacity: 0; }
-2793: }
-2793: 
-2794: /* ========================================
-2794:    PARALLAX LAYERS
-2795:    ======================================== */
-2795: 
-2796: .parallax-layer {
-2797:   position: absolute;
-2797:   inset: 0;
-2797:   pointer-events: none;
-2798:   overflow: hidden;
-2798: }
-2798: 
-2798: .parallax-layer:nth-child(1) { /* Far background */
-2799:   transform: translateZ(-100px) scale(1.3);
-2800: }
-2800: 
-2801: .parallax-layer:nth-child(2) { /* Mid ground */
-2801:   transform: translateZ(-50px) scale(1.15);
-2802: }
-2802: 
-2802: .parallax-layer:nth-child(3) { /* Near foreground */
-2803:   transform: translateZ(0);
-2803: }
-2804: 
-2804: [data-parallax] {
-2805:   will-change: transform;
-2805:   transition: transform 0.1s linear;
-2805: }
-2806: 
-2806: /* ========================================
-2807:    SCROLL PROGRESS BAR
-2808:    ======================================== */
-2808: 
-2808: .scroll-progress-bar {
-2809:   position: fixed;
-2810:   top: 0;
-2810:   left: 0;
-2811:   width: 0%;
-2811:   height: 3px;
-2812:   background: linear-gradient(90deg, #6B8F3C, #D8952B);
-2812:   z-index: 9999;
-2814:   transition: width 0.1s linear;
-2815:   box-shadow: 0 2px 8px rgba(107, 143, 60, 0.4);
-2816: }
-2817: 
-2818: /* ========================================
-2819:    TEXT REVEAL ANIMATIONS
-2820:    ======================================== */
-2820: 
-2820: [data-text-reveal] {
-2820:   opacity: 0;
-2821:   transform: translateY(30px);
-2821:   transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-2822: }
-2822: 
-2822: [data-text-reveal].revealed {
-2822:   opacity: 1;
-2823:   transform: translateY(0);
-2823: }
-2824: 
-2824: /* ========================================
-2825:    SCROLL PROGRESS BAR
-2826:    ======================================== */
-2826: 
-2826: .scroll-progress-bar {
-2827:   position: fixed;
-2827:   top: 0;
-2827:   left: 0;
-2828:   width: 0%;
-2828:   height: 3px;
-2829:   background: linear-gradient(90deg, #6B8F3C, #D8952B);
-2829:   z-index: 9999;
-2830:   transition: width 0.1s linear;
-2830:   box-shadow: 0 2px 8px rgba(107, 143, 60, 0.4);
-2831: }
-2832: 
-2833: /* ========================================
-2834:    THEME PARTICLES
-2834:    ======================================== */
-2834: 
-2834: .theme-particles > div {
-2835:   will-change: transform, opacity;
-2835: }
-2836: 
-2836: /* ========================================
-2837:    SCROLL TRUNK GROWTH
-2838:    ======================================== */
-2838: 
-2838: .main-trunk path.grown {
-2839:   animation: trunkGrow 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2840: }
-2841: 
-2841: .main-trunk circle.appeared {
-2842:   animation: nodeAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-2843: }
-2843: 
-2843: .service-card.animate-in,
-2844: .skill-category.animate-in,
-2845: .work-item.animate-in {
-2844:   animation: branchGrow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2845:   opacity: 0;
-2845: }
-2846: 
-2846: .service-card.branch-left.animate-in {
-2846:   animation-name: branchGrowLeft;
-2847: }
-2847: 
-2848: .service-card.branch-right.animate-in {
-2848:   animation-name: branchGrowRight;
-2849: }
-2850: 
-2850: .work-item.branch-left.animate-in {
-2850:   animation-name: branchGrowLeft;
-2851: }
-2851: 
-2852: .work-item.branch-right.animate-in {
-2852:   animation-name: branchGrowRight;
-2853: }
-2854: 
-2854: /* ========================================
-2855:    REDUCED MOTION
-2855:    ======================================== */
-2855: 
-2856: .reduced-motion *,
-2856: .reduced-motion *::before,
-2856: .reduced-motion *::after {
-2856:   animation-duration: 0.01ms !important;
-2856:   animation-iteration-count: 1 !important;
-2856:   transition-duration: 0.01ms !important;
-2857: }
-2857: 
-2858: /* ========================================
-2859:    TEXT REVEAL ANIMATIONS
-2859:    ======================================== */
-2859: 
-2859: [data-text-reveal] {
-2859:   opacity: 0;
-2860:   transform: translateY(30px);
-2860:   transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-2860: }
-2860: 
-2860: [data-text-reveal].revealed {
-2861:   opacity: 1;
-2861:   transform: translateY(0);
-2861: }
-2861: 
-2861: /* ========================================
-2862:    SCROLL PROGRESS BAR
-2862:    ======================================== */
-2862: 
-2862: .scroll-progress-bar {
-2862:   position: fixed;
-2863:   top: 0;
-2863:   left: 0;
-2864:   width: 0%;
-2864:   height: 3px;
-2865:   background: linear-gradient(90deg, #6B8F3C, #D8952B);
-2865:   z-index: 9999;
-2866:   transition: width 0.1s linear;
-2866:   box-shadow: 0 2px 8px rgba(107, 143, 60, 0.4);
-2867: }
-2868: 
-2868: /* ========================================
-2869:    THEME PARTICLES
-2869:    ======================================== */
-2869: 
-2869: .theme-particles > div {
-2870:   will-change: transform, opacity;
-2870: }
-2871: 
-2871: /* ========================================
-2872:    SCROLL TRUNK GROWTH
-2872:    ======================================== */
-2872: 
-2872: .main-trunk path.grown {
-2873:   animation: trunkGrow 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2874: }
-2874: 
-2874: .main-trunk circle.appeared {
-2875:   animation: nodeAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-2875: }
-2875: 
-2875: .service-card.animate-in,
-2876: .skill-category.animate-in,
-2876: .work-item.animate-in {
-2876:   animation: branchGrow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-2877:   opacity: 0;
-2877: }
-2877: 
-2877: .service-card.branch-left.animate-in {
-2878:   animation-name: branchGrowLeft;
-2879: }
-2878: 
-2879: .service-card.branch-right.animate-in {
-2879:   animation-name: branchGrowRight;
-2880: }
-2880: 
-2880: .work-item.branch-left.animate-in {
-2880:   animation-name: branchGrowLeft;
-2881: }
-2881: 
-2882: .work-item.branch-right.animate-in {
-2882:   animation-name: branchGrowRight;
-2883: }
-2883: 
-2883: /* ========================================
-2884:    REDUCED MOTION
-2884:    ======================================== */
-2884: 
-2885: .reduced-motion *,
-2885: .reduced-motion *::before,
-2885: .reduced-motion *::after {
-2885:   animation-duration: 0.01ms !important;
-2885:   animation-iteration-count: 1 !important;
-2885:   transition-duration: 0.01ms !important;
-2886: }
+[data-text-reveal] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-text-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade-in animation for TextReveal */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger-in animation for TextReveal */
+.stagger-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.stagger-in.visible {
+  animation: staggerIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes staggerIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========================================
+   SCROLL PROGRESS BAR
+   ======================================== */
