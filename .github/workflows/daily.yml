@@ -76,8 +76,8 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           echo "Installing Playwright Chromium..."
-          python -m playwright install chromium --with-deps
-          python -m playwright install-deps chromium
+          python -m playwright install chromium --with-deps || { echo "ERROR: Playwright install failed"; exit 1; }
+          python -m playwright install-deps chromium || { echo "ERROR: Playwright deps install failed"; exit 1; }
 
       - name: Install Python dependencies (engine)
         run: |
