@@ -123,6 +123,12 @@ jobs:
           echo "Verifying Playwright installation..."
           python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); browser = p.chromium.launch(headless=True); browser.close(); p.stop(); print('Playwright OK')" || { echo "ERROR: Playwright not working"; exit 1; }
 
+- name: Test engine API
+        run: |
+          echo "Testing engine API..."
+          curl -sf http://localhost:5000/health || { echo "ERROR: Engine health check failed"; exit 1; }
+          curl -sf -X POST http://localhost:5000/api/bid/generate -H "Content-Type: application/json" -d '{"platform":"mostaql","project_title":"test","project_description":"test","budget":"100"}' || { echo "ERROR: Engine API test failed"; exit 1; }
+
 - name: Run daily freelance routine
         run: |
           set -e
