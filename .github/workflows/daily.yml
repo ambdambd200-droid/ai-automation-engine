@@ -3,6 +3,8 @@ name: Daily Freelance Run with Self-Healing
 "on":
   schedule:
     - cron: '0 4 * * *'  # 4 AM UTC = 7 AM Gaza (winter)
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       dry_run:
