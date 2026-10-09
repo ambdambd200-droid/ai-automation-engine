@@ -53,6 +53,7 @@ jobs:
             echo "Attempt $i: Updating package list..."
             sudo apt-get update && break || { echo "Attempt $i failed, retrying in 10s..."; sleep 10; }
           done
+          echo "Installing system dependencies for Playwright..."
           sudo apt-get install -y \
             libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
             libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
@@ -65,14 +66,22 @@ jobs:
             libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
             libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 \
             libasound2 libxshmfence1 libxcb1 libxext6 libxrender1 libxi6 \
-            libxtst6 || true
+            libxtst6 libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+            libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
+            libxfixes3 libxrandr2 libgbm1 libasound2 libxshmfence1 libxcb1 \
+            libxext6 libxrender1 libxi6 libxtst6 libnss3 libnspr4 \
+            libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 \
+            libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 \
+            libasound2 libxshmfence1 libxcb1 libxext6 libxrender1 libxi6 \
+            libxtst6
 
       - name: Install Python dependencies (root)
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          python -m playwright install chromium --with-deps || true
-          python -m playwright install-deps chromium || true
+          echo "Installing Playwright Chromium..."
+          python -m playwright install chromium --with-deps
+          python -m playwright install-deps chromium
 
       - name: Install Python dependencies (engine)
         run: |
@@ -96,12 +105,24 @@ jobs:
           python app.py &
           ENGINE_PID=$!
           echo "ENGINE_PID=$ENGINE_PID" >> $GITHUB_ENV
-          sleep 10
-          for i in {1..5}; do
-            curl -sf http://localhost:5000/health && break || { echo "Waiting for engine... ($i/5)"; sleep 3; }
+          sleep 5
+          echo "Waiting for engine to be healthy..."
+          for i in {1..10}; do
+            if curl -sf http://localhost:5000/health; then
+              echo "Engine is healthy!"
+              break
+            fi
+            echo "Waiting for engine... ($i/10)"
+            sleep 3
           done
+          # Final health check - fail if engine not ready
+          curl -sf http://localhost:5000/health || { echo "ERROR: Engine failed to start"; exit 1; }
 
-      - name: Run daily freelance routine
+      - name: Verify Playwright installation
+        run: |
+          python -c "from playwright.sync_api import sync_playwright; p = sync_playwright().start(); browser = p.chromium.launch(headless=True); browser.close(); p.stop(); print('Playwright OK')" || { echo "ERROR: Playwright not working"; exit 1; }
+
+- name: Run daily freelance routine
         run: |
           set -e
           if [ "${{ github.event.inputs.platform }}" = "both" ]; then
